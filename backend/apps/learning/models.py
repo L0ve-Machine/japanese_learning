@@ -3,7 +3,10 @@ from django.contrib.postgres.fields import JSONField
 from apps.users.models import User
 
 class Subject(models.Model):
+    subject_key = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    group_key = models.CharField(max_length=10, null=True, blank=True)
     name = models.CharField(max_length=200)
+    indonesian_name = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
     order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
@@ -12,10 +15,25 @@ class Subject(models.Model):
 
     class Meta:
         db_table = 'subjects'
-        ordering = ['order', 'name']
+        ordering = ['group_key', 'order', 'name']
 
     def __str__(self):
         return self.name
+
+class ExamSession(models.Model):
+    year = models.IntegerField()
+    session_number = models.IntegerField()
+    available_subjects = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'exam_sessions'
+        ordering = ['-year', '-session_number']
+        unique_together = ['year', 'session_number']
+
+    def __str__(self):
+        return f"{self.year}年 第{self.session_number}回"
 
 class Question(models.Model):
     QUESTION_TYPES = [
@@ -24,6 +42,7 @@ class Question(models.Model):
     ]
 
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='questions', null=True, blank=True)
+    exam_session = models.ForeignKey(ExamSession, on_delete=models.CASCADE, related_name='questions', null=True, blank=True)
     question_type = models.CharField(max_length=20, choices=QUESTION_TYPES)
     year = models.IntegerField(null=True, blank=True)
     question_text = models.TextField()

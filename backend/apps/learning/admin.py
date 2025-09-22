@@ -1,12 +1,18 @@
 from django.contrib import admin
-from .models import Subject, Question, Word, FlashCard, Video, StudyText
+from .models import Subject, ExamSession, Question, Word, FlashCard, Video, StudyText
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ['name', 'order', 'is_active', 'created_at']
-    list_filter = ['is_active']
-    search_fields = ['name']
-    ordering = ['order', 'name']
+    list_display = ['name', 'subject_key', 'group_key', 'order', 'is_active', 'created_at']
+    list_filter = ['is_active', 'group_key']
+    search_fields = ['name', 'subject_key']
+    ordering = ['group_key', 'order', 'name']
+
+@admin.register(ExamSession)
+class ExamSessionAdmin(admin.ModelAdmin):
+    list_display = ['year', 'session_number', 'available_subjects', 'created_at']
+    list_filter = ['year']
+    ordering = ['-year', '-session_number']
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
