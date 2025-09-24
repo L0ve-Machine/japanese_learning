@@ -7,13 +7,6 @@ export interface User {
   created_at: string;
 }
 
-export interface Subject {
-  id: number;
-  name: string;
-  description: string;
-  order: number;
-  is_active: boolean;
-}
 
 export interface Question {
   id: number;
@@ -62,15 +55,87 @@ export interface Video {
   order: number;
 }
 
+// Hierarchical Learning Content Types
 export interface StudyText {
   id: number;
-  subject: number;
-  subject_name?: string;
   title: string;
   content: string;
   translations: Record<string, any>;
   order: number;
   is_premium: boolean;
+}
+
+export interface Page {
+  id: number;
+  name: string;
+  description: string;
+  order: number;
+  is_active: boolean;
+  texts?: StudyText[];
+}
+
+export interface Chapter {
+  id: number;
+  name: string;
+  description: string;
+  translations: Record<string, any>;
+  order: number;
+  is_active: boolean;
+  pages?: Page[];
+}
+
+export interface SubjectItem {
+  id: number;
+  name: string;
+  description: string;
+  translations: Record<string, any>;
+  order: number;
+  is_active: boolean;
+  chapters?: Chapter[];
+}
+
+// Enhanced Subject interface with hierarchy
+export interface Subject {
+  id: number;
+  name: string;
+  description: string;
+  group_key?: string;
+  indonesian_name?: string;
+  order: number;
+  is_active: boolean;
+  items?: SubjectItem[];
+  // Computed fields for display
+  group?: string;
+  progress?: number;
+  lessons?: number;
+  questions?: number;
+  completed?: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+// Navigation breadcrumb type
+export interface Breadcrumb {
+  id: number;
+  name: string;
+  type: 'subject' | 'item' | 'chapter' | 'page' | 'text';
+}
+
+export interface UserProgress {
+  id: number;
+  subject: number;
+  subject_name?: string;
+  item?: number;
+  item_name?: string;
+  chapter?: number;
+  chapter_name?: string;
+  page?: number;
+  page_name?: string;
+  text?: number;
+  text_title?: string;
+  completed: boolean;
+  completion_percentage: number;
+  last_accessed: string;
 }
 
 export interface SubscriptionPlan {
@@ -90,15 +155,5 @@ export interface Subscription {
   status: 'active' | 'cancelled' | 'expired' | 'pending';
   start_date: string;
   end_date: string;
-  created_at: string;
-}
-
-export interface UserProgress {
-  id: number;
-  content_type: string;
-  content_id: number;
-  completed: boolean;
-  score?: number;
-  completed_at?: string;
   created_at: string;
 }
