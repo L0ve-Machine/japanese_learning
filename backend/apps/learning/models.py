@@ -109,8 +109,63 @@ class Video(models.Model):
         db_table = 'videos'
         ordering = ['order', 'title']
 
+# Hierarchical Learning Content Models
+class SubjectItem(models.Model):
+    """項目 (Item) - Second level in hierarchy"""
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='items')
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    translations = models.JSONField(default=dict, blank=True)
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'subject_items'
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return f"{self.subject.name} - {self.name}"
+
+class Chapter(models.Model):
+    """章 (Chapter) - Third level in hierarchy"""
+    item = models.ForeignKey(SubjectItem, on_delete=models.CASCADE, related_name='chapters')
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    translations = models.JSONField(default=dict, blank=True)
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'chapters'
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return f"{self.item.name} - {self.name}"
+
+class Page(models.Model):
+    """ページ (Page) - Fourth level in hierarchy"""
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, related_name='pages')
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'pages'
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return f"{self.chapter.name} - {self.name}"
+
 class StudyText(models.Model):
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='texts')
+    """テキスト (Text) - Fifth level in hierarchy"""
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='texts')
     title = models.CharField(max_length=200)
     content = models.TextField()
     translations = models.JSONField(default=dict, blank=True)
@@ -122,3 +177,24 @@ class StudyText(models.Model):
     class Meta:
         db_table = 'study_texts'
         ordering = ['order', 'title']
+
+    def __str__(self):
+        return f"{self.page.name} - {self.title}"
+
+# User Progress Tracking
+class UserProgress(models.Model):
+    """Track user progress through the hierarchical content"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='learning_progress')
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    item = models.ForeignKey(SubjectItem, on_delete=models.CASCADE, null=True, blank=True)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE, null=True, blank=True)
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, null=True, blank=True)
+    text = models.ForeignKey(StudyText, on_delete=models.CASCADE, null=True, blank=True)
+    completed = models.BooleanField(default=False)
+    completion_percentage = models.FloatField(default=0.0)
+    last_accessed = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'user_progress'
+        unique_together = ['user', 'subject', 'item', 'chapter', 'page', 'text']

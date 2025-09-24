@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日本語学習 - ダッシュボード</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+            color: white;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 500;
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #66bb6a);
+            transition: width 0.3s ease;
+        }
+
+        /* Learning Menu */
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .learning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .learning-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .learning-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--card-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .learning-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .learning-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: var(--card-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .card-button {
+            background: var(--card-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .card-button:hover {
+            background: var(--card-color-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Color schemes for different cards */
+        .card-past-exams {
+            --card-color: #4caf50;
+            --card-color-dark: #388e3c;
+        }
+
+        .card-subjects {
+            --card-color: #2196f3;
+            --card-color-dark: #1976d2;
+        }
+
+        .card-vocabulary {
+            --card-color: #ff9800;
+            --card-color-dark: #f57c00;
+        }
+
+        .card-flashcards {
+            --card-color: #9c27b0;
+            --card-color-dark: #7b1fa2;
+        }
+
+        .card-videos {
+            --card-color: #f44336;
+            --card-color-dark: #d32f2f;
+        }
+
+        .card-progress {
+            --card-color: #00bcd4;
+            --card-color-dark: #0097a7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .learning-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation for loading */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.3s; }
+        .fade-in:nth-child(4) { animation-delay: 0.4s; }
+        .fade-in:nth-child(5) { animation-delay: 0.5s; }
+        .fade-in:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1 id="welcome-message">こんにちは、学習者さん</h1>
+            <p id="motivation-text">今日も頑張りましょう！介護資格取得に向けて一歩ずつ進んでいきましょう。</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-grid">
+            <div class="stat-card fade-in">
+                <h3>今週の学習時間</h3>
+                <div class="stat-value" id="weekly-hours">--</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="hours-progress" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <h3>完了した問題</h3>
+                <div class="stat-value" id="completed-questions">--</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="questions-progress" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="stat-card fade-in">
+                <h3>正答率</h3>
+                <div class="stat-value" id="accuracy-rate">--%</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="accuracy-progress" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Menu Section -->
+        <h2 class="section-title">学習メニュー</h2>
+        <div class="learning-grid">
+            <div class="learning-card card-past-exams fade-in" onclick="navigateTo('past-exams')">
+                <div class="card-icon">
+                    <span class="material-icons">assignment</span>
+                </div>
+                <h3 class="card-title">過去問題</h3>
+                <p class="card-description">過去5年分の問題を練習<br>125問 × 5択の実践問題</p>
+                <button class="card-button">開始</button>
+            </div>
+
+            <div class="learning-card card-subjects fade-in" onclick="navigateTo('subjects')">
+                <div class="card-icon">
+                    <span class="material-icons">school</span>
+                </div>
+                <h3 class="card-title">科目学習</h3>
+                <p class="card-description">13科目から学習<br>テキスト→問題→解説の流れ</p>
+                <button class="card-button">開始</button>
+            </div>
+
+            <div class="learning-card card-vocabulary fade-in" onclick="navigateTo('vocabulary')">
+                <div class="card-icon">
+                    <span class="material-icons">translate</span>
+                </div>
+                <h3 class="card-title">ことば</h3>
+                <p class="card-description">重要単語を学習<br>医療・介護用語を中心に</p>
+                <button class="card-button">開始</button>
+            </div>
+
+            <div class="learning-card card-flashcards fade-in" onclick="navigateTo('flashcards')">
+                <div class="card-icon">
+                    <span class="material-icons">quiz</span>
+                </div>
+                <h3 class="card-title">暗記カード</h3>
+                <p class="card-description">フラッシュカードで復習<br>効率的な記憶定着</p>
+                <button class="card-button">開始</button>
+            </div>
+
+            <div class="learning-card card-videos fade-in" onclick="navigateTo('videos')">
+                <div class="card-icon">
+                    <span class="material-icons">video_library</span>
+                </div>
+                <h3 class="card-title">解説動画</h3>
+                <p class="card-description">動画で詳しく学習<br>Vimeo統合の高品質動画</p>
+                <button class="card-button">開始</button>
+            </div>
+
+            <div class="learning-card card-progress fade-in" onclick="navigateTo('progress')">
+                <div class="card-icon">
+                    <span class="material-icons">trending_up</span>
+                </div>
+                <h3 class="card-title">学習進捗</h3>
+                <p class="card-description">進捗状況を確認<br>詳細な学習データ分析</p>
+                <button class="card-button">開始</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dashboard data management
+        const dashboardData = {
+            user: {
+                name: '学習者さん',
+                welcomeMessage: 'こんにちは、{name}',
+                motivationText: '今日も頑張りましょう！介護資格取得に向けて一歩ずつ進んでいきましょう。'
+            },
+            stats: {
+                weeklyHours: { value: 0, unit: '時間', progress: 0 },
+                completedQuestions: { value: 0, unit: '問', progress: 0 },
+                accuracyRate: { value: 0, unit: '%', progress: 0 }
+            }
+        };
+
+        // Update dashboard with data
+        function updateDashboard(data) {
+            // Update header
+            const welcomeElement = document.getElementById('welcome-message');
+            const motivationElement = document.getElementById('motivation-text');
+
+            if (data.user) {
+                if (welcomeElement && data.user.welcomeMessage) {
+                    welcomeElement.textContent = data.user.welcomeMessage.replace('{name}', data.user.name || '学習者さん');
+                }
+                if (motivationElement && data.user.motivationText) {
+                    motivationElement.textContent = data.user.motivationText;
+                }
+            }
+
+            // Update stats
+            if (data.stats) {
+                const weeklyHours = document.getElementById('weekly-hours');
+                const hoursProgress = document.getElementById('hours-progress');
+                const completedQuestions = document.getElementById('completed-questions');
+                const questionsProgress = document.getElementById('questions-progress');
+                const accuracyRate = document.getElementById('accuracy-rate');
+                const accuracyProgress = document.getElementById('accuracy-progress');
+
+                if (data.stats.weeklyHours && weeklyHours && hoursProgress) {
+                    weeklyHours.textContent = data.stats.weeklyHours.value + data.stats.weeklyHours.unit;
+                    hoursProgress.style.width = data.stats.weeklyHours.progress + '%';
+                }
+
+                if (data.stats.completedQuestions && completedQuestions && questionsProgress) {
+                    completedQuestions.textContent = data.stats.completedQuestions.value + data.stats.completedQuestions.unit;
+                    questionsProgress.style.width = data.stats.completedQuestions.progress + '%';
+                }
+
+                if (data.stats.accuracyRate && accuracyRate && accuracyProgress) {
+                    accuracyRate.textContent = data.stats.accuracyRate.value + data.stats.accuracyRate.unit;
+                    accuracyProgress.style.width = data.stats.accuracyRate.progress + '%';
+                }
+            }
+        }
+
+        // Navigation function (ready for API integration)
+        function navigateTo(section) {
+            // This function will be replaced with actual navigation logic
+            // For now, it's a placeholder that can be customized
+            console.log(`Navigating to: ${section}`);
+
+            // Placeholder - replace with actual navigation
+            const sectionNames = {
+                'past-exams': '過去問題',
+                'subjects': '科目学習',
+                'vocabulary': 'ことば',
+                'flashcards': '暗記カード',
+                'videos': '解説動画',
+                'progress': '学習進捗'
+            };
+
+            alert(`${sectionNames[section] || '機能'}セクションに移動します（開発中）`);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial data
+            updateDashboard(dashboardData);
+
+            // Add smooth loading animation
+            const cards = document.querySelectorAll('.fade-in');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.animation = `fadeInUp 0.6s ease ${index * 0.1}s forwards`;
+                }, 100);
+            });
+        });
+
+        // API integration ready functions
+        function loadUserData() {
+            // TODO: Replace with actual API call
+            // fetch('/api/user/profile')
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         dashboardData.user = data;
+            //         updateDashboard(dashboardData);
+            //     });
+        }
+
+        function loadStatsData() {
+            // TODO: Replace with actual API call
+            // fetch('/api/user/stats')
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         dashboardData.stats = data;
+            //         updateDashboard(dashboardData);
+            //     });
+        }
+    </script>
+</body>
+</html>

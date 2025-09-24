@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>介護試験対策 - 階層学習</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header with breadcrumbs */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: #f5f5f5;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .breadcrumb-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .breadcrumb-item:hover {
+            color: #2196f3;
+        }
+
+        .breadcrumb-item.active {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        /* Main content area */
+        .content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .content-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .content-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Navigation List */
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .nav-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .nav-content {
+            flex-grow: 1;
+        }
+
+        .nav-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .nav-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .nav-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .nav-arrow {
+            color: #ccc;
+            margin-left: 8px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: #e0e0e0;
+            margin-bottom: 16px;
+        }
+
+        .empty-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .empty-description {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Level indicators */
+        .level-subject .nav-icon { background: #4caf50; }
+        .level-item .nav-icon { background: #2196f3; }
+        .level-chapter .nav-icon { background: #ff9800; }
+        .level-page .nav-icon { background: #9c27b0; }
+        .level-text .nav-icon { background: #795548; }
+
+        /* Mobile Navigation Drawer */
+        .mobile-nav-btn {
+            display: none;
+            background: #f5f5f5;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .drawer-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+        }
+
+        .drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .drawer-title {
+            font-weight: 500;
+        }
+
+        .close-drawer {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-nav-btn {
+                display: flex;
+            }
+
+            .container {
+                padding: 16px;
+            }
+
+            .header {
+                padding: 16px;
+            }
+
+            .page-title {
+                font-size: 1.3rem;
+            }
+
+            .breadcrumbs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Navigation -->
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">
+                <span class="material-icons">arrow_back</span>
+            </button>
+
+            <div style="flex-grow: 1;">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <span class="breadcrumb-item active">介護試験対策</span>
+                </div>
+                <div class="page-title" id="pageTitle">項目一覧</div>
+            </div>
+
+            <button class="mobile-nav-btn" onclick="openDrawer()">
+                <span class="material-icons">menu</span>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <div class="content-header">
+                <div class="content-title" id="contentTitle">科目: 介護試験対策</div>
+                <div class="content-description" id="contentDescription">学習したい項目を選択してください</div>
+            </div>
+
+            <!-- Navigation List -->
+            <ul class="nav-list" id="navList">
+                <!-- Empty state for now -->
+                <li class="empty-state">
+                    <div class="empty-icon">
+                        <span class="material-icons">folder_open</span>
+                    </div>
+                    <div class="empty-title">項目が準備中です</div>
+                    <div class="empty-description">学習コンテンツは順次追加予定です</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div class="drawer-title">ナビゲーション</div>
+            <button class="close-drawer" onclick="closeDrawer()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <ul class="nav-list" id="drawerNavList">
+            <li class="nav-item">
+                <a class="nav-link" onclick="navigateToLevel('subject')">
+                    <div class="nav-icon level-subject">
+                        <span class="material-icons">school</span>
+                    </div>
+                    <div class="nav-content">
+                        <div class="nav-title">介護試験対策</div>
+                        <div class="nav-subtitle">科目トップ</div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        // Current navigation state
+        let currentLevel = 'subject';
+        let navigationPath = [
+            { id: 1, name: '介護試験対策', type: 'subject' }
+        ];
+
+        // Sample data structure with items
+        const sampleData = {
+            subject: {
+                id: 1,
+                name: '介護試験対策',
+                description: '過去問等',
+                items: [
+                    {
+                        id: 1,
+                        name: '介護保険',
+                        description: '介護保険制度について学習',
+                        chapters: [] // To be added later
+                    },
+                    {
+                        id: 2,
+                        name: 'コミュニケーション',
+                        description: 'コミュニケーション技術について学習',
+                        chapters: [] // To be added later
+                    }
+                ]
+            }
+        };
+
+        // Navigation functions
+        function goBack() {
+            if (navigationPath.length > 1) {
+                navigationPath.pop();
+                const previousLevel = navigationPath[navigationPath.length - 1];
+                navigateToLevel(previousLevel.type, previousLevel);
+            } else {
+                // Go back to subject list
+                window.location.href = '../科目学習.html';
+            }
+        }
+
+        function navigateToLevel(level, data = null) {
+            currentLevel = level;
+
+            switch (level) {
+                case 'subject':
+                    showSubjectItems();
+                    break;
+                case 'item':
+                    showItemChapters(data);
+                    break;
+                case 'chapter':
+                    showChapterPages(data);
+                    break;
+                case 'page':
+                    showPageTexts(data);
+                    break;
+                case 'text':
+                    showTextContent(data);
+                    break;
+            }
+
+            updateBreadcrumbs();
+            closeDrawer();
+        }
+
+        function showSubjectItems() {
+            const navList = document.getElementById('navList');
+            const contentTitle = document.getElementById('contentTitle');
+            const contentDescription = document.getElementById('contentDescription');
+            const pageTitle = document.getElementById('pageTitle');
+
+            pageTitle.textContent = '項目一覧';
+            contentTitle.textContent = '科目: 介護試験対策';
+            contentDescription.textContent = '学習したい項目を選択してください';
+
+            if (sampleData.subject.items.length === 0) {
+                navList.innerHTML = `
+                    <li class="empty-state">
+                        <div class="empty-icon">
+                            <span class="material-icons">folder_open</span>
+                        </div>
+                        <div class="empty-title">項目が準備中です</div>
+                        <div class="empty-description">学習コンテンツは順次追加予定です</div>
+                    </li>
+                `;
+            } else {
+                // Will populate with actual items when data is added
+                navList.innerHTML = sampleData.subject.items.map(item => `
+                    <li class="nav-item">
+                        <a class="nav-link level-item" onclick="navigateToItem(${item.id}, '${item.name}', '${item.description}')">
+                            <div class="nav-icon">
+                                <span class="material-icons">book</span>
+                            </div>
+                            <div class="nav-content">
+                                <div class="nav-title">${item.name}</div>
+                                <div class="nav-subtitle">${item.description}</div>
+                            </div>
+                            <div class="nav-badge">${item.chapters?.length || 0} 章</div>
+                            <span class="material-icons nav-arrow">chevron_right</span>
+                        </a>
+                    </li>
+                `).join('');
+            }
+        }
+
+        function navigateToItem(itemId, itemName, itemDescription) {
+            const item = { id: itemId, name: itemName, description: itemDescription, type: 'item' };
+            navigationPath.push(item);
+            navigateToLevel('item', item);
+        }
+
+        function showItemChapters(item) {
+            const navList = document.getElementById('navList');
+            const contentTitle = document.getElementById('contentTitle');
+            const contentDescription = document.getElementById('contentDescription');
+            const pageTitle = document.getElementById('pageTitle');
+
+            pageTitle.textContent = '章一覧';
+            contentTitle.textContent = `項目: ${item.name}`;
+            contentDescription.textContent = '学習したい章を選択してください';
+
+            // Show empty state since no chapters yet
+            navList.innerHTML = `
+                <li class="empty-state">
+                    <div class="empty-icon">
+                        <span class="material-icons">chapter</span>
+                    </div>
+                    <div class="empty-title">章が準備中です</div>
+                    <div class="empty-description">${item.name}の学習コンテンツは順次追加予定です</div>
+                </li>
+            `;
+        }
+
+        function showChapterPages(chapter) {
+            // Implementation for when chapters are added
+            console.log('Showing pages for chapter:', chapter);
+        }
+
+        function showPageTexts(page) {
+            // Implementation for when pages are added
+            console.log('Showing texts for page:', page);
+        }
+
+        function showTextContent(text) {
+            // Implementation for when texts are added
+            console.log('Showing content for text:', text);
+        }
+
+        function updateBreadcrumbs() {
+            const breadcrumbs = document.getElementById('breadcrumbs');
+
+            breadcrumbs.innerHTML = navigationPath.map((item, index) => {
+                const isLast = index === navigationPath.length - 1;
+                const separator = index > 0 ? '<span class="breadcrumb-separator">›</span>' : '';
+
+                return `
+                    ${separator}
+                    <span class="breadcrumb-item ${isLast ? 'active' : ''}"
+                          onclick="navigateToBreadcrumb(${index})">
+                        ${item.name}
+                    </span>
+                `;
+            }).join('');
+
+            // Update mobile drawer navigation
+            const drawerNavList = document.getElementById('drawerNavList');
+            drawerNavList.innerHTML = navigationPath.map((item, index) => `
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigateToBreadcrumb(${index})">
+                        <div class="nav-icon level-${item.type}">
+                            <span class="material-icons">
+                                ${item.type === 'subject' ? 'school' :
+                                  item.type === 'item' ? 'book' :
+                                  item.type === 'chapter' ? 'chapter' :
+                                  item.type === 'page' ? 'article' : 'text_snippet'}
+                            </span>
+                        </div>
+                        <div class="nav-content">
+                            <div class="nav-title">${item.name}</div>
+                            <div class="nav-subtitle">${item.type === 'subject' ? '科目' :
+                                                       item.type === 'item' ? '項目' :
+                                                       item.type === 'chapter' ? '章' :
+                                                       item.type === 'page' ? 'ページ' : 'テキスト'}</div>
+                        </div>
+                    </a>
+                </li>
+            `).join('');
+        }
+
+        function navigateToBreadcrumb(index) {
+            if (index < navigationPath.length - 1) {
+                navigationPath = navigationPath.slice(0, index + 1);
+                const targetItem = navigationPath[index];
+                navigateToLevel(targetItem.type, targetItem);
+            }
+        }
+
+        // Mobile drawer functions
+        function openDrawer() {
+            document.getElementById('drawerOverlay').style.display = 'block';
+            document.getElementById('drawer').classList.add('open');
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').style.display = 'none';
+            document.getElementById('drawer').classList.remove('open');
+        }
+
+        // Initialize the page
+        function init() {
+            showSubjectItems();
+            updateBreadcrumbs();
+        }
+
+        // Start the application
+        init();
+
+        console.log('Hierarchical learning interface initialized');
+    </script>
+</body>
+</html>
