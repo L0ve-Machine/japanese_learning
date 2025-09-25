@@ -467,9 +467,8 @@
         }
 
         function navigateToItem(itemId, itemName, itemDescription) {
-            const item = { id: itemId, name: itemName, description: itemDescription, type: 'item' };
-            navigationPath.push(item);
-            navigateToLevel('item', item);
+            // Navigate to actual SubjectItem page
+            window.location.href = `項目(Item)/${itemName}/${itemName}.html`;
         }
 
         function showItemChapters(item) {
