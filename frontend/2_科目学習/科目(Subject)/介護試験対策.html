@@ -458,7 +458,7 @@
                                 <div class="nav-title">${item.name}</div>
                                 <div class="nav-subtitle">${item.description}</div>
                             </div>
-                            <div class="nav-badge">${item.chapters?.length || 0} 章</div>
+                            <div class="nav-badge">${item.name === '介護保険' ? 5 : (item.chapters?.length || 0)} 章</div>
                             <span class="material-icons nav-arrow">chevron_right</span>
                         </a>
                     </li>
