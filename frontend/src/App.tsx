@@ -3,9 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
+import { SubscriptionProvider } from './contexts/SubscriptionContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import { theme } from './styles/theme';
 import Layout from './components/Layout';
 import PrivateRoute from './components/PrivateRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -32,7 +35,9 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          <Router>
+          <LanguageProvider>
+            <SubscriptionProvider>
+              <Router>
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -40,17 +45,39 @@ function App() {
                 <Route element={<Layout />}>
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/past-exams" element={<PastExams />} />
-                  <Route path="/subjects" element={<SubjectStudy />} />
-                  <Route path="/vocabulary" element={<Vocabulary />} />
-                  <Route path="/flashcards" element={<FlashCards />} />
-                  <Route path="/videos" element={<Videos />} />
+                  <Route path="/past-exams" element={
+                    <ProtectedRoute requireSubscription={true}>
+                      <PastExams />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/subjects" element={
+                    <ProtectedRoute requireSubscription={true}>
+                      <SubjectStudy />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/vocabulary" element={
+                    <ProtectedRoute requireSubscription={true}>
+                      <Vocabulary />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/flashcards" element={
+                    <ProtectedRoute requireSubscription={true}>
+                      <FlashCards />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/videos" element={
+                    <ProtectedRoute requireSubscription={true}>
+                      <Videos />
+                    </ProtectedRoute>
+                  } />
                   <Route path="/subscription" element={<Subscription />} />
                   <Route path="/profile" element={<Profile />} />
                 </Route>
               </Route>
             </Routes>
-          </Router>
+              </Router>
+            </SubscriptionProvider>
+          </LanguageProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ダッシュボード - 介護福祉士試験対策{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>こんにちは、{{ user.email }}さん</h1>
+        <p class="dashboard-subtitle">今日も頑張りましょう！介護資格取得に向けて一歩ずつ進んでいきましょう。</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <span class="material-icons">schedule</span>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-title">今週の学習時間</h3>
+                <div class="stat-value">12時間</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%;"></div>
+                </div>
+                <p class="stat-label">目標: 20時間</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <span class="material-icons">task_alt</span>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-title">完了した問題</h3>
+                <div class="stat-value">234問</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%;"></div>
+                </div>
+                <p class="stat-label">全520問中</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <span class="material-icons">trending_up</span>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-title">正答率</h3>
+                <div class="stat-value">78%</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 78%;"></div>
+                </div>
+                <p class="stat-label">前週比: +5%</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <span class="material-icons">emoji_events</span>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-title">連続学習日数</h3>
+                <div class="stat-value">7日</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%;"></div>
+                </div>
+                <p class="stat-label">素晴らしい！</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="learning-section">
+        <h2 class="section-title">学習メニュー</h2>
+        <div class="learning-grid">
+            <div class="learning-card">
+                <div class="card-icon" style="background: #4CAF50;">
+                    <span class="material-icons">assignment</span>
+                </div>
+                <h3 class="card-title">過去問題</h3>
+                <p class="card-description">
+                    過去5年分の問題を練習<br>
+                    125問 × 5択の実践問題
+                </p>
+                <div class="card-progress">
+                    <span>進捗: 45%</span>
+                    <div class="progress-bar small">
+                        <div class="progress-fill" style="width: 45%;"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="location.href='#'">
+                    開始
+                </button>
+            </div>
+
+            <div class="learning-card">
+                <div class="card-icon" style="background: #2196F3;">
+                    <span class="material-icons">school</span>
+                </div>
+                <h3 class="card-title">科目学習</h3>
+                <p class="card-description">
+                    13科目から学習<br>
+                    テキスト→問題→解説の流れ
+                </p>
+                <div class="card-progress">
+                    <span>進捗: 30%</span>
+                    <div class="progress-bar small">
+                        <div class="progress-fill" style="width: 30%;"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="location.href='#'">
+                    開始
+                </button>
+            </div>
+
+            <div class="learning-card">
+                <div class="card-icon" style="background: #FF9800;">
+                    <span class="material-icons">translate</span>
+                </div>
+                <h3 class="card-title">ことば</h3>
+                <p class="card-description">
+                    重要単語を学習<br>
+                    医療・介護用語を中心に
+                </p>
+                <div class="card-progress">
+                    <span>進捗: 65%</span>
+                    <div class="progress-bar small">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="location.href='#'">
+                    開始
+                </button>
+            </div>
+
+            <div class="learning-card">
+                <div class="card-icon" style="background: #9C27B0;">
+                    <span class="material-icons">quiz</span>
+                </div>
+                <h3 class="card-title">暗記カード</h3>
+                <p class="card-description">
+                    フラッシュカードで復習<br>
+                    効率的な記憶定着
+                </p>
+                <div class="card-progress">
+                    <span>進捗: 80%</span>
+                    <div class="progress-bar small">
+                        <div class="progress-fill" style="width: 80%;"></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="location.href='#'">
+                    開始
+                </button>
+            </div>
+
+            <div class="learning-card">
+                <div class="card-icon" style="background: #F44336;">
+                    <span class="material-icons">video_library</span>
+                </div>
+                <h3 class="card-title">解説動画</h3>
+                <p class="card-description">
+                    動画で詳しく学習<br>
+                    Vimeo統合の高品質動画
+                </p>
+                <div class="card-progress">
+                    <span>12本視聴済み</span>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="location.href='#'">
+                    視聴する
+                </button>
+            </div>
+
+            <div class="learning-card">
+                <div class="card-icon" style="background: #00BCD4;">
+                    <span class="material-icons">trending_up</span>
+                </div>
+                <h3 class="card-title">学習進捗</h3>
+                <p class="card-description">
+                    進捗状況を確認<br>
+                    詳細な学習データ分析
+                </p>
+                <button class="btn btn-outline btn-block" onclick="location.href='#'">
+                    詳細を見る
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="recent-activity">
+        <h2 class="section-title">最近の学習履歴</h2>
+        <div class="activity-list">
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <span class="material-icons">check_circle</span>
+                </div>
+                <div class="activity-content">
+                    <h4>人間の尊厳と自立 - 章テスト完了</h4>
+                    <p>正答率: 85% (17/20問正解)</p>
+                    <span class="activity-time">2時間前</span>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <span class="material-icons">play_circle</span>
+                </div>
+                <div class="activity-content">
+                    <h4>介護の基本 - 解説動画視聴</h4>
+                    <p>第3章: 介護従事者の倫理</p>
+                    <span class="activity-time">5時間前</span>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <span class="material-icons">assignment_turned_in</span>
+                </div>
+                <div class="activity-content">
+                    <h4>過去問題 - 2023年度午前</h4>
+                    <p>正答率: 72% (90/125問正解)</p>
+                    <span class="activity-time">昨日</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

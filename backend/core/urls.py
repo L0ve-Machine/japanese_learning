@@ -5,12 +5,14 @@ from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
+    path('', include('apps.web.urls')),
     path('admin/', admin.site.urls),
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
     path('api/users/', include('apps.users.urls')),
     path('api/learning/', include('apps.learning.urls')),
     path('api/subscriptions/', include('apps.subscriptions.urls')),
+    path('api/translations/', include('apps.translations.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 ]

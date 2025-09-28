@@ -12,7 +12,9 @@
       "Bash(tasklist)",
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git fetch:*)",
+      "Bash(git rev-parse:*)"
     ],
     "deny": [],
     "ask": []
