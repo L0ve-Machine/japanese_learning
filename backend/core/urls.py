@@ -3,10 +3,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from apps.learning.admin import learning_admin_site
 
 urlpatterns = [
     path('', include('apps.web.urls')),
     path('admin/', admin.site.urls),
+    path('learning-admin/', learning_admin_site.urls),
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
     path('api/users/', include('apps.users.urls')),

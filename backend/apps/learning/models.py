@@ -2,9 +2,26 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 from apps.users.models import User
 
+class SubjectGroup(models.Model):
+    """Subject groups for organizing exam subjects"""
+    name = models.CharField(max_length=200)
+    group_key = models.CharField(max_length=20, unique=True)
+    description = models.TextField(blank=True)
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'subject_groups'
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return self.name
+
 class Subject(models.Model):
     subject_key = models.CharField(max_length=100, unique=True, null=True, blank=True)
-    group_key = models.CharField(max_length=10, null=True, blank=True)
+    group = models.ForeignKey(SubjectGroup, on_delete=models.CASCADE, related_name='subjects', null=True, blank=True)
     name = models.CharField(max_length=200)
     indonesian_name = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
@@ -15,25 +32,42 @@ class Subject(models.Model):
 
     class Meta:
         db_table = 'subjects'
-        ordering = ['group_key', 'order', 'name']
+        ordering = ['group__order', 'order', 'name']
 
     def __str__(self):
         return self.name
 
+class ExamYear(models.Model):
+    """Year for past exams"""
+    year = models.IntegerField(unique=True)
+    description = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'exam_years'
+        ordering = ['-year']
+
+    def __str__(self):
+        return f"{self.year}年"
+
 class ExamSession(models.Model):
-    year = models.IntegerField()
+    year = models.ForeignKey(ExamYear, on_delete=models.CASCADE, related_name='sessions')
     session_number = models.IntegerField()
-    available_subjects = models.CharField(max_length=100)
+    name = models.CharField(max_length=200, blank=True)
+    subjects = models.ManyToManyField(Subject, related_name='exam_sessions', blank=True)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'exam_sessions'
-        ordering = ['-year', '-session_number']
+        ordering = ['-year__year', '-session_number']
         unique_together = ['year', 'session_number']
 
     def __str__(self):
-        return f"{self.year}年 第{self.session_number}回"
+        return f"{self.year.year}年 第{self.session_number}回"
 
 class Question(models.Model):
     QUESTION_TYPES = [
@@ -45,11 +79,11 @@ class Question(models.Model):
     exam_session = models.ForeignKey(ExamSession, on_delete=models.CASCADE, related_name='questions', null=True, blank=True)
     question_type = models.CharField(max_length=20, choices=QUESTION_TYPES)
     year = models.IntegerField(null=True, blank=True)
+    question_number = models.IntegerField(default=1)
     question_text = models.TextField()
-    choices = models.JSONField()
-    correct_answer = models.IntegerField()
     explanation = models.TextField()
     translations = models.JSONField(default=dict, blank=True)
+    vocabulary = models.JSONField(default=dict, blank=True)
     is_premium = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -57,7 +91,28 @@ class Question(models.Model):
 
     class Meta:
         db_table = 'questions'
-        ordering = ['order', 'id']
+        ordering = ['order', 'question_number']
+
+    def __str__(self):
+        return f"問題{self.question_number}: {self.question_text[:50]}..."
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
+    choice_number = models.IntegerField()
+    choice_text = models.TextField()
+    is_correct = models.BooleanField(default=False)
+    explanation = models.TextField(blank=True)
+    translations = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'choices'
+        ordering = ['choice_number']
+        unique_together = ['question', 'choice_number']
+
+    def __str__(self):
+        return f"{self.choice_number}. {self.choice_text[:30]}..."
 
 class Word(models.Model):
     WORD_CATEGORIES = [
@@ -196,5 +251,5 @@ class UserProgress(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'user_progress'
+        db_table = 'learning_user_progress'
         unique_together = ['user', 'subject', 'item', 'chapter', 'page', 'text']

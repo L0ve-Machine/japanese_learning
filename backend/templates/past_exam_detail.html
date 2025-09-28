@@ -1,0 +1,564 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ exam_year.year }}年度 第{{ exam_session.session_number }}回 - 過去問題{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="exam-detail-header">
+        <nav class="breadcrumb">
+            <a href="{% url 'dashboard' %}">ダッシュボード</a>
+            <span class="separator">></span>
+            <a href="{% url 'past_exams' %}">過去問題</a>
+            <span class="separator">></span>
+            <span class="current">{{ exam_year.year }}年度 第{{ exam_session.session_number }}回</span>
+        </nav>
+
+        <h1 class="exam-title">{{ exam_year.year }}年度 第{{ exam_session.session_number }}回</h1>
+        {% if exam_session.name %}
+            <p class="exam-subtitle">{{ exam_session.name }}</p>
+        {% endif %}
+
+        <div class="exam-overview">
+            <div class="overview-item">
+                <span class="material-icons">quiz</span>
+                <div>
+                    <strong>問題数</strong>
+                    <span>125問</span>
+                </div>
+            </div>
+            <div class="overview-item">
+                <span class="material-icons">schedule</span>
+                <div>
+                    <strong>試験時間</strong>
+                    <span>220分</span>
+                </div>
+            </div>
+            <div class="overview-item">
+                <span class="material-icons">folder</span>
+                <div>
+                    <strong>科目数</strong>
+                    <span>{{ exam_session.subjects.count }}科目</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="exam-modes">
+        <h2 class="section-title">学習モード選択</h2>
+        <div class="modes-grid">
+            <div class="mode-card">
+                <div class="mode-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                    <span class="material-icons">timer</span>
+                </div>
+                <h3>本番モード</h3>
+                <p>実際の試験と同じ制限時間で全問を解答します。本格的な実力測定ができます。</p>
+                <ul class="mode-features">
+                    <li>制限時間: 220分</li>
+                    <li>全125問連続</li>
+                    <li>途中保存不可</li>
+                </ul>
+                <button class="btn btn-primary btn-block" onclick="startQuiz()">
+                    本番モードで開始
+                </button>
+            </div>
+
+            <div class="mode-card">
+                <div class="mode-icon" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                    <span class="material-icons">school</span>
+                </div>
+                <h3>学習モード</h3>
+                <p>科目別に分けて学習できます。解説を見ながらじっくり勉強できます。</p>
+                <ul class="mode-features">
+                    <li>科目別に選択可能</li>
+                    <li>即座に解説表示</li>
+                    <li>途中保存可能</li>
+                </ul>
+                <button class="btn btn-outline btn-block" onclick="showSubjectSelection()">
+                    科目を選択
+                </button>
+            </div>
+
+            <div class="mode-card">
+                <div class="mode-icon" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                    <span class="material-icons">sync</span>
+                </div>
+                <h3>復習モード</h3>
+                <p>前回間違えた問題や苦手分野を重点的に復習できます。</p>
+                <ul class="mode-features">
+                    <li>間違えた問題のみ</li>
+                    <li>苦手分野中心</li>
+                    <li>効率的な復習</li>
+                </ul>
+                <button class="btn btn-outline btn-block" onclick="startReviewMode()">
+                    復習を開始
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="subject-groups" id="subject-selection" style="display: none;">
+        <h2 class="section-title">科目選択</h2>
+        <div class="groups-grid">
+            {% for group in subject_groups %}
+                <div class="group-card">
+                    <h3 class="group-title">{{ group.name }}</h3>
+                    {% if group.description %}
+                        <p class="group-description">{{ group.description }}</p>
+                    {% endif %}
+
+                    <div class="subjects-list">
+                        {% for subject in group.subjects.all %}
+                            {% if subject in exam_session.subjects.all %}
+                                <div class="subject-item">
+                                    <label class="subject-checkbox">
+                                        <input type="checkbox" value="{{ subject.id }}" name="selected_subjects">
+                                        <span class="checkmark"></span>
+                                        <span class="subject-name">{{ subject.name }}</span>
+                                    </label>
+                                    <div class="subject-meta">
+                                        <span class="question-count">約 {{ subject.name|slice:":1" }}0問</span>
+                                        <span class="difficulty">基礎</span>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="selection-actions">
+            <button class="btn btn-outline" onclick="selectAll()">全て選択</button>
+            <button class="btn btn-outline" onclick="clearAll()">選択解除</button>
+            <button class="btn btn-primary" onclick="startSelectedSubjects()">選択した科目で開始</button>
+        </div>
+    </div>
+
+    <div class="exam-progress">
+        <h2 class="section-title">学習進捗</h2>
+        <div class="progress-cards">
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h4>全体進捗</h4>
+                    <span class="progress-percentage">65%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%;"></div>
+                </div>
+                <p class="progress-detail">81問 / 125問 完了</p>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h4>正答率</h4>
+                    <span class="progress-percentage">78%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill success" style="width: 78%;"></div>
+                </div>
+                <p class="progress-detail">63問 / 81問 正解</p>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-header">
+                    <h4>学習時間</h4>
+                    <span class="progress-percentage">2.5h</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill warning" style="width: 45%;"></div>
+                </div>
+                <p class="progress-detail">目標: 5.5時間</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.exam-detail-header {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.separator {
+    color: #bdc3c7;
+}
+
+.current {
+    color: #7f8c8d;
+}
+
+.exam-title {
+    color: #2c3e50;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.exam-subtitle {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.exam-overview {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.overview-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.overview-item .material-icons {
+    color: #3498db;
+    font-size: 1.5rem;
+}
+
+.overview-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+.overview-item strong {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    font-weight: 600;
+}
+
+.overview-item span {
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+.modes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.mode-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e1e5e9;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.mode-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.mode-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.mode-icon .material-icons {
+    color: white;
+    font-size: 2rem;
+}
+
+.mode-card h3 {
+    color: #2c3e50;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.mode-card p {
+    color: #7f8c8d;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.mode-features {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+.mode-features li {
+    color: #5a6c7d;
+    font-size: 0.9rem;
+    padding: 0.25rem 0;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.mode-features li:before {
+    content: "✓";
+    color: #27ae60;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.group-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e1e5e9;
+}
+
+.group-title {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+.group-description {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.subject-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.subject-item:last-child {
+    border-bottom: none;
+}
+
+.subject-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    flex: 1;
+}
+
+.subject-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #bdc3c7;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.subject-checkbox input[type="checkbox"]:checked + .checkmark {
+    background: #3498db;
+    border-color: #3498db;
+}
+
+.subject-checkbox input[type="checkbox"]:checked + .checkmark:after {
+    content: "✓";
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+}
+
+.subject-name {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.subject-meta {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.question-count {
+    color: #7f8c8d;
+}
+
+.difficulty {
+    background: #e8f5e8;
+    color: #27ae60;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+}
+
+.selection-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding: 2rem 0;
+    border-top: 1px solid #e1e5e9;
+}
+
+.progress-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.progress-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e1e5e9;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.progress-header h4 {
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.progress-percentage {
+    color: #3498db;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #f1f3f4;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #3498db;
+    transition: width 0.3s ease;
+}
+
+.progress-fill.success {
+    background: #27ae60;
+}
+
+.progress-fill.warning {
+    background: #f39c12;
+}
+
+.progress-detail {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .exam-overview {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .modes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .groups-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .selection-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+</style>
+
+<script>
+function startQuiz() {
+    // クイズページに移動
+    window.location.href = "{% url 'quiz' exam_year.year exam_session.session_number %}";
+}
+
+function startExamMode(mode) {
+    // 本番モード開始の処理
+    alert('本番モードを開始します。準備はよろしいですか？');
+}
+
+function showSubjectSelection() {
+    document.getElementById('subject-selection').style.display = 'block';
+    document.getElementById('subject-selection').scrollIntoView({behavior: 'smooth'});
+}
+
+function selectAll() {
+    const checkboxes = document.querySelectorAll('input[name="selected_subjects"]');
+    checkboxes.forEach(checkbox => checkbox.checked = true);
+}
+
+function clearAll() {
+    const checkboxes = document.querySelectorAll('input[name="selected_subjects"]');
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+}
+
+function startSelectedSubjects() {
+    const selectedSubjects = document.querySelectorAll('input[name="selected_subjects"]:checked');
+    if (selectedSubjects.length === 0) {
+        alert('科目を選択してください。');
+        return;
+    }
+
+    const subjectIds = Array.from(selectedSubjects).map(cb => cb.value);
+    // クイズページに移動（科目選択での学習モード）
+    window.location.href = "{% url 'quiz' exam_year.year exam_session.session_number %}";
+}
+
+function startReviewMode() {
+    // クイズページに移動（復習モード）
+    window.location.href = "{% url 'quiz' exam_year.year exam_session.session_number %}";
+}
+</script>
+{% endblock %}
