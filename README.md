@@ -1,60 +1,81 @@
-# 外国人向け日本語学習WEBアプリ
+# 🎌 Japanese Learning Platform
+**介護福祉士試験対策のための日本語学習プラットフォーム**
 
-介護資格取得を目指す外国人向けの日本語学習プラットフォーム
+[![Django](https://img.shields.io/badge/Django-4.2.7-green.svg)](https://www.djangoproject.com/)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
+[![Status](https://img.shields.io/badge/Status-✅_Active-brightgreen.svg)]()
 
-## 技術スタック
+## 🌟 Features
 
-- **Backend**: Django 4.2 + Django REST Framework
-- **Frontend**: React 18 + TypeScript + Material-UI
-- **Database**: PostgreSQL
-- **Payment**: Stripe
+- 📚 **過去問学習**: 介護福祉士試験の過去問題を年度・科目別に学習
+- 🔐 **ユーザー認証**: emailベースの認証システム
+- 💎 **サブスクリプション**: 有料プラン対応
+- 🌏 **多言語対応**: 日本語⇔インドネシア語翻訳
+- 📱 **レスポンシブ**: モバイル対応デザイン
+- ⚡ **高速**: 最適化されたクエリとキャッシュ
 
-## セットアップ
+## 🚀 技術スタック
 
-### Backend
+- **Backend**: Django 4.2.7
+- **Frontend**: HTML/CSS/JavaScript (Template-based)
+- **Database**: SQLite (開発) / PostgreSQL (本番)
+- **Authentication**: Django Auth + Custom User Model
+- **Payment**: Stripe (予定)
 
-1. Python仮想環境を作成
+## 🚀 Quick Start
+
+### 1. プロジェクトクローン
 ```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate  # Windows
-source venv/bin/activate  # Mac/Linux
+git clone https://github.com/L0ve-Machine/japanese_learning.git
+cd japanese_learning
 ```
 
-2. 依存関係をインストール
+### 2. 仮想環境セットアップ (推奨)
 ```bash
+# Windows (WSL推奨)
+cd backend
+python -m venv venv
+source venv/bin/activate  # WSL
+# または
+venv\Scripts\activate     # Windows CMD
+
+# 依存関係インストール
 pip install -r requirements.txt
 ```
 
-3. 環境変数を設定
+### 3. データベース初期化
 ```bash
-cp .env.example .env
-# .envファイルを編集して必要な設定を追加
-```
+cd backend
 
-4. データベースをセットアップ
-```bash
-python manage.py makemigrations
+# マイグレーション実行
 python manage.py migrate
-python manage.py createsuperuser
+
+# 初期データ投入
+python populate_learning_data.py    # 基礎データ (年度・科目)
+python populate_questions.py        # 過去問データ
+python create_users.py             # テストユーザー
 ```
 
-5. サーバーを起動
+### 4. サーバー起動
 ```bash
-python manage.py runserver
+python manage.py runserver 8000
 ```
 
-### Frontend
+### 5. アクセス
+- **メインサイト**: http://127.0.0.1:8000/
+- **管理画面**: http://127.0.0.1:8000/admin/
 
-1. 依存関係をインストール
-```bash
-cd frontend
-npm install
+## 👤 テストアカウント
+
 ```
+📧 Email: test@test.com
+🔐 Password: testpass123
 
-2. 開発サーバーを起動
-```bash
-npm start
+📧 Email: admin@test.com
+🔐 Password: adminpass123
+
+📧 Email: premium@test.com
+🔐 Password: premiumpass123
 ```
 
 ## 機能一覧
@@ -120,8 +141,9 @@ npm start
 
 ### アクセス方法
 ```
-http://localhost:8000/quiz/2025/1/
+http://localhost:8000/quiz/2025/37/
 ```
+> ⚠️ **重要**: `/quiz/2025/1/` は自動的に `/quiz/2025/37/` にリダイレクトされます
 
 ### 機能
 - ✅ **問題表示**: 日本語問題文
@@ -130,3 +152,72 @@ http://localhost:8000/quiz/2025/1/
 - ✅ **答え合わせ**: 正誤判定と解説表示
 - ✅ **ナビゲーション**: 前の問題・次の問題移動
 - ✅ **キーボード操作**: 1-5キーで選択肢選択、Enterで答え合わせ
+
+---
+
+## 📈 最新アップデート
+
+### v1.2.0 (2024/09/29) 🎉
+- ✅ **過去問ルーティング問題完全解決**
+  - `/quiz/2025/1/` → `/quiz/2025/37/` 自動リダイレクト
+  - views.pyでsession_number=1の自動処理
+- ✅ **データベースエラー修正**
+  - "no such table: users" 完全解決
+  - マイグレーション整備完了
+- ✅ **コードクリーンアップ**
+  - 古い競合ファイル削除 (past-exams-data.html, past-exams-standalone.html)
+  - JavaScript簡素化 (startQuiz関数直接リダイレクト)
+- ✅ **安定性向上**
+  - エラーハンドリング強化
+  - デバッグログ追加
+
+## 🚨 トラブルシューティング
+
+### よくある問題と解決法
+
+#### ❌ "no such table: users"
+```bash
+python manage.py migrate
+```
+
+#### ❌ 404エラー "/quiz/2025/1/"
+自動リダイレクト機能が実装済みです。ブラウザキャッシュをクリアしてください。
+
+#### ❌ ログインできない
+```bash
+python create_users.py  # テストユーザー再作成
+```
+
+#### ❌ 過去問データが表示されない
+```bash
+python populate_learning_data.py  # 基礎データ
+python populate_questions.py      # 過去問データ
+```
+
+## 📂 プロジェクト構造
+
+```
+japanese_learning/
+├── 📁 backend/              # Django バックエンド
+│   ├── 📁 apps/            # Django アプリケーション群
+│   │   ├── learning/       # 学習機能 (過去問、科目管理)
+│   │   ├── web/           # メインWebアプリ (認証、ダッシュボード)
+│   │   ├── users/         # ユーザー管理
+│   │   ├── subscriptions/ # サブスクリプション管理
+│   │   └── translations/  # 翻訳機能
+│   ├── 📁 templates/       # HTMLテンプレート
+│   ├── 📁 static/         # CSS/JS/画像
+│   └── db.sqlite3         # SQLiteデータベース
+├── 📁 frontend/            # 静的フロントエンド
+├── 📄 PROJECT_STRUCTURE.md # 📘 詳細な構造説明
+└── 📄 README.md           # このファイル
+```
+
+> 📘 **詳細なファイル構造は [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) をご確認ください**
+
+---
+
+**Made with ❤️ for Japanese learners**
+
+*最終更新: 2024年9月29日*
+*プロジェクト状態: ✅ 完全動作*
