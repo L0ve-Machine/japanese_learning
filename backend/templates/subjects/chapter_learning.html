@@ -1,0 +1,465 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ chapter_title }} - {{ subject.title }} - 介護福祉士試験対策{% endblock %}
+
+{% block extra_head %}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header with breadcrumbs */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item:hover {
+            color: {{ subject.color }};
+        }
+
+        .breadcrumb-item.active {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .chapter-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .chapter-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: {{ subject.color }};
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .chapter-info h1 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .chapter-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Content area */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .content-header {
+            background: linear-gradient(135deg, {{ subject.color }} 0%, {{ subject.color }}dd 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .content-header h2 {
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+
+        .content-body {
+            padding: 24px;
+        }
+
+        .content-body h3 {
+            color: {{ subject.color }};
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+
+        .content-body h4 {
+            color: #333;
+            margin: 20px 0 12px 0;
+            font-size: 1.1rem;
+        }
+
+        .content-body p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .content-body ul, .content-body ol {
+            margin: 16px 0 16px 24px;
+        }
+
+        .content-body li {
+            margin-bottom: 8px;
+        }
+
+        .practice-question {
+            background: #f8f9fa;
+            border-left: 4px solid {{ subject.color }};
+            padding: 20px;
+            margin: 24px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .practice-question h4 {
+            color: {{ subject.color }};
+            margin-bottom: 12px;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .choices label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .choices label:hover {
+            background: #e3f2fd;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            background: {{ subject.color }};
+            color: white;
+            padding: 16px;
+            font-weight: 500;
+        }
+
+        .sidebar-content {
+            padding: 16px;
+        }
+
+        .vocabulary-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .vocabulary-item:last-child {
+            border-bottom: none;
+        }
+
+        .vocab-word {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .vocab-reading {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .vocab-translation {
+            font-size: 0.9rem;
+            color: {{ subject.color }};
+        }
+
+        .progress-section {
+            text-align: center;
+        }
+
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient({{ subject.color }} 60%, #e0e0e0 60%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+        }
+
+        .progress-text {
+            position: relative;
+            font-weight: 600;
+            color: {{ subject.color }};
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.primary {
+            background: {{ subject.color }};
+            color: white;
+        }
+
+        .nav-btn.secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                order: -1;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="breadcrumbs">
+                <a href="{% url 'dashboard' %}" class="breadcrumb-item">ダッシュボード</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="{% url 'subject_learning' %}" class="breadcrumb-item">科目学習</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="{% url 'subject_detail' subject_name %}" class="breadcrumb-item">{{ subject.title }}</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-item active">{{ chapter }}</span>
+            </div>
+
+            <div class="chapter-header">
+                <div class="chapter-icon">
+                    <span class="material-icons">{{ subject.icon }}</span>
+                </div>
+                <div class="chapter-info">
+                    <h1>{{ chapter }}: {{ chapter_title }}</h1>
+                    <p>{{ subject.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content wrapper -->
+        <div class="content-wrapper">
+            <!-- Main content -->
+            <div class="main-content">
+                <div class="content-header">
+                    <h2>{{ chapter_data.title }}</h2>
+                </div>
+                <div class="content-body">
+                    {{ chapter_data.content|safe }}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Progress -->
+                <div class="sidebar-section">
+                    <div class="sidebar-header">
+                        <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">trending_up</span>
+                        学習進捗
+                    </div>
+                    <div class="sidebar-content progress-section">
+                        <div class="progress-circle">
+                            <div class="progress-text">60%</div>
+                        </div>
+                        <p>{{ chapter }}の学習進捗</p>
+                    </div>
+                </div>
+
+                <!-- Vocabulary -->
+                {% if chapter_data.vocabulary %}
+                <div class="sidebar-section">
+                    <div class="sidebar-header">
+                        <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">translate</span>
+                        重要語彙
+                    </div>
+                    <div class="sidebar-content">
+                        {% for word, data in chapter_data.vocabulary.items %}
+                        <div class="vocabulary-item">
+                            <div class="vocab-word">{{ word }}</div>
+                            <div class="vocab-reading">{{ data.reading }}</div>
+                            <div class="vocab-translation">{{ data.translation }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Navigation -->
+                <div class="sidebar-section">
+                    <div class="sidebar-header">
+                        <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">navigation</span>
+                        ナビゲーション
+                    </div>
+                    <div class="sidebar-content">
+                        <div class="navigation-buttons">
+                            <button class="nav-btn secondary" onclick="goToPreviousChapter()">
+                                <span class="material-icons">chevron_left</span>
+                                前の章
+                            </button>
+                            <button class="nav-btn primary" onclick="goToNextChapter()">
+                                次の章
+                                <span class="material-icons">chevron_right</span>
+                            </button>
+                        </div>
+                        <div class="navigation-buttons" style="margin-top: 12px;">
+                            <button class="nav-btn secondary" onclick="goToSubjectDetail()">
+                                <span class="material-icons">list</span>
+                                章一覧
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToPreviousChapter() {
+            // Navigate to previous chapter
+            alert('前の章の機能は準備中です');
+        }
+
+        function goToNextChapter() {
+            // Navigate to next chapter
+            alert('次の章の機能は準備中です');
+        }
+
+        function goToSubjectDetail() {
+            window.location.href = '{% url "subject_detail" subject_name %}';
+        }
+
+        // Practice question functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioButtons = document.querySelectorAll('.choices input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Remove previous feedback
+                    document.querySelectorAll('.choice-feedback').forEach(feedback => {
+                        feedback.remove();
+                    });
+
+                    // Add feedback
+                    const label = this.closest('label');
+                    const feedback = document.createElement('div');
+                    feedback.className = 'choice-feedback';
+                    feedback.style.marginTop = '8px';
+                    feedback.style.fontSize = '0.8rem';
+
+                    if (this.value === '2') { // Correct answer
+                        feedback.style.color = '#4caf50';
+                        feedback.textContent = '正解！介護保険制度は2000年4月に開始されました。';
+                    } else {
+                        feedback.style.color = '#f44336';
+                        feedback.textContent = '不正解。正しくは2000年です。';
+                    }
+
+                    label.appendChild(feedback);
+                });
+            });
+        });
+
+        console.log('Chapter learning page loaded: {{ subject_name }} - {{ chapter }}');
+    </script>
+{% endblock %}

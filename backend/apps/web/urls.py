@@ -15,4 +15,5 @@ urlpatterns = [
     # 科目学習
     path('subjects/', views.subject_learning_view, name='subject_learning'),
     path('subjects/<str:subject_name>/', views.subject_detail_view, name='subject_detail'),
+    path('subjects/<str:subject_name>/chapter/', views.chapter_learning_view, name='chapter_learning'),
 ]

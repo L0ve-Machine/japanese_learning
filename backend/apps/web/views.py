@@ -352,3 +352,166 @@ def subject_detail_view(request, subject_name):
         'subject': subject,
         'user': request.user
     })
+
+@login_required
+@allow_free_access
+def chapter_learning_view(request, subject_name):
+    """章学習ページ"""
+    from django.http import Http404
+
+    # セキュリティ: パストラバーサル攻撃を防ぐ
+    if '..' in subject_name or '/' in subject_name:
+        raise Http404("Invalid subject name")
+
+    # URLパラメータから章情報を取得
+    chapter = request.GET.get('chapter', '第1章')
+    title = request.GET.get('title', '章学習')
+
+    # 利用可能な科目リスト
+    available_subjects = {
+        '介護試験対策': {
+            'title': '介護試験対策',
+            'description': 'Persiapan Ujian Kaigo',
+            'icon': 'medical_services',
+            'color': '#4caf50'
+        },
+        '介護の実務会話': {
+            'title': '介護の実務会話',
+            'description': 'Percakapan Praktis Kaigo',
+            'icon': 'chat',
+            'color': '#2196f3'
+        },
+        '日本人と会話': {
+            'title': '日本人と会話',
+            'description': 'Percakapan dengan Orang Jepang',
+            'icon': 'people',
+            'color': '#ff9800'
+        },
+        '特定技能評価試験': {
+            'title': '特定技能評価試験',
+            'description': 'Ujian Evaluasi Keterampilan Khusus',
+            'icon': 'assignment',
+            'color': '#9c27b0'
+        },
+        '日本の生活マナー': {
+            'title': '日本の生活マナー',
+            'description': 'Etiket Kehidupan di Jepang',
+            'icon': 'home',
+            'color': '#795548'
+        }
+    }
+
+    if subject_name not in available_subjects:
+        raise Http404("Subject not found")
+
+    subject = available_subjects[subject_name]
+
+    # 章コンテンツのマッピング
+    chapter_content = {
+        '介護試験対策': {
+            '第1章': {
+                'title': '介護保険制度創設の背景及び目的',
+                'content': '''
+                <h3>1. 介護保険制度とは</h3>
+                <p>介護保険制度は、2000年（平成12年）4月に開始された社会保険制度です。</p>
+
+                <h4>制度創設の背景</h4>
+                <ul>
+                    <li>高齢化の進展（高齢化率の上昇）</li>
+                    <li>核家族化の進行</li>
+                    <li>女性の社会進出</li>
+                    <li>介護の社会化の必要性</li>
+                </ul>
+
+                <h4>制度の目的</h4>
+                <ol>
+                    <li>尊厳を保持し、能力に応じた自立した日常生活を営むことができるよう支援</li>
+                    <li>要介護状態等の軽減・悪化防止</li>
+                    <li>医療と連携した総合的なサービス提供</li>
+                </ol>
+
+                <div class="practice-question">
+                    <h4>練習問題</h4>
+                    <p><strong>問1:</strong> 介護保険制度が開始された年度は？</p>
+                    <div class="choices">
+                        <label><input type="radio" name="q1" value="1"> 1998年</label>
+                        <label><input type="radio" name="q1" value="2"> 2000年</label>
+                        <label><input type="radio" name="q1" value="3"> 2002年</label>
+                    </div>
+                </div>
+                ''',
+                'vocabulary': {
+                    '介護保険': {'reading': 'かいごほけん', 'translation': 'asuransi perawatan'},
+                    '高齢化': {'reading': 'こうれいか', 'translation': 'penuaan populasi'},
+                    '核家族': {'reading': 'かくかぞく', 'translation': 'keluarga inti'},
+                    '自立': {'reading': 'じりつ', 'translation': 'kemandirian'},
+                    '要介護': {'reading': 'ようかいご', 'translation': 'membutuhkan perawatan'}
+                }
+            },
+            '第2章': {
+                'title': '被保険者（保険に加入する人）',
+                'content': '''
+                <h3>2. 被保険者の分類</h3>
+
+                <h4>第1号被保険者（65歳以上）</h4>
+                <ul>
+                    <li>年齢：65歳以上</li>
+                    <li>保険料：年金から特別徴収（原則）</li>
+                    <li>要介護認定：原因を問わず全ての要介護状態</li>
+                </ul>
+
+                <h4>第2号被保険者（40歳以上65歳未満）</h4>
+                <ul>
+                    <li>年齢：40歳以上65歳未満</li>
+                    <li>加入条件：医療保険に加入している者</li>
+                    <li>要介護認定：特定疾病による要介護状態のみ</li>
+                </ul>
+
+                <h4>特定疾病（16疾病）</h4>
+                <ol>
+                    <li>がん（医師が一般に認められている医学的知見に基づき回復の見込みがない状態に至ったと判断したものに限る）</li>
+                    <li>関節リウマチ</li>
+                    <li>筋萎縮性側索硬化症</li>
+                    <li>後縦靱帯骨化症</li>
+                    <li>骨折を伴う骨粗鬆症</li>
+                    <li>初老期における認知症</li>
+                    <li>進行性核上性麻痺</li>
+                    <li>脊髄小脳変性症</li>
+                    <li>脊柱管狭窄症</li>
+                    <li>早老症</li>
+                    <li>多系統萎縮症</li>
+                    <li>糖尿病性神経障害、糖尿病性腎症及び糖尿病性網膜症</li>
+                    <li>脳血管疾患</li>
+                    <li>閉塞性動脈硬化症</li>
+                    <li>慢性閉塞性肺疾患</li>
+                    <li>両側の膝関節又は股関節に著しい変形を伴う変形性関節症</li>
+                </ol>
+                ''',
+                'vocabulary': {
+                    '被保険者': {'reading': 'ひほけんしゃ', 'translation': 'pemegang polis asuransi'},
+                    '特別徴収': {'reading': 'とくべつちょうしゅう', 'translation': 'pemotongan khusus'},
+                    '特定疾病': {'reading': 'とくていしっぺい', 'translation': 'penyakit tertentu'},
+                    '関節リウマチ': {'reading': 'かんせつリウマチ', 'translation': 'rheumatoid arthritis'},
+                    '認知症': {'reading': 'にんちしょう', 'translation': 'demensia'}
+                }
+            }
+        }
+    }
+
+    # デフォルトコンテンツ
+    default_content = {
+        'title': title,
+        'content': f'<p>{title}の学習コンテンツを準備中です。</p>',
+        'vocabulary': {}
+    }
+
+    chapter_data = chapter_content.get(subject_name, {}).get(chapter, default_content)
+
+    return render(request, 'subjects/chapter_learning.html', {
+        'subject_name': subject_name,
+        'subject': subject,
+        'chapter': chapter,
+        'chapter_title': title,
+        'chapter_data': chapter_data,
+        'user': request.user
+    })
