@@ -1,0 +1,849 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}問題{{ question_number }} - {{ exam_year.year }}年度 第{{ exam_session.session_number }}回{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <!-- Question Header -->
+    <div class="question-header">
+        <div class="question-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ progress_percentage }}%;"></div>
+            </div>
+            <div class="progress-text">
+                <span class="current-question">{{ question_number }}</span>
+                <span class="total-questions">/ {{ total_questions }}</span>
+            </div>
+        </div>
+
+        <div class="question-meta">
+            <div class="exam-info">
+                <span class="exam-year">{{ exam_year.year }}年度</span>
+                <span class="exam-session">第{{ exam_session.session_number }}回</span>
+            </div>
+            <div class="subject-info">
+                <span class="subject-group">{{ current_question.subject.group.name }}</span>
+                <span class="subject-name">{{ current_question.subject.name }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Content -->
+    <div class="question-content">
+        <div class="question-header">
+            <div class="question-number">問題 {{ question_number }}</div>
+            {% if current_question.translations.indonesian %}
+            <button class="translate-question-btn" id="translateQuestionBtn">
+                <i class="material-icons">translate</i>
+                <span>インドネシア語</span>
+            </button>
+            {% endif %}
+        </div>
+        <div class="question-text" id="questionText">
+            {{ current_question.question_text|safe }}
+        </div>
+        {% if current_question.translations.indonesian %}
+        <div class="question-translation" id="questionTranslation" style="display: none;">
+            <div class="translation-header">
+                <i class="material-icons">translate</i>
+                <span>インドネシア語翻訳</span>
+            </div>
+            <div class="translation-text">
+                {{ current_question.translations.indonesian }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Answer Choices -->
+    <div class="answer-choices">
+        {% for choice in current_question.choices.all %}
+        <div class="choice-option" data-choice="{{ choice.choice_number }}">
+            <div class="choice-number">{{ choice.choice_number }}</div>
+            <div class="choice-text">{{ choice.choice_text|safe }}</div>
+            <div class="choice-actions">
+                <button class="translate-btn" data-choice="{{ choice.choice_number }}">
+                    <i class="material-icons">translate</i>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="quiz-actions">
+        <button class="btn btn-outline" id="prevBtn" {% if question_number == 1 %}disabled{% endif %}>
+            <i class="material-icons">chevron_left</i>
+            前の問題
+        </button>
+
+        <button class="btn btn-primary" id="checkAnswerBtn">
+            答えを確認
+        </button>
+
+        <button class="btn btn-outline" id="nextBtn">
+            次の問題
+            <i class="material-icons">chevron_right</i>
+        </button>
+    </div>
+
+    <!-- Answer Explanation (Hidden initially) -->
+    <div class="answer-explanation" id="answerExplanation" style="display: none;">
+        <div class="explanation-header">
+            <h3>解説</h3>
+        </div>
+        <div class="explanation-content">
+            {{ current_question.explanation }}
+        </div>
+    </div>
+
+    <!-- Vocabulary Panel -->
+    <div class="vocabulary-panel" id="vocabularyPanel" style="display: none;">
+        <div class="vocabulary-header">
+            <h3>語彙</h3>
+            <button class="close-btn" id="closeVocab">
+                <i class="material-icons">close</i>
+            </button>
+        </div>
+        <div class="vocabulary-content" id="vocabularyContent">
+            <!-- Vocabulary content will be populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<style>
+.quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.question-header {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.question-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-weight: 600;
+    color: #475569;
+}
+
+.current-question {
+    font-size: 1.2rem;
+    color: #1e293b;
+}
+
+.total-questions {
+    color: #64748b;
+}
+
+.question-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.exam-info, .subject-info {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.exam-year, .subject-group {
+    background: #3b82f6;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.exam-session, .subject-name {
+    background: #e2e8f0;
+    color: #475569;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.question-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.question-number {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #3b82f6;
+}
+
+.translate-question-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.translate-question-btn:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+.translate-question-btn.active {
+    background: #dbeafe;
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.translate-question-btn .material-icons {
+    font-size: 18px;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #1e293b;
+}
+
+.question-text ruby {
+    ruby-align: center;
+}
+
+.question-text rt {
+    font-size: 0.7em;
+    color: #64748b;
+}
+
+.vocab-word {
+    border-bottom: 2px dotted #3b82f6;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vocab-word:hover {
+    background: #dbeafe;
+    border-bottom-style: solid;
+}
+
+.question-translation {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: #f8f9ff;
+    border: 1px solid #e0e7ff;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.translation-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #3b82f6;
+    font-size: 0.9rem;
+}
+
+.translation-header .material-icons {
+    font-size: 18px;
+}
+
+.translation-text {
+    color: #374151;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.answer-choices {
+    margin-bottom: 2rem;
+}
+
+.choice-option {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.choice-option:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.choice-option.selected {
+    border-color: #3b82f6;
+    background: #dbeafe;
+}
+
+.choice-option.correct {
+    border-color: #059669;
+    background: #d1fae5;
+}
+
+.choice-option.incorrect {
+    border-color: #dc2626;
+    background: #fee2e2;
+}
+
+.choice-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #475569;
+    flex-shrink: 0;
+}
+
+.choice-option.selected .choice-number {
+    background: #3b82f6;
+    color: white;
+}
+
+.choice-option.correct .choice-number {
+    background: #059669;
+    color: white;
+}
+
+.choice-option.incorrect .choice-number {
+    background: #dc2626;
+    color: white;
+}
+
+.choice-text {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #1e293b;
+}
+
+.choice-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.translate-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.translate-btn:hover {
+    background: #e2e8f0;
+}
+
+.translate-btn .material-icons {
+    font-size: 18px;
+    color: #64748b;
+}
+
+.quiz-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+}
+
+.btn-outline {
+    background: white;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-outline:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.answer-explanation {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-left: 4px solid #059669;
+}
+
+.explanation-header h3 {
+    color: #059669;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.explanation-content {
+    color: #374151;
+    line-height: 1.6;
+}
+
+.vocabulary-panel {
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.vocabulary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.vocabulary-header h3 {
+    color: #1e293b;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    background: #e2e8f0;
+}
+
+.vocabulary-content {
+    padding: 1.5rem;
+}
+
+.vocab-item {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.vocab-item:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.vocab-japanese {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.vocab-reading {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0.25rem 0;
+}
+
+.vocab-translation {
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+/* Tooltip styles */
+.vocab-tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    max-width: 250px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    font-size: 0.9rem;
+}
+
+.tooltip-japanese {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #fbbf24;
+}
+
+.tooltip-reading {
+    font-size: 0.85rem;
+    color: #a3a3a3;
+    margin-bottom: 0.5rem;
+}
+
+.tooltip-translation {
+    line-height: 1.4;
+}
+
+.tooltip-translation .indonesian {
+    color: #86efac;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .quiz-container {
+        padding: 1rem;
+    }
+
+    .question-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+    }
+
+    .choice-option {
+        padding: 1rem;
+    }
+
+    .quiz-actions {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .vocabulary-panel {
+        position: fixed;
+        right: 0;
+        left: 0;
+        top: auto;
+        bottom: 0;
+        transform: none;
+        width: auto;
+        border-radius: 12px 12px 0 0;
+    }
+}
+</style>
+
+<script>
+let selectedChoice = null;
+let isAnswerChecked = false;
+
+// Initialize button states
+document.addEventListener('DOMContentLoaded', function() {
+    // Disable next button initially
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.disabled = true;
+    nextBtn.style.opacity = '0.5';
+
+    // Disable check answer button initially
+    const checkBtn = document.getElementById('checkAnswerBtn');
+    checkBtn.disabled = true;
+
+    // Question translation toggle
+    const translateBtn = document.getElementById('translateQuestionBtn');
+    const translationDiv = document.getElementById('questionTranslation');
+
+    if (translateBtn && translationDiv) {
+        translateBtn.addEventListener('click', function() {
+            if (translationDiv.style.display === 'none' || translationDiv.style.display === '') {
+                translationDiv.style.display = 'block';
+                translateBtn.classList.add('active');
+                translateBtn.querySelector('span').textContent = '翻訳を隠す';
+            } else {
+                translationDiv.style.display = 'none';
+                translateBtn.classList.remove('active');
+                translateBtn.querySelector('span').textContent = 'インドネシア語';
+            }
+        });
+    }
+});
+
+// Choice selection
+document.querySelectorAll('.choice-option').forEach(option => {
+    option.addEventListener('click', function() {
+        if (isAnswerChecked) return;
+
+        // Remove previous selection
+        document.querySelectorAll('.choice-option').forEach(opt => opt.classList.remove('selected'));
+
+        // Add selection to clicked option
+        this.classList.add('selected');
+        selectedChoice = this.dataset.choice;
+
+        // Enable check answer button
+        document.getElementById('checkAnswerBtn').disabled = false;
+    });
+});
+
+// Check answer
+document.getElementById('checkAnswerBtn').addEventListener('click', function() {
+    if (!selectedChoice || isAnswerChecked) return;
+
+    isAnswerChecked = true;
+
+    // Show correct/incorrect styling
+    document.querySelectorAll('.choice-option').forEach(option => {
+        const choiceNum = option.dataset.choice;
+
+        // Find the correct answer
+        {% for choice in current_question.choices.all %}
+        {% if choice.is_correct %}
+        const correctAnswer = '{{ choice.choice_number }}';
+        {% endif %}
+        {% endfor %}
+
+        if (choiceNum === correctAnswer) {
+            option.classList.add('correct');
+        } else if (choiceNum === selectedChoice) {
+            option.classList.add('incorrect');
+        }
+    });
+
+    // Show explanation
+    document.getElementById('answerExplanation').style.display = 'block';
+
+    // Change button text
+    this.textContent = '解説を確認しました';
+    this.disabled = true;
+
+    // Enable next button
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = '1';
+});
+
+// Navigation
+document.getElementById('prevBtn').addEventListener('click', function() {
+    const prevQuestion = {{ question_number }} - 1;
+    if (prevQuestion >= 1) {
+        window.location.href = `?q=${prevQuestion}`;
+    }
+});
+
+document.getElementById('nextBtn').addEventListener('click', function() {
+    const nextQuestion = {{ question_number }} + 1;
+    if (nextQuestion <= {{ total_questions }}) {
+        window.location.href = `?q=${nextQuestion}`;
+    }
+});
+
+// Vocabulary functionality
+let hoverTimeout;
+let currentTooltip;
+
+document.querySelectorAll('.vocab-word').forEach(word => {
+    // Click functionality (existing)
+    word.addEventListener('click', function() {
+        const translation = this.dataset.translation;
+        const reading = this.dataset.reading;
+        const japanese = this.textContent;
+
+        showVocabulary(japanese, reading, translation);
+    });
+
+    // Hover functionality (new)
+    word.addEventListener('mouseenter', function() {
+        clearTimeout(hoverTimeout);
+        const translation = this.dataset.translation;
+        const reading = this.dataset.reading;
+        const japanese = this.textContent;
+
+        hoverTimeout = setTimeout(() => {
+            showTooltip(this, japanese, reading, translation);
+        }, 300); // 300ms delay
+    });
+
+    word.addEventListener('mouseleave', function() {
+        clearTimeout(hoverTimeout);
+        hideTooltip();
+    });
+});
+
+function showTooltip(element, japanese, reading, translation) {
+    hideTooltip(); // Remove any existing tooltip
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'vocab-tooltip';
+
+    const translations = translation.split('|');
+    const englishTranslation = translations[0] || '';
+    const indonesianTranslation = translations[1] || '';
+
+    tooltip.innerHTML = `
+        <div class="tooltip-japanese">${japanese}</div>
+        <div class="tooltip-reading">${reading}</div>
+        <div class="tooltip-translation">
+            ${englishTranslation ? `<div>${englishTranslation}</div>` : ''}
+            ${indonesianTranslation ? `<div class="indonesian">${indonesianTranslation}</div>` : ''}
+        </div>
+    `;
+
+    document.body.appendChild(tooltip);
+    currentTooltip = tooltip;
+
+    // Position the tooltip
+    const rect = element.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    let left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+    let top = rect.top - tooltipRect.height - 10;
+
+    // Adjust if tooltip goes off screen
+    if (left < 10) left = 10;
+    if (left + tooltipRect.width > window.innerWidth - 10) {
+        left = window.innerWidth - tooltipRect.width - 10;
+    }
+    if (top < 10) {
+        top = rect.bottom + 10;
+    }
+
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+    tooltip.style.opacity = '1';
+}
+
+function hideTooltip() {
+    if (currentTooltip) {
+        currentTooltip.remove();
+        currentTooltip = null;
+    }
+}
+
+function showVocabulary(japanese, reading, translation) {
+    const panel = document.getElementById('vocabularyPanel');
+    const content = document.getElementById('vocabularyContent');
+
+    const translations = translation.split('|');
+    const japaneseTranslation = translations[0] || '';
+    const indonesianTranslation = translations[1] || '';
+
+    content.innerHTML = `
+        <div class="vocab-item">
+            <div class="vocab-japanese">${japanese}</div>
+            <div class="vocab-reading">${reading}</div>
+            <div class="vocab-translation">
+                <div><strong>English:</strong> ${japaneseTranslation}</div>
+                ${indonesianTranslation ? `<div><strong>Indonesian:</strong> ${indonesianTranslation}</div>` : ''}
+            </div>
+        </div>
+    `;
+
+    panel.style.display = 'block';
+}
+
+document.getElementById('closeVocab').addEventListener('click', function() {
+    document.getElementById('vocabularyPanel').style.display = 'none';
+});
+
+// Close vocabulary panel when clicking outside
+document.addEventListener('click', function(e) {
+    const panel = document.getElementById('vocabularyPanel');
+    if (panel.style.display === 'block' && !panel.contains(e.target) && !e.target.classList.contains('vocab-word')) {
+        panel.style.display = 'none';
+    }
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    if (e.key >= '1' && e.key <= '5') {
+        const choiceNum = e.key;
+        const option = document.querySelector(`[data-choice="${choiceNum}"]`);
+        if (option && !isAnswerChecked) {
+            option.click();
+        }
+    } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (!isAnswerChecked && selectedChoice) {
+            document.getElementById('checkAnswerBtn').click();
+        }
+    } else if (e.key === 'ArrowLeft') {
+        document.getElementById('prevBtn').click();
+    } else if (e.key === 'ArrowRight') {
+        document.getElementById('nextBtn').click();
+    }
+});
+</script>
+{% endblock %}

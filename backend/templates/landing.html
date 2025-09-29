@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ホーム - 介護福祉士試験対策{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="landing-hero">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <span class="highlight">介護福祉士試験</span>に<br>
+            合格への最短ルート
+        </h1>
+        <p class="hero-subtitle">
+            外国人の方のための日本語学習と試験対策を完全サポート
+        </p>
+        <div class="hero-buttons">
+            <a href="#features" class="btn btn-secondary">詳しく見る</a>
+            <a href="{% url 'login' %}" class="btn btn-primary">
+                <span class="material-icons">login</span>
+                ログインして始める
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="stat-number">5,000+</span>
+                <span class="stat-label">過去問題</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">13</span>
+                <span class="stat-label">科目対応</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">85%</span>
+                <span class="stat-label">合格率</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="features" class="features-section">
+    <div class="container">
+        <h2 class="section-title">充実の学習機能</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <span class="material-icons">assignment</span>
+                </div>
+                <h3>過去問題</h3>
+                <p>過去5年分の実際の試験問題を収録。125問×5択形式で本番と同じ環境で練習できます。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <span class="material-icons">school</span>
+                </div>
+                <h3>科目別学習</h3>
+                <p>13科目を体系的に学習。テキスト→問題→解説の流れで、効率的に知識を定着させます。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <span class="material-icons">translate</span>
+                </div>
+                <h3>多言語対応</h3>
+                <p>ベトナム語、インドネシア語、中国語など、母国語での解説で理解を深められます。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <span class="material-icons">quiz</span>
+                </div>
+                <h3>暗記カード</h3>
+                <p>重要用語や頻出問題をフラッシュカード形式で効率的に暗記できます。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <span class="material-icons">video_library</span>
+                </div>
+                <h3>解説動画</h3>
+                <p>難しい問題も動画でわかりやすく解説。視覚的に理解を深められます。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                    <span class="material-icons">trending_up</span>
+                </div>
+                <h3>学習分析</h3>
+                <p>詳細な学習データ分析で、弱点を把握し効率的な学習計画を立てられます。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pricing-section">
+    <div class="container">
+        <h2 class="section-title">料金プラン</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3 class="pricing-title">無料プラン</h3>
+                <div class="pricing-price">
+                    <span class="currency">¥</span>
+                    <span class="amount">0</span>
+                    <span class="period">/月</span>
+                </div>
+                <ul class="pricing-features">
+                    <li><span class="material-icons">check</span>基本的な過去問題</li>
+                    <li><span class="material-icons">check</span>3科目まで学習可能</li>
+                    <li><span class="material-icons">check</span>学習進捗管理</li>
+                </ul>
+                <a href="{% url 'register' %}" class="btn btn-outline">無料で始める</a>
+            </div>
+
+            <div class="pricing-card featured">
+                <div class="pricing-badge">人気</div>
+                <h3 class="pricing-title">プレミアムプラン</h3>
+                <div class="pricing-price">
+                    <span class="currency">¥</span>
+                    <span class="amount">2,980</span>
+                    <span class="period">/月</span>
+                </div>
+                <ul class="pricing-features">
+                    <li><span class="material-icons">check</span>全ての過去問題</li>
+                    <li><span class="material-icons">check</span>13科目すべて学習可能</li>
+                    <li><span class="material-icons">check</span>解説動画見放題</li>
+                    <li><span class="material-icons">check</span>多言語翻訳機能</li>
+                    <li><span class="material-icons">check</span>優先サポート</li>
+                </ul>
+                <a href="{% url 'register' %}" class="btn btn-primary">今すぐ始める</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <h2>今すぐ学習を始めましょう</h2>
+        <p>介護福祉士試験合格への第一歩を踏み出しましょう</p>
+        <a href="{% url 'register' %}" class="btn btn-primary btn-large">
+            無料アカウント作成
+        </a>
+    </div>
+</section>
+{% endblock %}

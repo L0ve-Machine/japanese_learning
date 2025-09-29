@@ -1,0 +1,11 @@
+subject_key,item_key,chapter_key,question_number,option_number,japanese_option,indonesian_option,is_correct
+介護試験対策,介護保険,chapter_1,1,1,高齢者の医療費を軽減すること,Mengurangi biaya medis bagi lansia,false
+介護試験対策,介護保険,chapter_1,1,2,高齢者が尊厳を保ち、自立した生活を送れるよう支援すること,Mendukung lansia agar dapat mempertahankan martabat dan menjalani kehidupan mandiri,true
+介護試験対策,介護保険,chapter_1,1,3,介護施設の数を増やすこと,Meningkatkan jumlah fasilitas perawatan,false
+介護試験対策,介護保険,chapter_1,1,4,家族の介護負担を完全になくすこと,Menghilangkan beban perawatan keluarga sepenuhnya,false
+介護試験対策,介護保険,chapter_1,1,5,40歳以上の国民全員に介護サービスを提供すること,Menyediakan layanan perawatan untuk semua warga negara berusia 40 tahun ke atas,false
+介護試験対策,介護保険,chapter_1,2,1,国,Negara,false
+介護試験対策,介護保険,chapter_1,2,2,都道府県,Prefektur,false
+介護試験対策,介護保険,chapter_1,2,3,市町村と特別区,Pemerintah kota dan distrik khusus,true
+介護試験対策,介護保険,chapter_1,2,4,医療保険組合,Asosiasi asuransi kesehatan,false
+介護試験対策,介護保険,chapter_1,2,5,後期高齢者医療広域連合,Serikat asuransi kesehatan lansia lanjutan,false

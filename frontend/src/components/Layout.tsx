@@ -30,25 +30,30 @@ import {
   Assignment,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import LanguageSelector from './LanguageSelector';
 
 const drawerWidth = 240;
 
-const menuItems = [
-  { text: 'ダッシュボード', icon: <Dashboard />, path: '/dashboard' },
-  { text: '過去問題', icon: <Assignment />, path: '/past-exams' },
-  { text: '科目学習', icon: <School />, path: '/subjects' },
-  { text: 'ことば', icon: <Translate />, path: '/vocabulary' },
-  { text: '暗記カード', icon: <Quiz />, path: '/flashcards' },
-  { text: '解説動画', icon: <VideoLibrary />, path: '/videos' },
-  { text: 'サブスクリプション', icon: <CreditCard />, path: '/subscription' },
+const getMenuItems = (t: (key: string) => string) => [
+  { text: t('nav.dashboard'), icon: <Dashboard />, path: '/dashboard' },
+  { text: t('nav.past_exams'), icon: <Assignment />, path: '/past-exams' },
+  { text: t('nav.subjects'), icon: <School />, path: '/subjects' },
+  { text: t('nav.vocabulary'), icon: <Translate />, path: '/vocabulary' },
+  { text: t('nav.flashcards'), icon: <Quiz />, path: '/flashcards' },
+  { text: t('nav.videos'), icon: <VideoLibrary />, path: '/videos' },
+  { text: t('nav.subscription'), icon: <CreditCard />, path: '/subscription' },
 ];
 
 const Layout: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, logout } = useAuth();
+  const { getTranslation } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const menuItems = getMenuItems(getTranslation);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -116,7 +121,8 @@ const Layout: React.FC = () => {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {menuItems.find((item) => item.path === location.pathname)?.text || ''}
           </Typography>
-          <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <LanguageSelector />
             <IconButton onClick={handleMenuClick} sx={{ p: 0 }}>
               <Avatar sx={{ bgcolor: 'secondary.main' }}>
                 {user?.email?.charAt(0).toUpperCase()}
@@ -139,13 +145,13 @@ const Layout: React.FC = () => {
                 <ListItemIcon>
                   <Person fontSize="small" />
                 </ListItemIcon>
-                プロフィール
+                {getTranslation('nav.profile')}
               </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>
-                ログアウト
+                {getTranslation('nav.logout')}
               </MenuItem>
             </Menu>
           </Box>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第4章 - 介護試験対策</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .chapter-title {
+            font-size: 2rem;
+            margin: 20px 0 10px 0;
+        }
+        .content {
+            background: white;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+
+        /* Interactive text block styles from their template */
+        .text-block {
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+        .japanese-text-container {
+            line-height: 2.2;
+            font-size: 1.1rem;
+        }
+        .indonesian-text-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-left: 0.5rem;
+            margin-right: 4rem;
+        }
+        .indonesian-text-wrapper.open {
+            max-height: 300px;
+        }
+        .indonesian-text {
+            color: #4b5563;
+            font-size: 0.95rem;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-left: 3px solid #d1d5db;
+        }
+        .translation-toggle {
+            background: none;
+            border: none;
+            color: #6b7280;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .translation-toggle:hover {
+            background-color: #f3f4f6;
+        }
+        .translation-toggle i {
+            transition: all 0.3s ease;
+        }
+        .translation-toggle.open i {
+            transform: rotate(180deg);
+        }
+        .text-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        /* Vocabulary word styling from their template */
+        .vocabulary-word {
+            cursor: pointer;
+            border-bottom: 1px dotted #9ca3af;
+            transition: border-color 0.2s;
+        }
+        .vocabulary-word:hover {
+            border-color: #374151;
+        }
+        #translation-popup {
+            max-width: 250px;
+            line-height: 1.5;
+            position: absolute;
+            z-index: 50;
+            padding: 12px;
+            background-color: #1f2937;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            font-size: 0.875rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="../../介護保険.html" class="back-btn">← 戻る</a>
+        <h1 class="chapter-title">第4章</h1>
+        <p><strong>章名:</strong> 4. 介護保険のサービス</p>
+    </div>
+
+    <div class="content">
+        <h2>4. 介護保険のサービス</h2>
+
+        <div class="text-content">
+            <!-- Preparing Message -->
+            <div style="text-align: center; padding: 60px 20px; background-color: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+                <div style="font-size: 3rem; color: #6c757d; margin-bottom: 20px;">
+                    🚧
+                </div>
+                <h3 style="color: #495057; margin-bottom: 15px;">コンテンツ準備中</h3>
+                <p style="color: #6c757d; font-size: 1.1rem; margin-bottom: 10px;">
+                    第4章「介護保険のサービス」の学習コンテンツを準備しています。
+                </p>
+                <p style="color: #868e96; font-size: 0.95rem;">
+                    Konten pembelajaran untuk Bab 4 "Layanan Asuransi Perawatan Jangka Panjang" sedang dalam persiapan.
+                </p>
+                <div style="margin-top: 30px; padding: 15px; background-color: #e9ecef; border-radius: 6px; display: inline-block;">
+                    <p style="margin: 0; color: #495057; font-size: 0.9rem;">
+                        <strong>実装予定機能:</strong><br>
+                        • インタラクティブテキスト<br>
+                        • 語彙翻訳機能<br>
+                        • 確認問題とフィードバック
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive structure ready for future content -->
+            <!-- When CSV data is available, text blocks will be inserted here -->
+
+            <!-- Quiz section placeholder -->
+            <div class="quiz-section" style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; display: none;" id="quiz-section">
+                <h3 style="color: #007bff; margin-bottom: 20px;">📝 確認問題</h3>
+                <!-- Quiz questions will be inserted here when data is available -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Translation popup -->
+    <div id="translation-popup"></div>
+
+    <script>
+        // Get translation popup element
+        const translationPopup = document.getElementById('translation-popup');
+
+        // Toggle functionality for translation buttons
+        function handleToggle(e, toggleClass, wrapperClass) {
+            const toggleBtn = e.target.closest(toggleClass);
+            if (toggleBtn) {
+                e.stopPropagation();
+                toggleBtn.classList.toggle('open');
+                const parent = toggleBtn.closest('.text-block');
+                if (parent) {
+                    const wrapper = parent.querySelector(wrapperClass);
+                    if (wrapper) wrapper.classList.toggle('open');
+                }
+            }
+        }
+
+        // Add event listeners
+        document.body.addEventListener('click', (e) => {
+            const wordSpan = e.target.closest('.vocabulary-word');
+
+            // Handle vocabulary word clicks
+            if (wordSpan) {
+                // Don't close popup if clicking on the popup itself
+                if (e.target.closest('#translation-popup')) return;
+
+                // Toggle popup if same word clicked again
+                if (translationPopup.style.display === 'block' && translationPopup.dataset.owner === wordSpan.outerHTML) {
+                    translationPopup.style.display = 'none';
+                    return;
+                }
+
+                // Show translation popup
+                const translation = wordSpan.dataset.translation;
+                translationPopup.innerHTML = translation;
+                translationPopup.dataset.owner = wordSpan.outerHTML;
+
+                // Position popup
+                const rect = wordSpan.getBoundingClientRect();
+                translationPopup.style.display = 'block';
+                const popupRect = translationPopup.getBoundingClientRect();
+
+                let top = window.scrollY + rect.bottom + 8;
+                let left = window.scrollX + rect.left + (rect.width / 2) - (popupRect.width / 2);
+
+                // Adjust if popup goes off screen
+                if (top + popupRect.height > window.innerHeight + window.scrollY) {
+                    top = window.scrollY + rect.top - popupRect.height - 8;
+                }
+                if (left < 0) left = 10;
+                else if (left + popupRect.width > window.innerWidth) left = window.innerWidth - popupRect.width - 10;
+
+                translationPopup.style.top = `${top}px`;
+                translationPopup.style.left = `${left}px`;
+
+                e.stopPropagation();
+            }
+            // Handle translation toggle buttons
+            else if (!e.target.closest('.translation-toggle')) {
+                // Hide popup when clicking elsewhere
+                translationPopup.style.display = 'none';
+            }
+
+            // Handle translation toggles
+            handleToggle(e, '.translation-toggle', '.indonesian-text-wrapper');
+        });
+
+        // Quiz functionality placeholder - ready for implementation
+        // When CSV data becomes available for chapter_4:
+        // 1. Add quiz questions from テキスト７．クイズ問題.csv
+        // 2. Add choices from テキスト８．クイズ選択肢.csv
+        // 3. Add feedback from テキスト９．フィードバック.csv
+        // 4. Implement checkAnswer(), getFeedbackData(), isAnswerCorrect(), highlightCorrectAnswer() functions
+        // 5. Show quiz-section div (remove display: none)
+
+        console.log('Chapter 4 interactive functionality loaded - ready for content integration');
+    </script>
+</body>
+</html>

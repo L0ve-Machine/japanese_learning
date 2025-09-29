@@ -1,0 +1,7 @@
+データ構造の説明
+
+階層構造: 科目 > 項目 > 章 > ページ > テキスト
+キー関係: subject_key, item_key, chapter_keyで関連付け
+順序管理: order_number, page_number, text_orderで表示順を制御
+コンテンツタイプ: テキスト、語彙、クイズを分離
+翻訳ペア: 各エントリに日本語とインドネシア語を併記

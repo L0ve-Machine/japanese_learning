@@ -64,3 +64,8 @@ htmlcov/
 *.egg-info/
 dist/
 build/
+
+# Backend specific
+backend/venv/
+*.sqlite3-journal
+sample_data.csv

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>介護の実務会話 - 階層学習</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header with breadcrumbs */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: #f5f5f5;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .breadcrumb-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .breadcrumb-item:hover {
+            color: #2196f3;
+        }
+
+        .breadcrumb-item.active {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        /* Main content area */
+        .content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .content-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .content-description {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Empty state */
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: #e0e0e0;
+            margin-bottom: 16px;
+        }
+
+        .empty-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .empty-description {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Preparing state */
+        .preparing-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .preparing-icon {
+            font-size: 64px;
+            color: #ff9800;
+            margin-bottom: 16px;
+        }
+
+        .preparing-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .preparing-description {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .preparing-features {
+            background: #fff3e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px auto;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .preparing-features h4 {
+            color: #e65100;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .preparing-features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .preparing-features li {
+            color: #bf360c;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .preparing-features li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Navigation -->
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">
+                <span class="material-icons">arrow_back</span>
+            </button>
+
+            <div style="flex-grow: 1;">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <span class="breadcrumb-item active">介護の実務会話</span>
+                </div>
+                <div class="page-title" id="pageTitle">項目一覧</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <div class="content-header">
+                <div class="content-title" id="contentTitle">科目: 介護の実務会話</div>
+                <div class="content-description" id="contentDescription">Percakapan Praktis Kaigo - 実務で使用する会話を学習</div>
+            </div>
+
+            <!-- Preparing State -->
+            <div class="preparing-state">
+                <div class="preparing-icon">
+                    🚧
+                </div>
+                <div class="preparing-title">コンテンツ準備中</div>
+                <div class="preparing-description">
+                    介護現場での実務会話を学習するためのコンテンツを準備しています。<br>
+                    <em>Konten untuk mempelajari percakapan praktis di tempat perawatan sedang dalam persiapan.</em>
+                </div>
+
+                <div class="preparing-features">
+                    <h4>実装予定項目:</h4>
+                    <ul>
+                        <li>先輩との会話</li>
+                        <li>緊急時の報告</li>
+                        <li>インタラクティブ学習機能</li>
+                        <li>音声付き会話練習</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = '../科目学習.html';
+        }
+
+        console.log('介護の実務会話 page loaded - ready for content integration');
+    </script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from apps.users.models import User
 
 class SubscriptionPlan(models.Model):
@@ -38,6 +39,22 @@ class Subscription(models.Model):
     class Meta:
         db_table = 'subscriptions'
         ordering = ['-created_at']
+
+    def is_active(self):
+        """サブスクリプションが有効かどうかを確認"""
+        return (
+            self.status == 'active' and
+            self.end_date > timezone.now()
+        )
+
+    @classmethod
+    def get_user_active_subscription(cls, user):
+        """ユーザーのアクティブなサブスクリプションを取得"""
+        return cls.objects.filter(
+            user=user,
+            status='active',
+            end_date__gt=timezone.now()
+        ).first()
 
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')

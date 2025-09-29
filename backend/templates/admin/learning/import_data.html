@@ -1,0 +1,269 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}データインポート | {{ site_title|default:"Django site admin" }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+.import-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.import-steps {
+    margin-bottom: 30px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #007cba;
+}
+
+.step-number {
+    background: #007cba;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    background: #fafafa;
+    margin: 20px 0;
+}
+
+.upload-area:hover {
+    border-color: #007cba;
+    background: #f0f8ff;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.file-input-wrapper input[type=file] {
+    position: absolute;
+    left: -9999px;
+}
+
+.file-input-label {
+    padding: 12px 24px;
+    background: #007cba;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block;
+    transition: background 0.3s;
+}
+
+.file-input-label:hover {
+    background: #005a87;
+}
+
+.template-download {
+    background: #e8f5e9;
+    border: 1px solid #4caf50;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.download-btn {
+    background: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.download-btn:hover {
+    background: #45a049;
+    color: white;
+    text-decoration: none;
+}
+
+.format-info {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.format-info h4 {
+    margin-top: 0;
+    color: #856404;
+}
+
+.format-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.format-table th,
+.format-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.format-table th {
+    background: #f2f2f2;
+    font-weight: bold;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<div class="import-container">
+    <div class="import-steps">
+        <h3>インポート手順</h3>
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <div>
+                <strong>テンプレートをダウンロード</strong>
+                <p>まず、データの形式を確認するためにテンプレートをダウンロードしてください。</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div>
+                <strong>データを入力</strong>
+                <p>ダウンロードしたテンプレートに問題データを入力してください。</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <div>
+                <strong>ファイルをアップロード</strong>
+                <p>入力が完了したファイルをアップロードしてインポートを実行してください。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="template-download">
+        <h4>📋 テンプレートダウンロード</h4>
+        <p>CSVテンプレートをダウンロードして、正しい形式でデータを準備してください。</p>
+        <a href="{% url 'learning_admin:download_template' %}" class="download-btn">
+            📥 CSVテンプレートをダウンロード
+        </a>
+    </div>
+
+    <div class="format-info">
+        <h4>📝 データ形式について</h4>
+        <p>以下のカラムが必須です：</p>
+        <table class="format-table">
+            <thead>
+                <tr>
+                    <th>カラム名</th>
+                    <th>説明</th>
+                    <th>例</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>question_id</td>
+                    <td>問題の一意ID</td>
+                    <td>q_37_2025_1</td>
+                </tr>
+                <tr>
+                    <td>session</td>
+                    <td>試験回数</td>
+                    <td>37</td>
+                </tr>
+                <tr>
+                    <td>year</td>
+                    <td>年度</td>
+                    <td>2025</td>
+                </tr>
+                <tr>
+                    <td>question_number</td>
+                    <td>問題番号</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>part</td>
+                    <td>パート (A, B, C)</td>
+                    <td>A</td>
+                </tr>
+                <tr>
+                    <td>subject_key</td>
+                    <td>科目キー</td>
+                    <td>human_dignity_independence</td>
+                </tr>
+                <tr>
+                    <td>japanese_question</td>
+                    <td>日本語問題文</td>
+                    <td>次の記述のうち...</td>
+                </tr>
+                <tr>
+                    <td>indonesian_question</td>
+                    <td>インドネシア語問題文</td>
+                    <td>Dari deskripsi berikut...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="upload-area">
+            <h4>📁 ファイルアップロード</h4>
+            <p>CSV または Excel ファイルを選択してください</p>
+
+            <div class="file-input-wrapper">
+                {{ form.file }}
+                <label for="{{ form.file.id_for_label }}" class="file-input-label">
+                    ファイルを選択
+                </label>
+            </div>
+
+            <p style="margin-top: 15px;">
+                <small>対応形式: CSV (.csv), Excel (.xlsx, .xls)</small>
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="submit" class="btn btn-primary" style="padding: 12px 30px; font-size: 16px;">
+                🚀 データをインポート
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('{{ form.file.id_for_label }}').addEventListener('change', function(e) {
+    const label = document.querySelector('.file-input-label');
+    const fileName = e.target.files[0] ? e.target.files[0].name : 'ファイルを選択';
+    label.textContent = fileName;
+});
+</script>
+{% endblock %}
