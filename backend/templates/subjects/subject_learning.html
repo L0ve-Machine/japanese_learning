@@ -644,6 +644,8 @@
         }
 
         function startLearning(subjectName) {
+            console.log(`[DJANGO ROUTING] Starting learning for: ${subjectName}`);
+
             // Navigate to the corresponding subject page using Django URLs
             const subjectFiles = {
                 '介護試験対策': '介護試験対策',
@@ -655,9 +657,11 @@
 
             const subjectKey = subjectFiles[subjectName];
             if (subjectKey) {
-                window.location.href = `/subjects/${encodeURIComponent(subjectKey)}/`;
+                const url = `/subjects/${encodeURIComponent(subjectKey)}/`;
+                console.log(`[DJANGO ROUTING] Navigating to: ${url}`);
+                window.location.href = url;
             } else {
-                console.error(`Unknown subject: ${subjectName}`);
+                console.error(`[DJANGO ROUTING] Unknown subject: ${subjectName}`);
                 showError(`科目 "${subjectName}" が見つかりません`);
             }
         }
@@ -705,7 +709,7 @@
             }, 5000);
         }
 
-        console.log('Enhanced Subject Learning interface loaded');
+        console.log('Enhanced Subject Learning interface loaded - v2.0 with Django routing');
     </script>
     </div>
 {% endblock %}
