@@ -575,7 +575,9 @@ function startQuiz() {
 
     if (confirm(message)) {
         // 最初のセッション（第1回）にリダイレクト
-        window.location.href = `/quiz/${selectedYear}/1/`;
+        // 年度に対応する正しいセッション番号を使用
+        let sessionNumber = selectedYear === 2025 ? 37 : selectedYear === 2024 ? 36 : 35;
+        window.location.href = `/quiz/${selectedYear}/${sessionNumber}/`;
     }
 }
 </script>
