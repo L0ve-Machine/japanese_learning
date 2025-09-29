@@ -270,3 +270,55 @@ def redirect_to_correct_session(request):
     """古いセッション番号を正しいセッション番号にリダイレクト"""
     from django.shortcuts import redirect
     return redirect('quiz', year=2025, session_number=37)
+
+@login_required
+@allow_free_access
+def subject_learning_view(request):
+    """科目学習メインページ"""
+    import os
+    from django.conf import settings
+
+    # 利用可能な科目ファイル一覧を取得
+    subjects_dir = os.path.join(settings.BASE_DIR, 'static', 'subjects')
+    available_subjects = []
+
+    if os.path.exists(subjects_dir):
+        for filename in os.listdir(subjects_dir):
+            if filename.endswith('.html'):
+                subject_name = filename.replace('.html', '')
+                available_subjects.append({
+                    'name': subject_name,
+                    'filename': filename,
+                    'url': f'/static/subjects/{filename}'
+                })
+
+    return render(request, 'subjects/subject_learning.html', {
+        'available_subjects': available_subjects,
+        'user': request.user
+    })
+
+@login_required
+@allow_free_access
+def subject_detail_view(request, subject_name):
+    """個別科目詳細ページ"""
+    import os
+    from django.conf import settings
+    from django.http import HttpResponse, Http404
+
+    # セキュリティ: パストラバーサル攻撃を防ぐ
+    if '..' in subject_name or '/' in subject_name:
+        raise Http404("Invalid subject name")
+
+    subject_file = f"{subject_name}.html"
+    file_path = os.path.join(settings.BASE_DIR, 'static', 'subjects', subject_file)
+
+    if not os.path.exists(file_path):
+        raise Http404("Subject not found")
+
+    # HTMLファイルの内容を読み込み
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        return HttpResponse(html_content)
+    except Exception as e:
+        raise Http404("Error reading subject file")

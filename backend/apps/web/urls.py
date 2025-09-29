@@ -12,4 +12,7 @@ urlpatterns = [
     path('quiz/<int:year>/<int:session_number>/', views.quiz_view, name='quiz'),
     # 応急処置: 古いセッション番号を正しいセッション番号にリダイレクト
     path('quiz/2025/1/', views.redirect_to_correct_session, name='quiz_redirect'),
+    # 科目学習
+    path('subjects/', views.subject_learning_view, name='subject_learning'),
+    path('subjects/<str:subject_name>/', views.subject_detail_view, name='subject_detail'),
 ]
