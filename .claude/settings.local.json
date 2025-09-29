@@ -42,7 +42,8 @@
       "WebFetch(domain:codepen.io)",
       "Bash(pip install:*)",
       "Bash(git checkout:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
