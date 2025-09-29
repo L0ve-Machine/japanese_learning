@@ -51,7 +51,10 @@
       "Bash(find:*)",
       "Bash(while read dir)",
       "Bash(do echo \"=== $dir ===\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(\"\"C:\\Users\\genki\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe\"\" --version)",
+      "Bash(start frontend/past-exams.html)",
+      "Bash(start frontend/past-exams-standalone.html)"
     ],
     "deny": [],
     "ask": []

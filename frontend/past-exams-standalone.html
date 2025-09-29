@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>過去問題 - 介護福祉士試験対策</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header Navigation */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-user {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .dashboard-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        #category-page {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.75rem;
+        }
+
+        .space-y-4 > * + * {
+            margin-top: 1rem;
+        }
+
+        .space-y-2 > * + * {
+            margin-top: 0.5rem;
+        }
+
+        /* 年度選択 */
+        .border {
+            border: 1px solid #e5e7eb;
+        }
+
+        .rounded-lg {
+            border-radius: 0.5rem;
+        }
+
+        .rounded {
+            border-radius: 0.25rem;
+        }
+
+        .divide-y > * + * {
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .year-row {
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+        }
+
+        .year-row:hover {
+            background-color: #f9fafb;
+        }
+
+        .year-row.selected {
+            background-color: #ede9fe;
+            border-color: #a855f7;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .flex-grow {
+            flex: 1 1 0%;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .start-year-btn {
+            transition: all 0.2s ease;
+            background-color: #a855f7;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .start-year-btn:hover {
+            background-color: #9333ea;
+            transform: scale(1.05);
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .text-base {
+            font-size: 1rem;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        /* アコーディオングループ */
+        .group-accordion {
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .group-header:hover {
+            background-color: #f9fafb;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.125rem;
+        }
+
+        .accordion-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .subject-panel {
+            padding: 0.75rem;
+            border-top: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            display: none;
+            animation: slideDown 0.2s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 300px;
+            }
+        }
+
+        .subject-buttons-container {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
+        }
+
+        .selectable {
+            transition: all 0.2s ease;
+            background: white;
+            width: 100%;
+            text-align: left;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .selectable:hover {
+            background-color: white;
+            border-color: #a855f7;
+            transform: translateY(-1px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .selectable.selected {
+            background-color: #ede9fe;
+            border-color: #a855f7;
+            color: #7c3aed;
+            font-weight: 600;
+        }
+
+        /* 開始ボタン */
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary {
+            background-color: #d1d5db;
+            color: #9ca3af;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: not-allowed;
+        }
+
+        .btn-primary:not(:disabled) {
+            background-color: #a855f7;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-primary:not(:disabled):hover {
+            background-color: #9333ea;
+            transform: scale(1.1);
+        }
+
+        .text-gray-600 {
+            color: #4b5563;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+
+            #category-page {
+                padding: 1rem;
+            }
+
+            .subject-buttons-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="dashboard-preview.html" class="nav-brand">
+                <span class="material-icons">school</span>
+                日本語学習プラットフォーム
+            </a>
+            <div class="nav-menu">
+                <span class="nav-user">学習者さん</span>
+                <a href="dashboard-preview.html" class="nav-link">ダッシュボード</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>過去問題</h1>
+            <p class="dashboard-subtitle">年度と科目を選択して過去問題を開始しましょう</p>
+        </div>
+
+        <div id="category-page">
+            <div class="space-y-4">
+                <!-- 年度選択 -->
+                <div>
+                    <h2 class="section-title">1. 年度を選ぶ</h2>
+                    <div id="year-container" class="border rounded-lg divide-y">
+                        <div class="year-row selected" data-year="2023">
+                            <span class="font-medium flex-grow cursor-pointer py-1 px-2">2023年度</span>
+                            <button class="start-year-btn">
+                                <i class="material-icons text-base">play_arrow</i>
+                            </button>
+                        </div>
+                        <div class="year-row" data-year="2022">
+                            <span class="font-medium flex-grow cursor-pointer py-1 px-2">2022年度</span>
+                            <button class="start-year-btn">
+                                <i class="material-icons text-base">play_arrow</i>
+                            </button>
+                        </div>
+                        <div class="year-row" data-year="2021">
+                            <span class="font-medium flex-grow cursor-pointer py-1 px-2">2021年度</span>
+                            <button class="start-year-btn">
+                                <i class="material-icons text-base">play_arrow</i>
+                            </button>
+                        </div>
+                        <div class="year-row" data-year="2020">
+                            <span class="font-medium flex-grow cursor-pointer py-1 px-2">2020年度</span>
+                            <button class="start-year-btn">
+                                <i class="material-icons text-base">play_arrow</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 科目グループ選択 -->
+                <div>
+                    <h2 class="section-title">2. ABC & 科目</h2>
+                    <div id="group-container" class="space-y-2">
+                        <!-- Aグループ -->
+                        <div class="group-accordion">
+                            <div class="group-header" data-group="A">
+                                <h3 class="font-semibold text-sm">Aグループ</h3>
+                                <i class="material-icons accordion-icon">expand_more</i>
+                            </div>
+                            <div class="subject-panel">
+                                <div class="subject-buttons-container">
+                                    <button class="selectable" data-subject="1" data-subject-name="人間の尊厳と自立">人間の尊厳と自立</button>
+                                    <button class="selectable" data-subject="2" data-subject-name="介護の基本">介護の基本</button>
+                                    <button class="selectable" data-subject="3" data-subject-name="社会の理解">社会の理解</button>
+                                    <button class="selectable" data-subject="4" data-subject-name="人間関係とコミュニケーション">人間関係とコミュニケーション</button>
+                                    <button class="selectable" data-subject="5" data-subject-name="コミュニケーション技術">コミュニケーション技術</button>
+                                    <button class="selectable" data-subject="6" data-subject-name="生活支援技術">生活支援技術</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bグループ -->
+                        <div class="group-accordion">
+                            <div class="group-header" data-group="B">
+                                <h3 class="font-semibold text-sm">Bグループ</h3>
+                                <i class="material-icons accordion-icon">expand_more</i>
+                            </div>
+                            <div class="subject-panel">
+                                <div class="subject-buttons-container">
+                                    <button class="selectable" data-subject="7" data-subject-name="こころとからだのしくみ">こころとからだのしくみ</button>
+                                    <button class="selectable" data-subject="8" data-subject-name="発達と老化の理解">発達と老化の理解</button>
+                                    <button class="selectable" data-subject="9" data-subject-name="認知症の理解">認知症の理解</button>
+                                    <button class="selectable" data-subject="10" data-subject-name="障害の理解">障害の理解</button>
+                                    <button class="selectable" data-subject="11" data-subject-name="医療的ケア（基礎）">医療的ケア（基礎）</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cグループ -->
+                        <div class="group-accordion">
+                            <div class="group-header" data-group="C">
+                                <h3 class="font-semibold text-sm">Cグループ</h3>
+                                <i class="material-icons accordion-icon">expand_more</i>
+                            </div>
+                            <div class="subject-panel">
+                                <div class="subject-buttons-container">
+                                    <button class="selectable" data-subject="12" data-subject-name="介護過程">介護過程</button>
+                                    <button class="selectable" data-subject="13" data-subject-name="喀痰吸引">喀痰吸引</button>
+                                    <button class="selectable" data-subject="14" data-subject-name="経管栄養">経管栄養</button>
+                                    <button class="selectable" data-subject="999" data-subject-name="総合問題">総合問題</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中央の開始ボタン -->
+            <div class="mt-6 text-center">
+                <button id="start-quiz-btn" class="btn-primary mx-auto" disabled>
+                    <i class="material-icons text-lg">play_arrow</i>
+                </button>
+                <p class="mt-1 text-xs text-gray-600" id="selection-status">年度と科目を選択してください</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 介護福祉士試験対策プラットフォーム. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let selectedYear = "2023"; // デフォルトで2023年選択
+        let selectedSubjects = [];
+
+        // 年度選択の処理
+        document.addEventListener('DOMContentLoaded', function() {
+            // 年度行のクリック処理
+            document.querySelectorAll('.year-row').forEach(row => {
+                row.addEventListener('click', function(e) {
+                    if (e.target.closest('.start-year-btn')) {
+                        return; // 再生ボタンがクリックされた場合は年度選択しない
+                    }
+
+                    // 他の年度の選択を解除
+                    document.querySelectorAll('.year-row').forEach(r => r.classList.remove('selected'));
+
+                    // この年度を選択
+                    this.classList.add('selected');
+                    selectedYear = this.dataset.year;
+
+                    updateStartButton();
+                });
+            });
+
+            // 年度別開始ボタンの処理
+            document.querySelectorAll('.start-year-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const year = this.closest('.year-row').dataset.year;
+
+                    // 全科目で開始
+                    selectedYear = year;
+                    selectedSubjects = Array.from(document.querySelectorAll('.selectable')).map(btn => btn.dataset.subject);
+
+                    startQuiz();
+                });
+            });
+
+            // アコーディオンの処理
+            document.querySelectorAll('.group-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const panel = this.nextElementSibling;
+                    const icon = this.querySelector('.accordion-icon');
+
+                    // パネルの表示/非表示を切り替え
+                    if (panel.style.display === 'none' || panel.style.display === '') {
+                        panel.style.display = 'block';
+                        icon.classList.add('rotated');
+                    } else {
+                        panel.style.display = 'none';
+                        icon.classList.remove('rotated');
+                    }
+                });
+            });
+
+            // 科目選択の処理
+            document.querySelectorAll('.selectable').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const subjectId = this.dataset.subject;
+
+                    if (this.classList.contains('selected')) {
+                        // 選択解除
+                        this.classList.remove('selected');
+                        selectedSubjects = selectedSubjects.filter(id => id !== subjectId);
+                    } else {
+                        // 選択
+                        this.classList.add('selected');
+                        selectedSubjects.push(subjectId);
+                    }
+
+                    updateStartButton();
+                });
+            });
+
+            // 中央開始ボタンの処理
+            document.getElementById('start-quiz-btn').addEventListener('click', function() {
+                if (!this.disabled) {
+                    startQuiz();
+                }
+            });
+
+            // 初期状態の設定
+            updateStartButton();
+        });
+
+        function updateStartButton() {
+            const startBtn = document.getElementById('start-quiz-btn');
+            const statusText = document.getElementById('selection-status');
+
+            if (selectedYear && selectedSubjects.length > 0) {
+                startBtn.disabled = false;
+                statusText.textContent = `${selectedYear}年度 - ${selectedSubjects.length}科目選択済み`;
+            } else if (selectedYear && selectedSubjects.length === 0) {
+                startBtn.disabled = true;
+                statusText.textContent = `${selectedYear}年度選択済み - 科目を選択してください`;
+            } else {
+                startBtn.disabled = true;
+                statusText.textContent = '年度と科目を選択してください';
+            }
+        }
+
+        function startQuiz() {
+            if (!selectedYear || selectedSubjects.length === 0) {
+                alert('年度と科目を選択してください。');
+                return;
+            }
+
+            const subjectNames = selectedSubjects.map(id => {
+                const btn = document.querySelector(`[data-subject="${id}"]`);
+                return btn ? btn.dataset.subjectName : '';
+            }).filter(name => name);
+
+            const message = `${selectedYear}年度の問題を開始します！\n\n選択科目:\n${subjectNames.join('\n')}\n\n問題数: 約${selectedSubjects.length * 8}問\n推定時間: ${Math.ceil(selectedSubjects.length * 8 * 1.8)}分`;
+
+            if (confirm(message)) {
+                // 実際のDjangoサーバーが動作していれば、そちらにリダイレクト
+                // window.location.href = `/quiz/${selectedYear}/1/`;
+
+                // 現在はデモとして詳細画面を表示
+                showExamDetail();
+            }
+        }
+
+        function showExamDetail() {
+            alert(`過去問クイズの詳細設定画面に移動します。\n\n実際のシステムでは：\n• 本番モード（220分制限）\n• 学習モード（科目別学習）\n• 復習モード（間違えた問題中心）\n\nの選択ができます。`);
+        }
+    </script>
+</body>
+</html>
