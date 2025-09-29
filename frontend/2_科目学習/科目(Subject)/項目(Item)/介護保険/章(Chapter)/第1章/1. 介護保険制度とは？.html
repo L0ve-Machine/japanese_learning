@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第1章 - 介護試験対策</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .chapter-title {
+            font-size: 2rem;
+            margin: 20px 0 10px 0;
+        }
+        .content {
+            background: white;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+
+        /* Interactive text block styles from their template */
+        .text-block {
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+        .japanese-text-container {
+            line-height: 2.2;
+            font-size: 1.1rem;
+        }
+        .indonesian-text-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-left: 0.5rem;
+            margin-right: 4rem;
+        }
+        .indonesian-text-wrapper.open {
+            max-height: 300px;
+        }
+        .indonesian-text {
+            color: #4b5563;
+            font-size: 0.95rem;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-left: 3px solid #d1d5db;
+        }
+        .translation-toggle {
+            background: none;
+            border: none;
+            color: #6b7280;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .translation-toggle:hover {
+            background-color: #f3f4f6;
+        }
+        .translation-toggle i {
+            transition: all 0.3s ease;
+        }
+        .translation-toggle.open i {
+            transform: rotate(180deg);
+        }
+        .text-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        /* Vocabulary word styling from their template */
+        .vocabulary-word {
+            cursor: pointer;
+            border-bottom: 1px dotted #9ca3af;
+            transition: border-color 0.2s;
+        }
+        .vocabulary-word:hover {
+            border-color: #374151;
+        }
+        #translation-popup {
+            max-width: 250px;
+            line-height: 1.5;
+            position: absolute;
+            z-index: 50;
+            padding: 12px;
+            background-color: #1f2937;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            font-size: 0.875rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="../../介護保険.html" class="back-btn">← 戻る</a>
+        <h1 class="chapter-title">第1章</h1>
+        <p><strong>章名:</strong> 1. 介護保険制度とは？</p>
+    </div>
+
+    <div class="content">
+        <h2>1. 介護保険制度とは？</h2>
+
+        <div class="text-content">
+            <!-- Text Block 1 -->
+            <div class="text-block">
+                <div class="text-container">
+                    <p class="japanese-text-container" style="flex-grow: 1; padding-right: 1rem;">
+                        <span class="vocabulary-word" data-translation="Sistem asuransi perawatan jangka panjang">介護保険制度</span>は、<span class="vocabulary-word" data-translation="Lansia">高齢者</span>の<span class="vocabulary-word" data-translation="Perawatan">介護</span>を<span class="vocabulary-word" data-translation="Seluruh masyarakat">社会全体</span>で<span class="vocabulary-word" data-translation="Mendukung">支える</span><span class="vocabulary-word" data-translation="Mekanisme / Sistem">仕組み</span>です。
+                    </p>
+                    <button class="translation-toggle" title="全文翻訳">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="indonesian-text-wrapper">
+                    <p class="indonesian-text">
+                        Sistem asuransi perawatan jangka panjang adalah mekanisme untuk mendukung perawatan lansia oleh seluruh masyarakat.
+                    </p>
+                    <div class="indonesian-text" style="margin-top: 10px; overflow-x: auto; max-height: 300px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                            <thead>
+                                <tr style="background-color: #f3f4f6;">
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">日本語</th>
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">インドネシア語</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">介護保険制度</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Sistem asuransi perawatan jangka panjang</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">高齢者</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Lansia</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">介護</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Perawatan</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">社会全体</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Seluruh masyarakat</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">支える</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Mendukung</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">仕組み</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Mekanisme / Sistem</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Block 2 -->
+            <div class="text-block">
+                <div class="text-container">
+                    <p class="japanese-text-container" style="flex-grow: 1; padding-right: 1rem;">
+                        <span class="vocabulary-word" data-translation="Berusia 40 tahun ke atas">40歳以上</span>の<span class="vocabulary-word" data-translation="Warga negara">国民</span>が<span class="vocabulary-word" data-translation="Premi asuransi">保険料</span>を<span class="vocabulary-word" data-translation="Membayar">納め</span>、<span class="vocabulary-word" data-translation="Perawatan">介護</span>が<span class="vocabulary-word" data-translation="diperlukan">必要に</span>なったときに、<span class="vocabulary-word" data-translation="Biaya">費用</span>の<span class="vocabulary-word" data-translation="Sebagian">一部</span>を<span class="vocabulary-word" data-translation="Menanggung">負担する</span>だけで<span class="vocabulary-word" data-translation="Berbagai macam">様々</span>な<span class="vocabulary-word" data-translation="Layanan">サービス</span>を<span class="vocabulary-word" data-translation="Dapat menggunakan">利用できます</span>。
+                    </p>
+                    <button class="translation-toggle" title="全文翻訳">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="indonesian-text-wrapper">
+                    <p class="indonesian-text">
+                        Warga negara berusia 40 tahun ke atas membayar premi asuransi, dan ketika perawatan diperlukan, mereka dapat menggunakan berbagai layanan hanya dengan menanggung sebagian dari biayanya.
+                    </p>
+                    <div class="indonesian-text" style="margin-top: 10px; overflow-x: auto; max-height: 300px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                            <thead>
+                                <tr style="background-color: #f3f4f6;">
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">日本語</th>
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">インドネシア語</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">40歳以上</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Berusia 40 tahun ke atas</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">国民</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Warga negara</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">保険料</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Premi asuransi</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">納め</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Membayar</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">介護</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Perawatan</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">必要に</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">diperlukan</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">費用</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Biaya</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">一部</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Sebagian</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">負担する</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Menanggung</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">様々</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Berbagai macam</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">サービス</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Layanan</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">利用できます</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Dapat menggunakan</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Block 3 -->
+            <div class="text-block">
+                <div class="text-container">
+                    <p class="japanese-text-container" style="flex-grow: 1; padding-right: 1rem;">
+                        <strong><span class="vocabulary-word" data-translation="Badan penyelenggara">運営の主体</span>（<span class="vocabulary-word" data-translation="Penanggung (asuransi)">保険者</span>）</strong>→ <span class="vocabulary-word" data-translation="Pemerintah kota">市町村</span>と<span class="vocabulary-word" data-translation="Distrik khusus">特別区</span>です。
+                    </p>
+                    <button class="translation-toggle" title="全文翻訳">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="indonesian-text-wrapper">
+                    <p class="indonesian-text">
+                        <strong>Badan penyelenggara (penanggung)</strong> → Pemerintah kota dan distrik khusus.
+                    </p>
+                    <div class="indonesian-text" style="margin-top: 10px; overflow-x: auto; max-height: 300px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                            <thead>
+                                <tr style="background-color: #f3f4f6;">
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">日本語</th>
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">インドネシア語</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">運営の主体</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Badan penyelenggara</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">保険者</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Penanggung (asuransi)</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">市町村</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Pemerintah kota</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">特別区</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Distrik khusus</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Block 4 -->
+            <div class="text-block">
+                <div class="text-container">
+                    <p class="japanese-text-container" style="flex-grow: 1; padding-right: 1rem;">
+                        <strong><span class="vocabulary-word" data-translation="Tujuan">目的</span></strong>→ <span class="vocabulary-word" data-translation="Lansia">高齢者</span>が<span class="vocabulary-word" data-translation="Martabat">尊厳</span>を<span class="vocabulary-word" data-translation="Menjaga">保ち</span>、<span class="vocabulary-word" data-translation="Kemampuan">能力</span>に<span class="vocabulary-word" data-translation="Sesuai dengan">応じて</span><span class="vocabulary-word" data-translation="Mandiri">自立した</span><span class="vocabulary-word" data-translation="Kehidupan sehari-hari">日常生活</span>を<span class="vocabulary-word" data-translation="Agar dapat menjalani">送れるよう</span>に<span class="vocabulary-word" data-translation="Mendukung">支援する</span>ことです。
+                    </p>
+                    <button class="translation-toggle" title="全文翻訳">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="indonesian-text-wrapper">
+                    <p class="indonesian-text">
+                        <strong>Tujuan</strong> → Untuk mendukung lansia agar dapat mempertahankan martabat mereka dan menjalani kehidupan sehari-hari yang mandiri sesuai dengan kemampuan mereka.
+                    </p>
+                    <div class="indonesian-text" style="margin-top: 10px; overflow-x: auto; max-height: 300px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                            <thead>
+                                <tr style="background-color: #f3f4f6;">
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">日本語</th>
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">インドネシア語</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">目的</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Tujuan</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">高齢者</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Lansia</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">尊厳</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Martabat</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">保ち</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Menjaga</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">能力</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Kemampuan</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">応じて</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Sesuai dengan</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">自立した</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Mandiri</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">日常生活</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Kehidupan sehari-hari</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">送れるよう</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Agar dapat menjalani</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">支援する</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">Mendukung</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Section -->
+            <div class="quiz-section" style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+                <h3 style="color: #007bff; margin-bottom: 20px;">📝 確認問題</h3>
+
+                <!-- Question 1 -->
+                <div class="quiz-question" style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 6px; border-left: 4px solid #007bff;">
+                    <h4 style="color: #333; margin-bottom: 15px;">問題1</h4>
+                    <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">
+                        介護保険制度の目的として、最も適切なものはどれか？
+                    </p>
+                    <div class="quiz-options">
+                        <div class="option" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="1" data-option="1">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question1" value="1" style="margin-right: 10px;">
+                                1. 高齢者の医療費を軽減すること
+                            </label>
+                        </div>
+                        <div class="option correct-answer" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="1" data-option="2">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question1" value="2" style="margin-right: 10px;">
+                                2. 高齢者が尊厳を保ち、自立した生活を送れるよう支援すること
+                            </label>
+                        </div>
+                        <div class="option" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="1" data-option="3">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question1" value="3" style="margin-right: 10px;">
+                                3. 介護施設の数を増やすこと
+                            </label>
+                        </div>
+                        <div class="option" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="1" data-option="4">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question1" value="4" style="margin-right: 10px;">
+                                4. 家族の介護負担を完全になくすこと
+                            </label>
+                        </div>
+                        <div class="option" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="1" data-option="5">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question1" value="5" style="margin-right: 10px;">
+                                5. 40歳以上の国民全員に介護サービスを提供すること
+                            </label>
+                        </div>
+                    </div>
+                    <button class="check-answer-btn" onclick="checkAnswer(1)" style="margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">答えを確認</button>
+                    <div class="feedback" id="feedback1" style="margin-top: 15px; padding: 15px; border-radius: 4px; display: none;"></div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="quiz-question" style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 6px; border-left: 4px solid #007bff;">
+                    <h4 style="color: #333; margin-bottom: 15px;">問題2</h4>
+                    <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">
+                        介護保険制度の保険者（運営の主体）として、正しいものはどれか？
+                    </p>
+                    <div class="quiz-options">
+                        <div class="option" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="2" data-option="1">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question2" value="1" style="margin-right: 10px;">
+                                1. 国
+                            </label>
+                        </div>
+                        <div class="option" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="2" data-option="2">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question2" value="2" style="margin-right: 10px;">
+                                2. 都道府県
+                            </label>
+                        </div>
+                        <div class="option correct-answer" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="2" data-option="3">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question2" value="3" style="margin-right: 10px;">
+                                3. 市町村と特別区
+                            </label>
+                        </div>
+                        <div class="option" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="2" data-option="4">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question2" value="4" style="margin-right: 10px;">
+                                4. 医療保険組合
+                            </label>
+                        </div>
+                        <div class="option" style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;" data-question="2" data-option="5">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question2" value="5" style="margin-right: 10px;">
+                                5. 後期高齢者医療広域連合
+                            </label>
+                        </div>
+                    </div>
+                    <button class="check-answer-btn" onclick="checkAnswer(2)" style="margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">答えを確認</button>
+                    <div class="feedback" id="feedback2" style="margin-top: 15px; padding: 15px; border-radius: 4px; display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Translation popup -->
+    <div id="translation-popup"></div>
+
+    <script>
+        // Get translation popup element
+        const translationPopup = document.getElementById('translation-popup');
+
+        // Toggle functionality for translation buttons
+        function handleToggle(e, toggleClass, wrapperClass) {
+            const toggleBtn = e.target.closest(toggleClass);
+            if (toggleBtn) {
+                e.stopPropagation();
+                toggleBtn.classList.toggle('open');
+                const parent = toggleBtn.closest('.text-block');
+                if (parent) {
+                    const wrapper = parent.querySelector(wrapperClass);
+                    if (wrapper) wrapper.classList.toggle('open');
+                }
+            }
+        }
+
+        // Add event listeners
+        document.body.addEventListener('click', (e) => {
+            const wordSpan = e.target.closest('.vocabulary-word');
+
+            // Handle vocabulary word clicks
+            if (wordSpan) {
+                // Don't close popup if clicking on the popup itself
+                if (e.target.closest('#translation-popup')) return;
+
+                // Toggle popup if same word clicked again
+                if (translationPopup.style.display === 'block' && translationPopup.dataset.owner === wordSpan.outerHTML) {
+                    translationPopup.style.display = 'none';
+                    return;
+                }
+
+                // Show translation popup
+                const translation = wordSpan.dataset.translation;
+                translationPopup.innerHTML = translation;
+                translationPopup.dataset.owner = wordSpan.outerHTML;
+
+                // Position popup
+                const rect = wordSpan.getBoundingClientRect();
+                translationPopup.style.display = 'block';
+                const popupRect = translationPopup.getBoundingClientRect();
+
+                let top = window.scrollY + rect.bottom + 8;
+                let left = window.scrollX + rect.left + (rect.width / 2) - (popupRect.width / 2);
+
+                // Adjust if popup goes off screen
+                if (top + popupRect.height > window.innerHeight + window.scrollY) {
+                    top = window.scrollY + rect.top - popupRect.height - 8;
+                }
+                if (left < 0) left = 10;
+                else if (left + popupRect.width > window.innerWidth) left = window.innerWidth - popupRect.width - 10;
+
+                translationPopup.style.top = `${top}px`;
+                translationPopup.style.left = `${left}px`;
+
+                e.stopPropagation();
+            }
+            // Handle translation toggle buttons
+            else if (!e.target.closest('.translation-toggle')) {
+                // Hide popup when clicking elsewhere
+                translationPopup.style.display = 'none';
+            }
+
+            // Handle translation toggles
+            handleToggle(e, '.translation-toggle', '.indonesian-text-wrapper');
+        });
+
+        // Quiz functionality
+        function checkAnswer(questionNumber) {
+            const selectedOption = document.querySelector(`input[name="question${questionNumber}"]:checked`);
+            const feedbackDiv = document.getElementById(`feedback${questionNumber}`);
+
+            if (!selectedOption) {
+                alert('選択肢を選んでください。');
+                return;
+            }
+
+            const selectedValue = parseInt(selectedOption.value);
+            let feedbackData = getFeedbackData(questionNumber, selectedValue);
+            let isCorrect = isAnswerCorrect(questionNumber, selectedValue);
+
+            // Show feedback
+            feedbackDiv.style.display = 'block';
+            feedbackDiv.innerHTML = `
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="font-weight: bold; color: ${isCorrect ? '#28a745' : '#dc3545'};">
+                        ${isCorrect ? '✓ 正解' : '✗ 不正解'}
+                    </span>
+                </div>
+                <div style="background-color: #f8f9fa; padding: 12px; border-radius: 4px; border-left: 3px solid ${isCorrect ? '#28a745' : '#dc3545'};">
+                    <strong>解説:</strong><br>
+                    ${feedbackData.japanese}
+                </div>
+                <div style="background-color: #f1f3f4; padding: 12px; border-radius: 4px; margin-top: 10px; border-left: 3px solid #6c757d;">
+                    <strong>インドネシア語:</strong><br>
+                    ${feedbackData.indonesian}
+                </div>
+            `;
+
+            // Only highlight correct answer if user got it right
+            if (isCorrect) {
+                highlightCorrectAnswer(questionNumber);
+            }
+        }
+
+        function getFeedbackData(questionNumber, optionNumber) {
+            const feedbackData = {
+                1: {
+                    1: {
+                        japanese: '医療費の軽減は医療保険の目的です。介護保険は介護に要する費用の支援が目的です。',
+                        indonesian: 'Mengurangi biaya medis adalah tujuan asuransi kesehatan. Tujuan asuransi perawatan jangka panjang adalah untuk mendukung biaya yang diperlukan untuk perawatan.'
+                    },
+                    2: {
+                        japanese: '正解です。介護保険法第1条に定められている目的です。単に介護するだけでなく、利用者の尊厳と自立支援が重視されます。',
+                        indonesian: 'Benar. Ini adalah tujuan yang ditetapkan dalam Pasal 1 Undang-Undang Asuransi Perawatan Jangka Panjang. Tidak hanya sekadar merawat tetapi juga menekankan dukungan terhadap martabat dan kemandirian pengguna.'
+                    },
+                    3: {
+                        japanese: '介護基盤の整備は重要ですが、制度の直接的な目的ではありません。目的を達成するための手段の一つです。',
+                        indonesian: 'Pengembangan infrastruktur perawatan memang penting tetapi itu bukan tujuan langsung dari sistem ini. Itu adalah salah satu cara untuk mencapai tujuan.'
+                    },
+                    4: {
+                        japanese: '家族の負担軽減も制度の重要な役割ですが、「完全になくすこと」が目的ではありません。社会全体で支えることが基本です。',
+                        indonesian: 'Mengurangi beban keluarga juga merupakan peran penting dari sistem ini tetapi tujuannya bukan untuk \'menghilangkannya sepenuhnya\'. Prinsip dasarnya adalah dukungan dari seluruh masyarakat.'
+                    },
+                    5: {
+                        japanese: 'サービスが提供されるのは、保険料を納めている人のうち、介護が必要だと認定された人です。全員ではありません。',
+                        indonesian: 'Layanan diberikan kepada mereka yang membayar premi dan telah disertifikasi membutuhkan perawatan. Tidak untuk semua orang.'
+                    }
+                },
+                2: {
+                    1: {
+                        japanese: '国の役割は制度の基準設定や財政支援ですが、直接の運営主体ではありません。',
+                        indonesian: 'Peran negara adalah menetapkan standar sistem dan dukungan finansial tetapi bukan penyelenggara langsung.'
+                    },
+                    2: {
+                        japanese: '都道府県は、市町村への支援やサービス提供事業者の指定などを行いますが、保険者ではありません。',
+                        indonesian: 'Prefektur memberikan dukungan kepada pemerintah kota dan menunjuk penyedia layanan tetapi bukan penanggung.'
+                    },
+                    3: {
+                        japanese: '正解です。介護保険は、住民に最も身近な行政単位である市町村と特別区が保険者として運営しています。',
+                        indonesian: 'Benar. Asuransi perawatan jangka panjang diselenggarakan oleh pemerintah kota dan distrik khusus yang merupakan unit administrasi terdekat dengan penduduk.'
+                    },
+                    4: {
+                        japanese: '医療保険組合は医療保険の運営主体であり、介護保険の運営主体とは異なります。',
+                        indonesian: 'Asosiasi asuransi kesehatan adalah penyelenggara asuransi kesehatan dan berbeda dari penyelenggara asuransi perawatan jangka panjang.'
+                    },
+                    5: {
+                        japanese: 'これは後期高齢者医療制度の運営主体であり、介護保険の保険者ではありません。',
+                        indonesian: 'Ini adalah badan penyelenggara sistem asuransi kesehatan untuk lansia lanjutan bukan penanggung asuransi perawatan jangka panjang.'
+                    }
+                }
+            };
+
+            return feedbackData[questionNumber][optionNumber];
+        }
+
+        function isAnswerCorrect(questionNumber, optionNumber) {
+            const correctAnswers = {
+                1: 2, // Question 1 correct answer is option 2
+                2: 3  // Question 2 correct answer is option 3
+            };
+            return correctAnswers[questionNumber] === optionNumber;
+        }
+
+        function highlightCorrectAnswer(questionNumber) {
+            const correctAnswers = {1: 2, 2: 3};
+            const correctOptionNumber = correctAnswers[questionNumber];
+            const correctOption = document.querySelector(`input[name="question${questionNumber}"][value="${correctOptionNumber}"]`).closest('.option');
+
+            // Remove any existing highlights
+            document.querySelectorAll(`input[name="question${questionNumber}"]`).forEach(input => {
+                input.closest('.option').style.backgroundColor = '';
+                input.closest('.option').style.borderColor = '#dee2e6';
+            });
+
+            // Highlight correct answer
+            correctOption.style.backgroundColor = '#d4edda';
+            correctOption.style.borderColor = '#28a745';
+        }
+
+        console.log('Chapter 1 interactive functionality loaded');
+    </script>
+</body>
+</html>

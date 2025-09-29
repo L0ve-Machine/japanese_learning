@@ -386,15 +386,58 @@
 
         <!-- Subjects Grid -->
         <div class="subjects-grid" id="subjectsGrid">
-            <!-- Single Sample Subject Card -->
+            <!-- Subject 1: 介護試験対策 -->
             <div class="subject-card">
                 <div class="card-header">
                     <div class="card-icon" style="background: #4caf50;">
-                        <span class="material-icons">support</span>
+                        <span class="material-icons">medical_services</span>
                     </div>
                     <div>
                         <div class="card-title">介護試験対策</div>
-                        <div class="card-description">過去問等</div>
+                        <div class="card-description">Persiapan Ujian Kaigo</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">学習進捗</span>
+                        <span class="progress-label">5%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 5%; background: #4caf50;"></div>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">項目</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">章</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">進行中</div>
+                        <div class="stat-label">状態</div>
+                    </div>
+                </div>
+
+                <button class="action-btn btn-primary" onclick="startLearning('介護試験対策')">
+                    <span class="material-icons">play_arrow</span>
+                    学習開始
+                </button>
+            </div>
+
+            <!-- Subject 2: 介護の実務会話 -->
+            <div class="subject-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: #2196f3;">
+                        <span class="material-icons">chat</span>
+                    </div>
+                    <div>
+                        <div class="card-title">介護の実務会話</div>
+                        <div class="card-description">Percakapan Praktis Kaigo</div>
                     </div>
                 </div>
 
@@ -404,13 +447,13 @@
                         <span class="progress-label">0%</span>
                     </div>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%; background: #4caf50;"></div>
+                        <div class="progress-fill" style="width: 0%; background: #2196f3;"></div>
                     </div>
                 </div>
 
                 <div class="stats-row">
                     <div class="stat-item">
-                        <div class="stat-value">0</div>
+                        <div class="stat-value">2</div>
                         <div class="stat-label">項目</div>
                     </div>
                     <div class="stat-item">
@@ -423,7 +466,136 @@
                     </div>
                 </div>
 
-                <button class="action-btn btn-primary" onclick="startLearning('介護試験対策')">
+                <button class="action-btn btn-primary" onclick="startLearning('介護の実務会話')" style="background: #2196f3;">
+                    <span class="material-icons">play_arrow</span>
+                    学習開始
+                </button>
+            </div>
+
+            <!-- Subject 3: 日本人と会話 -->
+            <div class="subject-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: #ff9800;">
+                        <span class="material-icons">people</span>
+                    </div>
+                    <div>
+                        <div class="card-title">日本人と会話</div>
+                        <div class="card-description">Percakapan dengan Orang Jepang</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">学習進捗</span>
+                        <span class="progress-label">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%; background: #ff9800;"></div>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">項目</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">章</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">準備中</div>
+                        <div class="stat-label">状態</div>
+                    </div>
+                </div>
+
+                <button class="action-btn btn-primary" onclick="startLearning('日本人と会話')" style="background: #ff9800;">
+                    <span class="material-icons">play_arrow</span>
+                    学習開始
+                </button>
+            </div>
+
+            <!-- Subject 4: 特定技能評価試験 -->
+            <div class="subject-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: #9c27b0;">
+                        <span class="material-icons">assignment</span>
+                    </div>
+                    <div>
+                        <div class="card-title">特定技能評価試験</div>
+                        <div class="card-description">Ujian Evaluasi Keterampilan Khusus</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">学習進捗</span>
+                        <span class="progress-label">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%; background: #9c27b0;"></div>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">項目</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">章</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">準備中</div>
+                        <div class="stat-label">状態</div>
+                    </div>
+                </div>
+
+                <button class="action-btn btn-primary" onclick="startLearning('特定技能評価試験')" style="background: #9c27b0;">
+                    <span class="material-icons">play_arrow</span>
+                    学習開始
+                </button>
+            </div>
+
+            <!-- Subject 5: 日本の生活マナー -->
+            <div class="subject-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: #795548;">
+                        <span class="material-icons">home</span>
+                    </div>
+                    <div>
+                        <div class="card-title">日本の生活マナー</div>
+                        <div class="card-description">Etiket Kehidupan di Jepang</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">学習進捗</span>
+                        <span class="progress-label">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%; background: #795548;"></div>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">項目</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">章</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">準備中</div>
+                        <div class="stat-label">状態</div>
+                    </div>
+                </div>
+
+                <button class="action-btn btn-primary" onclick="startLearning('日本の生活マナー')" style="background: #795548;">
                     <span class="material-icons">play_arrow</span>
                     学習開始
                 </button>
@@ -471,8 +643,22 @@
         }
 
         function startLearning(subjectName) {
-            // Navigate to hierarchical learning page
-            window.location.href = '科目(Subject)/介護試験対策.html';
+            // Navigate to the corresponding subject page
+            const subjectFiles = {
+                '介護試験対策': '介護試験対策.html',
+                '介護の実務会話': '介護の実務会話.html',
+                '日本人と会話': '日本人と会話.html',
+                '特定技能評価試験': '特定技能評価試験.html',
+                '日本の生活マナー': '日本の生活マナー.html'
+            };
+
+            const fileName = subjectFiles[subjectName];
+            if (fileName) {
+                window.location.href = `科目(Subject)/${fileName}`;
+            } else {
+                console.error(`Unknown subject: ${subjectName}`);
+                showError(`科目 "${subjectName}" が見つかりません`);
+            }
         }
 
         // Search functionality

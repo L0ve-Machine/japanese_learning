@@ -43,7 +43,15 @@
       "Bash(pip install:*)",
       "Bash(git checkout:*)",
       "Bash(git merge:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(del \"C:\\Users\\masam\\OneDrive\\Desktop\\prodivant_project\\japanese_learning\\frontend\\2_科目学習\\科目(Subject)\\項目(Item)\\介護保険\\章(Chapter)\\第2章\\2. 被保険者（保険に加入する人）.html\")",
+      "Bash(git push:*)",
+      "Bash(if [ -d \"章(Chapter)\" ])",
+      "Bash(fi)",
+      "Bash(find:*)",
+      "Bash(while read dir)",
+      "Bash(do echo \"=== $dir ===\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

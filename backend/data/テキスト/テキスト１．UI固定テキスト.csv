@@ -1,0 +1,12 @@
+element_id,japanese,indonesian,context
+page_title,Textbook,Buku Teks,ページタイトル
+back_button,前へ,Sebelumnya,前のページボタン
+next_button,次へ,Selanjutnya,次のページボタン
+answer_button,解答する,Jawab,クイズ解答ボタン
+retry_button,やり直す,Coba Lagi,クイズやり直しボタン
+quiz_title,確認問題,Soal Konfirmasi,クイズセクションタイトル
+question_prefix,問題,Soal,問題番号の前につく文字
+correct_feedback,正解！,Benar!,正解時のフィードバック
+incorrect_feedback,不正解,Salah,不正解時のフィードバック
+photo_placeholder,photo,foto,写真プレースホルダー
+preparing_content,コンテンツの準備中です。,Konten sedang dipersiapkan.,未実装コンテンツ表示

@@ -458,7 +458,7 @@
                                 <div class="nav-title">${item.name}</div>
                                 <div class="nav-subtitle">${item.description}</div>
                             </div>
-                            <div class="nav-badge">${item.chapters?.length || 0} 章</div>
+                            <div class="nav-badge">${item.name === '介護保険' ? 5 : (item.chapters?.length || 0)} 章</div>
                             <span class="material-icons nav-arrow">chevron_right</span>
                         </a>
                     </li>
@@ -467,9 +467,8 @@
         }
 
         function navigateToItem(itemId, itemName, itemDescription) {
-            const item = { id: itemId, name: itemName, description: itemDescription, type: 'item' };
-            navigationPath.push(item);
-            navigateToLevel('item', item);
+            // Navigate to actual SubjectItem page
+            window.location.href = `項目(Item)/${itemName}/${itemName}.html`;
         }
 
         function showItemChapters(item) {
