@@ -299,7 +299,7 @@
         <!-- Learning Menu Section -->
         <h2 class="section-title">学習メニュー</h2>
         <div class="learning-grid">
-            <div class="learning-card card-past-exams fade-in" onclick="navigateTo('past-exams')">
+            <div class="learning-card card-past-exams fade-in" onclick="navigateTo('past-exams-data')">
                 <div class="card-icon">
                     <span class="material-icons">assignment</span>
                 </div>
@@ -422,6 +422,12 @@
                     break;
                 case 'past-exams':
                     window.location.href = 'past-exams-standalone.html';
+                    break;
+                case 'past-exams-new':
+                    window.location.href = 'past-exams-new.html';
+                    break;
+                case 'past-exams-data':
+                    window.location.href = 'past-exams-data.html';
                     break;
                 case 'vocabulary':
                     alert('ことばセクションに移動します（開発中）');

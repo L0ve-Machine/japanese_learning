@@ -54,7 +54,17 @@
       "Bash(done)",
       "Bash(\"\"C:\\Users\\genki\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe\"\" --version)",
       "Bash(start frontend/past-exams.html)",
-      "Bash(start frontend/past-exams-standalone.html)"
+      "Bash(start frontend/past-exams-standalone.html)",
+      "Bash(start frontend/past-exams-data.html)",
+      "Bash(python3 manage.py migrate:*)",
+      "Bash(./venv/bin/python3 manage.py migrate:*)",
+      "Bash(powershell:*)",
+      "Bash(\"C:\\Users\\genki\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe\" --version)",
+      "Bash(sqlite3:*)",
+      "Bash(if exist db.sqlite3 del db.sqlite3)",
+      "Bash(\"C:\\Users\\genki\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe\" manage.py makemigrations)",
+      "Bash(timeout:*)",
+      "Bash(start:*)"
     ],
     "deny": [],
     "ask": []
