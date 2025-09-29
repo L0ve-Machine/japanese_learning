@@ -6,7 +6,7 @@
 {% block content %}
 <div class="dashboard-container">
     <div class="dashboard-header">
-        <h1>過去問題</h1>
+        <h1>過去問題 [UPDATED-FIX-V3-CACHE-CLEAR]</h1>
         <p class="dashboard-subtitle">年度と科目を選択して過去問題を開始しましょう</p>
     </div>
 
@@ -485,12 +485,20 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
             const year = this.closest('.year-row').dataset.year;
+            console.log('DEBUG: Year button clicked, year =', year);
 
             // 全科目で開始
             selectedYear = year;
             selectedSubjects = Array.from(document.querySelectorAll('.selectable')).map(btn => btn.dataset.subject);
 
-            startQuiz();
+            // 年度によって処理を分岐
+            let yearNum = parseInt(year);
+            if (yearNum === 2025) {
+                console.log('DEBUG: Direct redirect to 2025/37');
+                window.location.href = `/quiz/2025/37/`;
+            } else {
+                alert(`${year}年度のデータはまだ準備されていません。\n現在利用可能な年度: 2025年度のみ`);
+            }
         });
     });
 
@@ -561,24 +569,10 @@ function updateStartButton() {
 }
 
 function startQuiz() {
-    if (!selectedYear || selectedSubjects.length === 0) {
-        alert('年度と科目を選択してください。');
-        return;
-    }
-
-    const subjectNames = selectedSubjects.map(id => {
-        const btn = document.querySelector(`[data-subject="${id}"]`);
-        return btn ? btn.dataset.subjectName : '';
-    }).filter(name => name);
-
-    const message = `${selectedYear}年度の問題を開始します！\n\n選択科目:\n${subjectNames.join('\n')}\n\n問題数: 約${selectedSubjects.length * 8}問\n推定時間: ${Math.ceil(selectedSubjects.length * 8 * 1.8)}分`;
-
-    if (confirm(message)) {
-        // 最初のセッション（第1回）にリダイレクト
-        // 年度に対応する正しいセッション番号を使用
-        let sessionNumber = selectedYear === 2025 ? 37 : selectedYear === 2024 ? 36 : 35;
-        window.location.href = `/quiz/${selectedYear}/${sessionNumber}/`;
-    }
+    // とりあえず問題1から50まで表示するシンプルな解決
+    console.log('DEBUG: startQuiz called - redirecting to /quiz/2025/37/');
+    alert('デバッグ: /quiz/2025/37/ にリダイレクトします');
+    window.location.href = `/quiz/2025/37/`;
 }
 </script>
 {% endblock %}

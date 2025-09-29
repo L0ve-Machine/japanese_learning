@@ -161,9 +161,21 @@ def past_exam_detail_view(request, year, session_number):
 def quiz_view(request, year, session_number):
     """クイズページ"""
     from apps.learning.models import ExamYear, ExamSession, Question, Subject, Choice
-    from django.shortcuts import get_object_or_404
+    from django.shortcuts import get_object_or_404, redirect
 
     exam_year = get_object_or_404(ExamYear, year=year, is_active=True)
+
+    # セッション番号1の場合は適切なセッション番号にリダイレクト
+    if session_number == 1:
+        # 2025年度は37回、その他は利用可能なセッションを探す
+        if year == 2025:
+            return redirect('quiz', year=2025, session_number=37)
+        else:
+            # その他の年度の場合は最初の利用可能なセッションを探す
+            available_session = ExamSession.objects.filter(year=exam_year, is_active=True).first()
+            if available_session:
+                return redirect('quiz', year=year, session_number=available_session.session_number)
+
     exam_session = get_object_or_404(ExamSession, year=exam_year, session_number=session_number, is_active=True)
 
     # Get question number from URL parameter, default to 1
@@ -253,3 +265,8 @@ def quiz_view(request, year, session_number):
         'progress_percentage': progress_percentage,
         'user': request.user
     })
+
+def redirect_to_correct_session(request):
+    """古いセッション番号を正しいセッション番号にリダイレクト"""
+    from django.shortcuts import redirect
+    return redirect('quiz', year=2025, session_number=37)
