@@ -1,0 +1,496 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ subject.title }} - 介護福祉士試験対策{% endblock %}
+
+{% block extra_head %}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header with breadcrumbs */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: #f5f5f5;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: #666;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .breadcrumb-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .breadcrumb-item:hover {
+            color: #2196f3;
+        }
+
+        .breadcrumb-item.active {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Main content area */
+        .content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .content-header {
+            background: linear-gradient(135deg, {{ subject.color }} 0%, {{ subject.color }}dd 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .content-title {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .content-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .content-body {
+            padding: 24px;
+        }
+
+        .learning-sections {
+            display: grid;
+            gap: 24px;
+        }
+
+        .section {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f5f5f5;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .section-header:hover {
+            background: #eeeeee;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-icon {
+            color: {{ subject.color }};
+        }
+
+        .section-toggle {
+            color: #666;
+            transition: transform 0.2s ease;
+        }
+
+        .section.open .section-toggle {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .section.open .section-content {
+            display: block;
+        }
+
+        .chapter-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .chapter-item {
+            background: #f9f9f9;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chapter-item:hover {
+            background: #f0f0f0;
+            border-color: {{ subject.color }};
+        }
+
+        .chapter-info {
+            flex-grow: 1;
+        }
+
+        .chapter-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .chapter-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .chapter-progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .progress-badge {
+            background: {{ subject.color }};
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+
+        .start-btn {
+            background: {{ subject.color }};
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: opacity 0.2s ease;
+        }
+
+        .start-btn:hover {
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #f9f9f9;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: {{ subject.color }};
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .page-title {
+                font-size: 1.2rem;
+            }
+
+            .content-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Header with breadcrumbs -->
+        <div class="header">
+            <a href="{% url 'subject_learning' %}" class="back-btn">
+                <span class="material-icons">arrow_back</span>
+            </a>
+
+            <div class="breadcrumbs">
+                <a href="{% url 'dashboard' %}" class="breadcrumb-item">ダッシュボード</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="{% url 'subject_learning' %}" class="breadcrumb-item">科目学習</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-item active">{{ subject.title }}</span>
+            </div>
+
+            <div class="page-title">
+                <div class="page-icon" style="background: {{ subject.color }};">
+                    <span class="material-icons">{{ subject.icon }}</span>
+                </div>
+                <div>
+                    <div>{{ subject.title }}</div>
+                    <div style="font-size: 0.9rem; font-weight: 400; color: #666;">{{ subject.description }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="content-header">
+                <h1 class="content-title">{{ subject.title }}</h1>
+                <p class="content-subtitle">{{ subject.description }}</p>
+            </div>
+
+            <div class="content-body">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">項目数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">章数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">15%</div>
+                        <div class="stat-label">進捗率</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">進行中</div>
+                        <div class="stat-label">状態</div>
+                    </div>
+                </div>
+
+                <!-- Learning sections -->
+                <div class="learning-sections">
+                    <!-- Section 1: 介護保険 -->
+                    <div class="section" onclick="toggleSection(this)">
+                        <div class="section-header">
+                            <div class="section-title">
+                                <span class="material-icons section-icon">health_and_safety</span>
+                                介護保険
+                            </div>
+                            <span class="material-icons section-toggle">expand_more</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="chapter-list">
+                                <div class="chapter-item" onclick="startChapter('第1章', '介護保険制度創設の背景及び目的', event)">
+                                    <div class="chapter-info">
+                                        <div class="chapter-title">第1章</div>
+                                        <div class="chapter-subtitle">介護保険制度創設の背景及び目的</div>
+                                    </div>
+                                    <div class="chapter-progress">
+                                        <span class="progress-badge">完了</span>
+                                        <button class="start-btn">
+                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
+                                            開始
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="chapter-item" onclick="startChapter('第2章', '被保険者（保険に加入する人）', event)">
+                                    <div class="chapter-info">
+                                        <div class="chapter-title">第2章</div>
+                                        <div class="chapter-subtitle">被保険者（保険に加入する人）</div>
+                                    </div>
+                                    <div class="chapter-progress">
+                                        <span class="progress-badge" style="background: #ff9800;">進行中</span>
+                                        <button class="start-btn">
+                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
+                                            続行
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: 医療との連携とリハビリテーション -->
+                    <div class="section" onclick="toggleSection(this)">
+                        <div class="section-header">
+                            <div class="section-title">
+                                <span class="material-icons section-icon">medical_services</span>
+                                医療との連携とリハビリテーション
+                            </div>
+                            <span class="material-icons section-toggle">expand_more</span>
+                        </div>
+                        <div class="section-content">
+                            <div class="chapter-list">
+                                <div class="chapter-item" onclick="startChapter('第3章', '医療との連携', event)">
+                                    <div class="chapter-info">
+                                        <div class="chapter-title">第3章</div>
+                                        <div class="chapter-subtitle">医療との連携</div>
+                                    </div>
+                                    <div class="chapter-progress">
+                                        <span class="progress-badge" style="background: #ccc;">未開始</span>
+                                        <button class="start-btn">
+                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
+                                            開始
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="chapter-item" onclick="startChapter('第4章', 'リハビリテーション', event)">
+                                    <div class="chapter-info">
+                                        <div class="chapter-title">第4章</div>
+                                        <div class="chapter-subtitle">リハビリテーション</div>
+                                    </div>
+                                    <div class="chapter-progress">
+                                        <span class="progress-badge" style="background: #ccc;">未開始</span>
+                                        <button class="start-btn">
+                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
+                                            開始
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="chapter-item" onclick="startChapter('第5章', '福祉用具の意義と活用', event)">
+                                    <div class="chapter-info">
+                                        <div class="chapter-title">第5章</div>
+                                        <div class="chapter-subtitle">福祉用具の意義と活用</div>
+                                    </div>
+                                    <div class="chapter-progress">
+                                        <span class="progress-badge" style="background: #ccc;">未開始</span>
+                                        <button class="start-btn">
+                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
+                                            開始
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(element) {
+            // Don't toggle if clicking on a button inside
+            if (event.target.closest('.start-btn')) {
+                return;
+            }
+
+            element.classList.toggle('open');
+        }
+
+        function startChapter(chapterNumber, chapterTitle, event) {
+            event.stopPropagation();
+
+            // Navigate to chapter learning page
+            const params = new URLSearchParams({
+                subject: '{{ subject_name }}',
+                chapter: chapterNumber,
+                title: chapterTitle
+            });
+
+            window.location.href = `/subjects/{{ subject_name }}/chapter/?${params.toString()}`;
+        }
+
+        // Auto-open first section
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstSection = document.querySelector('.section');
+            if (firstSection) {
+                firstSection.classList.add('open');
+            }
+        });
+
+        console.log('Subject detail page loaded: {{ subject_name }}');
+    </script>
+{% endblock %}

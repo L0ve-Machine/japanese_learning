@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>科目学習 - 強化版</title>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}科目学習 - 介護福祉士試験対策{% endblock %}
+
+{% block extra_head %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -339,8 +339,9 @@
             100% { transform: rotate(360deg); }
         }
     </style>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -348,7 +349,7 @@
                 <h1>科目学習</h1>
                 <p>13科目から選択して、テキスト→問題→解説の流れで学習します</p>
             </div>
-            <a href="../dashboard-preview.html" class="back-btn">
+            <a href="{% url 'dashboard' %}" class="back-btn">
                 <span class="material-icons">arrow_back</span>
                 ダッシュボードに戻る
             </a>
@@ -643,18 +644,18 @@
         }
 
         function startLearning(subjectName) {
-            // Navigate to the corresponding subject page
+            // Navigate to the corresponding subject page using Django URLs
             const subjectFiles = {
-                '介護試験対策': '介護試験対策.html',
-                '介護の実務会話': '介護の実務会話.html',
-                '日本人と会話': '日本人と会話.html',
-                '特定技能評価試験': '特定技能評価試験.html',
-                '日本の生活マナー': '日本の生活マナー.html'
+                '介護試験対策': '介護試験対策',
+                '介護の実務会話': '介護の実務会話',
+                '日本人と会話': '日本人と会話',
+                '特定技能評価試験': '特定技能評価試験',
+                '日本の生活マナー': '日本の生活マナー'
             };
 
-            const fileName = subjectFiles[subjectName];
-            if (fileName) {
-                window.location.href = `科目(Subject)/${fileName}`;
+            const subjectKey = subjectFiles[subjectName];
+            if (subjectKey) {
+                window.location.href = `/subjects/${encodeURIComponent(subjectKey)}/`;
             } else {
                 console.error(`Unknown subject: ${subjectName}`);
                 showError(`科目 "${subjectName}" が見つかりません`);
@@ -706,5 +707,5 @@
 
         console.log('Enhanced Subject Learning interface loaded');
     </script>
-</body>
-</html>
+    </div>
+{% endblock %}

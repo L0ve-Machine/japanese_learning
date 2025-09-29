@@ -301,24 +301,54 @@ def subject_learning_view(request):
 @allow_free_access
 def subject_detail_view(request, subject_name):
     """個別科目詳細ページ"""
-    import os
-    from django.conf import settings
-    from django.http import HttpResponse, Http404
+    from django.shortcuts import get_object_or_404
+    from django.http import Http404
 
     # セキュリティ: パストラバーサル攻撃を防ぐ
     if '..' in subject_name or '/' in subject_name:
         raise Http404("Invalid subject name")
 
-    subject_file = f"{subject_name}.html"
-    file_path = os.path.join(settings.BASE_DIR, 'static', 'subjects', subject_file)
+    # 利用可能な科目リスト
+    available_subjects = {
+        '介護試験対策': {
+            'title': '介護試験対策',
+            'description': 'Persiapan Ujian Kaigo',
+            'icon': 'medical_services',
+            'color': '#4caf50'
+        },
+        '介護の実務会話': {
+            'title': '介護の実務会話',
+            'description': 'Percakapan Praktis Kaigo',
+            'icon': 'chat',
+            'color': '#2196f3'
+        },
+        '日本人と会話': {
+            'title': '日本人と会話',
+            'description': 'Percakapan dengan Orang Jepang',
+            'icon': 'people',
+            'color': '#ff9800'
+        },
+        '特定技能評価試験': {
+            'title': '特定技能評価試験',
+            'description': 'Ujian Evaluasi Keterampilan Khusus',
+            'icon': 'assignment',
+            'color': '#9c27b0'
+        },
+        '日本の生活マナー': {
+            'title': '日本の生活マナー',
+            'description': 'Etiket Kehidupan di Jepang',
+            'icon': 'home',
+            'color': '#795548'
+        }
+    }
 
-    if not os.path.exists(file_path):
+    if subject_name not in available_subjects:
         raise Http404("Subject not found")
 
-    # HTMLファイルの内容を読み込み
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            html_content = f.read()
-        return HttpResponse(html_content)
-    except Exception as e:
-        raise Http404("Error reading subject file")
+    subject = available_subjects[subject_name]
+
+    return render(request, 'subjects/subject_detail.html', {
+        'subject_name': subject_name,
+        'subject': subject,
+        'user': request.user
+    })
