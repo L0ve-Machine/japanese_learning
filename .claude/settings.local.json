@@ -40,7 +40,9 @@
       "Bash(curl:*)",
       "Bash(start http://localhost:8000/)",
       "WebFetch(domain:codepen.io)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)"
     ],
     "deny": [],
     "ask": []
