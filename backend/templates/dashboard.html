@@ -112,26 +112,6 @@
             </div>
 
             <div class="learning-card">
-                <div class="card-icon" style="background: #FF9800;">
-                    <span class="material-icons">translate</span>
-                </div>
-                <h3 class="card-title">ことば</h3>
-                <p class="card-description">
-                    重要単語を学習<br>
-                    医療・介護用語を中心に
-                </p>
-                <div class="card-progress">
-                    <span>進捗: 65%</span>
-                    <div class="progress-bar small">
-                        <div class="progress-fill" style="width: 65%;"></div>
-                    </div>
-                </div>
-                <button class="btn btn-primary btn-block" onclick="location.href='{% url 'kotoba' %}'">
-                    開始
-                </button>
-            </div>
-
-            <div class="learning-card">
                 <div class="card-icon" style="background: #9C27B0;">
                     <span class="material-icons">quiz</span>
                 </div>
@@ -146,7 +126,7 @@
                         <div class="progress-fill" style="width: 80%;"></div>
                     </div>
                 </div>
-                <button class="btn btn-primary btn-block" onclick="location.href='#'">
+                <button class="btn btn-primary btn-block" onclick="location.href='{% url 'flashcards' %}'">
                     開始
                 </button>
             </div>

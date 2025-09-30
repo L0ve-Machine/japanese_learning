@@ -20,4 +20,8 @@ urlpatterns = [
     path('kotoba/', views.kotoba_view, name='kotoba'),
     path('kotoba/<str:category_key>/', views.kotoba_category_view, name='kotoba_category'),
     path('kotoba/<str:category_key>/<str:subcategory_key>/', views.kotoba_subcategory_view, name='kotoba_subcategory'),
+    # 暗記カード（フラッシュカード）
+    path('flashcards/', views.flashcards_view, name='flashcards'),
+    path('flashcards/<int:deck_id>/study/', views.flashcards_study_view, name='flashcards_study'),
+    path('flashcards/update/<int:card_id>/', views.flashcards_update_progress, name='flashcards_update_progress'),
 ]

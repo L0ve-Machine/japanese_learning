@@ -379,3 +379,91 @@ class UserWordProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.word.japanese_word}"
+
+# Flashcard (暗記カード) Models
+class FlashcardDeck(models.Model):
+    """Deck of flashcards for spaced repetition learning"""
+    DECK_TYPES = [
+        ('vocabulary', '語彙'),
+        ('kanji', '漢字'),
+        ('grammar', '文法'),
+        ('medical', '医療用語'),
+        ('caregiving', '介護用語'),
+    ]
+
+    name = models.CharField(max_length=200)
+    deck_type = models.CharField(max_length=20, choices=DECK_TYPES)
+    description = models.TextField(blank=True)
+    is_premium = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'flashcard_decks'
+        ordering = ['order', 'name']
+
+    def __str__(self):
+        return self.name
+
+class FlashcardCard(models.Model):
+    """Individual flashcard with front/back content"""
+    deck = models.ForeignKey(FlashcardDeck, on_delete=models.CASCADE, related_name='cards')
+    front_text = models.TextField(help_text='Front of card (Japanese)')
+    back_text = models.TextField(help_text='Back of card (Translation/Meaning)')
+    front_reading = models.CharField(max_length=200, blank=True, help_text='Furigana/Reading')
+    example_sentence = models.TextField(blank=True)
+    example_translation = models.TextField(blank=True)
+    notes = models.TextField(blank=True)
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'flashcard_cards'
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return f"{self.deck.name} - {self.front_text[:30]}"
+
+class UserFlashcardProgress(models.Model):
+    """Track user's spaced repetition progress on flashcards"""
+    DIFFICULTY_CHOICES = [
+        (1, 'Again'),
+        (2, 'Hard'),
+        (3, 'Good'),
+        (4, 'Easy'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='flashcard_progress')
+    card = models.ForeignKey(FlashcardCard, on_delete=models.CASCADE, related_name='user_progress')
+    ease_factor = models.FloatField(default=2.5)  # SM-2 algorithm
+    interval_days = models.IntegerField(default=0)  # Days until next review
+    repetitions = models.IntegerField(default=0)
+    last_difficulty = models.IntegerField(choices=DIFFICULTY_CHOICES, null=True, blank=True)
+    next_review_date = models.DateField(null=True, blank=True)
+    is_mastered = models.BooleanField(default=False)
+    total_reviews = models.IntegerField(default=0)
+    correct_reviews = models.IntegerField(default=0)
+    last_reviewed = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'user_flashcard_progress'
+        unique_together = ['user', 'card']
+        indexes = [
+            models.Index(fields=['user', 'next_review_date']),
+            models.Index(fields=['user', 'is_mastered']),
+        ]
+
+    def __str__(self):
+        return f"{self.user.email} - {self.card.front_text[:20]}"
+
+    @property
+    def accuracy(self):
+        """Calculate accuracy percentage"""
+        if self.total_reviews == 0:
+            return 0
+        return (self.correct_reviews / self.total_reviews) * 100

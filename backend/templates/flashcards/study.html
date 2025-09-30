@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ deck.name }} - 暗記カード学習{% endblock %}
+
+{% block extra_css %}
+<style>
+    .study-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        min-height: 70vh;
+    }
+
+    .study-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .study-header h1 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .study-progress {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .flashcard-wrapper {
+        perspective: 1000px;
+        margin: 2rem 0;
+    }
+
+    .flashcard {
+        position: relative;
+        width: 100%;
+        min-height: 350px;
+        max-height: 450px;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+    }
+
+    .flashcard.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .card-face {
+        position: absolute;
+        width: 100%;
+        min-height: 350px;
+        max-height: 450px;
+        overflow-y: auto;
+        backface-visibility: hidden;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .card-front {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .card-back {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        transform: rotateY(180deg);
+    }
+
+    .card-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .card-content {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.75rem;
+        text-align: center;
+        line-height: 1.3;
+    }
+
+    .card-reading {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-example {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255,255,255,0.3);
+        font-size: 0.95rem;
+        text-align: center;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .card-example-label {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-notes {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        margin-top: 0.75rem;
+        text-align: center;
+    }
+
+    .flip-hint {
+        text-align: center;
+        color: #666;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+    }
+
+    .flip-hint .material-icons {
+        vertical-align: middle;
+        font-size: 1.2rem;
+    }
+
+    .difficulty-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .difficulty-buttons.hidden {
+        display: none;
+    }
+
+    .btn-difficulty {
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: white;
+    }
+
+    .btn-again {
+        background: #f44336;
+    }
+
+    .btn-again:hover {
+        background: #d32f2f;
+        transform: translateY(-2px);
+    }
+
+    .btn-hard {
+        background: #ff9800;
+    }
+
+    .btn-hard:hover {
+        background: #f57c00;
+        transform: translateY(-2px);
+    }
+
+    .btn-good {
+        background: #4caf50;
+    }
+
+    .btn-good:hover {
+        background: #388e3c;
+        transform: translateY(-2px);
+    }
+
+    .btn-easy {
+        background: #2196f3;
+    }
+
+    .btn-easy:hover {
+        background: #1976d2;
+        transform: translateY(-2px);
+    }
+
+    .completion-screen {
+        text-align: center;
+        padding: 3rem;
+    }
+
+    .completion-screen .material-icons {
+        font-size: 5rem;
+        color: #4caf50;
+        margin-bottom: 1rem;
+    }
+
+    .completion-screen h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .btn-return {
+        margin-top: 2rem;
+        padding: 1rem 2rem;
+        background: #9C27B0;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-return:hover {
+        background: #7B1FA2;
+    }
+
+    .new-badge {
+        background: #2196F3;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        margin-left: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="study-container">
+    <div class="study-header">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+            <a href="{% url 'flashcards' %}" class="btn-back" style="text-decoration: none; color: #666; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="material-icons">arrow_back</span>
+                戻る
+            </a>
+            <h1 style="margin: 0;">{{ deck.name }}</h1>
+        </div>
+        <div class="study-progress">
+            <span>復習カード: <strong id="cards-remaining">{{ cards_to_review|length }}</strong></span>
+            <span>全カード: <strong>{{ total_cards }}</strong></span>
+        </div>
+    </div>
+
+    {% if cards_to_review %}
+    <div id="flashcard-area">
+        <div class="flashcard-wrapper">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <div class="card-label">日本語</div>
+                    <div class="card-content" id="front-text"></div>
+                    <div class="card-reading" id="front-reading"></div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-label">意味・翻訳</div>
+                    <div class="card-content" id="back-text"></div>
+                    <div class="card-example" id="example-area" style="display: none;">
+                        <div class="card-example-label">例文</div>
+                        <div id="example-sentence"></div>
+                        <div id="example-translation" style="margin-top: 0.5rem; opacity: 0.8;"></div>
+                    </div>
+                    <div class="card-notes" id="notes-area" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flip-hint">
+            <span class="material-icons">touch_app</span>
+            カードをクリックして裏返す
+        </div>
+
+        <div class="difficulty-buttons hidden" id="difficulty-buttons">
+            <button class="btn-difficulty btn-again" onclick="answerCard(1)">
+                もう一度<br><small>1日</small>
+            </button>
+            <button class="btn-difficulty btn-hard" onclick="answerCard(2)">
+                難しい<br><small>3日</small>
+            </button>
+            <button class="btn-difficulty btn-good" onclick="answerCard(3)">
+                普通<br><small>7日</small>
+            </button>
+            <button class="btn-difficulty btn-easy" onclick="answerCard(4)">
+                簡単<br><small>14日</small>
+            </button>
+        </div>
+    </div>
+
+    <div id="completion-screen" class="completion-screen" style="display: none;">
+        <span class="material-icons">check_circle</span>
+        <h2>お疲れ様でした！</h2>
+        <p>すべてのカードを復習しました。</p>
+        <a href="{% url 'flashcards' %}" class="btn-return">デッキ一覧に戻る</a>
+    </div>
+    {% else %}
+    <div class="completion-screen">
+        <span class="material-icons">check_circle</span>
+        <h2>復習するカードがありません</h2>
+        <p>すべてのカードを習得済みです。素晴らしい！</p>
+        <a href="{% url 'flashcards' %}" class="btn-return">デッキ一覧に戻る</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    let cardsData = [];
+    let currentCardIndex = 0;
+    let isFlipped = false;
+    let currentCardId = null;
+
+    function loadCard(index) {
+        if (index >= cardsData.length) {
+            showCompletionScreen();
+            return;
+        }
+
+        const cardData = cardsData[index];
+        const card = cardData.card;
+
+        currentCardId = card.id;
+
+        document.getElementById('front-text').textContent = card.front_text;
+        document.getElementById('front-reading').textContent = card.front_reading || '';
+        document.getElementById('back-text').textContent = card.back_text;
+
+        // Handle example - preserve line breaks
+        const exampleArea = document.getElementById('example-area');
+        if (card.example_sentence && card.example_sentence.trim()) {
+            const exampleDiv = document.getElementById('example-sentence');
+            exampleDiv.innerHTML = card.example_sentence.replace(/\n/g, '<br>');
+            exampleArea.style.display = 'block';
+        } else {
+            exampleArea.style.display = 'none';
+        }
+
+        // Handle notes
+        const notesArea = document.getElementById('notes-area');
+        if (card.notes && card.notes.trim()) {
+            notesArea.textContent = 'サブカテゴリー: ' + card.notes;
+            notesArea.style.display = 'block';
+        } else {
+            notesArea.style.display = 'none';
+        }
+
+        // Reset flip state
+        document.getElementById('flashcard').classList.remove('flipped');
+        document.getElementById('difficulty-buttons').classList.add('hidden');
+        isFlipped = false;
+
+        // Update remaining count
+        document.getElementById('cards-remaining').textContent = cardsData.length - index;
+    }
+
+    function flipCard() {
+        const flashcard = document.getElementById('flashcard');
+        flashcard.classList.toggle('flipped');
+        isFlipped = !isFlipped;
+
+        if (isFlipped) {
+            document.getElementById('difficulty-buttons').classList.remove('hidden');
+        }
+    }
+
+    function answerCard(difficulty) {
+        // Send progress update to server
+        fetch(`/flashcards/update/${currentCardId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ difficulty: difficulty })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Move to next card
+            currentCardIndex++;
+            loadCard(currentCardIndex);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Still move to next card even if there's an error
+            currentCardIndex++;
+            loadCard(currentCardIndex);
+        });
+    }
+
+    function showCompletionScreen() {
+        document.getElementById('flashcard-area').style.display = 'none';
+        document.getElementById('completion-screen').style.display = 'block';
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Initialize cards data
+    {% if cards_to_review %}
+    cardsData = [
+        {% for item in cards_to_review %}
+        {
+            card: {
+                id: {{ item.card.id }},
+                front_text: "{{ item.card.front_text|escapejs }}",
+                front_reading: "{{ item.card.front_reading|escapejs }}",
+                back_text: "{{ item.card.back_text|escapejs }}",
+                example_sentence: `{{ item.card.example_sentence|escapejs }}`,
+                example_translation: "{{ item.card.example_translation|escapejs }}",
+                notes: "{{ item.card.notes|escapejs }}"
+            },
+            is_new: {{ item.is_new|yesno:"true,false" }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    // Load first card when page is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCard(0);
+        });
+    } else {
+        loadCard(0);
+    }
+    {% endif %}
+</script>
+{% endblock %}

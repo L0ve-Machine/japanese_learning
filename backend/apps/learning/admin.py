@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from .models import (
     SubjectGroup, Subject, ExamYear, ExamSession, Question, Choice, Word, FlashCard, Video, StudyText,
     SubjectItem, Chapter, Page, UserProgress,
-    KotobaCategory, KotobaSubcategory, KotobaWord, KotobaExample, KotobaVocabulary, UserWordProgress
+    KotobaCategory, KotobaSubcategory, KotobaWord, KotobaExample, KotobaVocabulary, UserWordProgress,
+    FlashcardDeck, FlashcardCard, UserFlashcardProgress
 )
 from .forms import DataImportForm
 # from .services import DataImportService
@@ -175,6 +176,34 @@ class UserWordProgressAdmin(admin.ModelAdmin):
     list_filter = ['is_memorized', 'word__main_category']
     search_fields = ['user__email', 'word__japanese_word']
     ordering = ['-last_reviewed']
+
+# Flashcard Admin
+@admin.register(FlashcardDeck)
+class FlashcardDeckAdmin(admin.ModelAdmin):
+    list_display = ['name', 'deck_type', 'is_premium', 'is_active', 'order', 'created_at']
+    list_filter = ['deck_type', 'is_premium', 'is_active']
+    search_fields = ['name', 'description']
+    ordering = ['order', 'name']
+
+class FlashcardCardInline(admin.TabularInline):
+    model = FlashcardCard
+    extra = 1
+    fields = ['front_text', 'back_text', 'front_reading', 'order']
+
+@admin.register(FlashcardCard)
+class FlashcardCardAdmin(admin.ModelAdmin):
+    list_display = ['front_text', 'deck', 'order', 'created_at']
+    list_filter = ['deck']
+    search_fields = ['front_text', 'back_text']
+    ordering = ['deck', 'order']
+
+@admin.register(UserFlashcardProgress)
+class UserFlashcardProgressAdmin(admin.ModelAdmin):
+    list_display = ['user', 'card', 'is_mastered', 'repetitions', 'interval_days', 'next_review_date', 'last_reviewed']
+    list_filter = ['is_mastered', 'card__deck']
+    search_fields = ['user__email', 'card__front_text']
+    ordering = ['-last_reviewed']
+    readonly_fields = ['ease_factor', 'interval_days', 'repetitions', 'total_reviews', 'correct_reviews']
 
 class LearningAdminSite(admin.AdminSite):
     """学習データ管理用のカスタム管理サイト"""
