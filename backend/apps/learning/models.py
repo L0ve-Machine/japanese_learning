@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.core.cache import cache
 from apps.users.models import User
 
 class SubjectGroup(models.Model):
@@ -253,3 +253,129 @@ class UserProgress(models.Model):
     class Meta:
         db_table = 'learning_user_progress'
         unique_together = ['user', 'subject', 'item', 'chapter', 'page', 'text']
+
+# Kotoba (Vocabulary) Models
+class KotobaCategory(models.Model):
+    """Main category for Kotoba (e.g., 介護の勉強, 仕事)"""
+    category_key = models.CharField(max_length=100, unique=True, primary_key=True)
+    japanese_name = models.CharField(max_length=200)
+    indonesian_translation = models.CharField(max_length=200)
+    ruby_reading = models.CharField(max_length=200)
+    order_number = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'kotoba_categories'
+        ordering = ['order_number', 'japanese_name']
+
+    def __str__(self):
+        return self.japanese_name
+
+    @classmethod
+    def get_cached(cls, category_key):
+        """Get category with caching"""
+        cache_key = f'kotoba_category_{category_key}'
+        category = cache.get(cache_key)
+        if not category:
+            category = cls.objects.get(category_key=category_key)
+            cache.set(cache_key, category, timeout=3600)  # Cache for 1 hour
+        return category
+
+class KotobaSubcategory(models.Model):
+    """Subcategory for Kotoba (e.g., 介護の基本, 移動・移乗の介護)"""
+    main_category = models.ForeignKey(KotobaCategory, on_delete=models.CASCADE, related_name='subcategories')
+    subcategory_key = models.CharField(max_length=100)
+    japanese_name = models.CharField(max_length=200)
+    indonesian_translation = models.CharField(max_length=200)
+    ruby_reading = models.CharField(max_length=200)
+    order_number = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'kotoba_subcategories'
+        ordering = ['order_number', 'japanese_name']
+        unique_together = ['main_category', 'subcategory_key']
+
+    def __str__(self):
+        return f"{self.main_category.japanese_name} - {self.japanese_name}"
+
+class KotobaWord(models.Model):
+    """Individual word in Kotoba"""
+    word_id = models.CharField(max_length=50, unique=True, primary_key=True)
+    main_category = models.ForeignKey(KotobaCategory, on_delete=models.CASCADE, related_name='words')
+    subcategory = models.ForeignKey(KotobaSubcategory, on_delete=models.CASCADE, related_name='words')
+    japanese_word = models.CharField(max_length=200)
+    ruby_reading = models.CharField(max_length=200)
+    indonesian_translation = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'kotoba_words'
+        ordering = ['japanese_word']
+
+    def __str__(self):
+        return self.japanese_word
+
+    @classmethod
+    def get_cached(cls, word_id):
+        """Get word with caching"""
+        cache_key = f'kotoba_word_{word_id}'
+        word = cache.get(cache_key)
+        if not word:
+            word = cls.objects.prefetch_related('examples__vocabulary').get(word_id=word_id)
+            cache.set(cache_key, word, timeout=3600)  # Cache for 1 hour
+        return word
+
+class KotobaExample(models.Model):
+    """Example sentence for a word"""
+    example_id = models.CharField(max_length=50, unique=True, primary_key=True)
+    word = models.ForeignKey(KotobaWord, on_delete=models.CASCADE, related_name='examples')
+    japanese_example = models.TextField()
+    indonesian_example = models.TextField()
+    order_number = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'kotoba_examples'
+        ordering = ['order_number']
+
+    def __str__(self):
+        return f"{self.word.japanese_word} - Example {self.order_number}"
+
+class KotobaVocabulary(models.Model):
+    """Vocabulary words within example sentences"""
+    vocabulary_id = models.CharField(max_length=50, unique=True, primary_key=True)
+    example = models.ForeignKey(KotobaExample, on_delete=models.CASCADE, related_name='vocabulary')
+    japanese_word = models.CharField(max_length=200)
+    ruby_reading = models.CharField(max_length=200)
+    indonesian_translation = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'kotoba_vocabulary'
+        ordering = ['japanese_word']
+
+    def __str__(self):
+        return self.japanese_word
+
+class UserWordProgress(models.Model):
+    """Track user progress for Kotoba words"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='word_progress')
+    word = models.ForeignKey(KotobaWord, on_delete=models.CASCADE, related_name='user_progress')
+    is_memorized = models.BooleanField(default=False)
+    review_count = models.IntegerField(default=0)
+    last_reviewed = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'user_word_progress'
+        unique_together = ['user', 'word']
+
+    def __str__(self):
+        return f"{self.user.email} - {self.word.japanese_word}"

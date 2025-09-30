@@ -1,0 +1,72 @@
+[
+  {
+    "example_id": "ex_001",
+    "word_id": "w_001",
+    "japanese_example": "介護福祉士になるために勉強しています。",
+    "indonesian_example": "Saya belajar untuk menjadi Care Worker bersertifikat.",
+    "order_number": "1"
+  },
+  {
+    "example_id": "ex_002",
+    "word_id": "w_001",
+    "japanese_example": "彼女は経験豊富な介護福祉士です。",
+    "indonesian_example": "Dia (perempuan) adalah Care Worker bersertifikat yang sangat berpengalaman.",
+    "order_number": "2"
+  },
+  {
+    "example_id": "ex_003",
+    "word_id": "w_002",
+    "japanese_example": "人間の尊厳を守ることは介護の基本です。",
+    "indonesian_example": "Menjaga martabat manusia adalah dasar dari perawatan.",
+    "order_number": "1"
+  },
+  {
+    "example_id": "ex_004",
+    "word_id": "w_002",
+    "japanese_example": "どのような人にも尊厳を持って接するべきだ。",
+    "indonesian_example": "Kita harus memperlakukan semua orang dengan martabat.",
+    "order_number": "2"
+  },
+  {
+    "example_id": "ex_005",
+    "word_id": "w_003",
+    "japanese_example": "自立支援は介護の重要な目標です。",
+    "indonesian_example": "Dukungan kemandirian adalah tujuan penting dalam perawatan.",
+    "order_number": "1"
+  },
+  {
+    "example_id": "ex_006",
+    "word_id": "w_003",
+    "japanese_example": "私たちは利用者の自立支援を目指しています。",
+    "indonesian_example": "Kami bertujuan untuk mendukung kemandirian pengguna jasa.",
+    "order_number": "2"
+  },
+  {
+    "example_id": "ex_007",
+    "word_id": "w_004",
+    "japanese_example": "ベッドから車椅子への移乗を手伝います。",
+    "indonesian_example": "Saya membantu transfer dari tempat tidur ke kursi roda.",
+    "order_number": "1"
+  },
+  {
+    "example_id": "ex_008",
+    "word_id": "w_004",
+    "japanese_example": "安全な移乗の方法を学びました。",
+    "indonesian_example": "Saya telah mempelajari metode transfer yang aman.",
+    "order_number": "2"
+  },
+  {
+    "example_id": "ex_009",
+    "word_id": "w_005",
+    "japanese_example": "2時間ごとに体位交換を行います。",
+    "indonesian_example": "Kami melakukan ubah posisi tubuh setiap 2 jam.",
+    "order_number": "1"
+  },
+  {
+    "example_id": "ex_010",
+    "word_id": "w_005",
+    "japanese_example": "体位交換は床ずれの予防に効果的です。",
+    "indonesian_example": "Ubah posisi tubuh efektif untuk mencegah luka baring.",
+    "order_number": "2"
+  }
+]

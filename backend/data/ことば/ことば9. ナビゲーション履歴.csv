@@ -1,0 +1,5 @@
+level,description,data_structure,example_path
+1,メインカテゴリー,Top level categories,["介護の勉強"]
+2,サブカテゴリー,Category subdivisions,["介護の勉強", "介護の基本"]
+3,単語リスト,Word list within subcategory,["介護の勉強", "介護の基本", "介護福祉士"]
+4,単語詳細,Individual word with examples,["介護の勉強", "介護の基本", "介護福祉士", "examples"]

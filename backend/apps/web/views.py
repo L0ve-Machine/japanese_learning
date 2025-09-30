@@ -273,6 +273,186 @@ def redirect_to_correct_session(request):
 
 @login_required
 @allow_free_access
+def kotoba_view(request):
+    """ことば（語彙学習）メインページ"""
+    from apps.learning.models import KotobaCategory
+    from django.core.cache import cache
+    from django.db.models import Count
+
+    # Try to get from cache
+    cache_key = 'kotoba_categories_all'
+    categories = cache.get(cache_key)
+
+    if not categories:
+        # Load from database with word counts
+        categories = list(KotobaCategory.objects.all().annotate(
+            word_count=Count('words')
+        ).values(
+            'category_key', 'japanese_name', 'indonesian_translation', 'ruby_reading', 'order_number', 'word_count'
+        ))
+        # Transform to match template expectations
+        categories = [{
+            'key': cat['category_key'],
+            'japanese': cat['japanese_name'],
+            'indonesian': cat['indonesian_translation'],
+            'ruby': cat['ruby_reading'],
+            'order': cat['order_number'],
+            'word_count': cat['word_count']
+        } for cat in categories]
+        # Cache for 1 hour
+        cache.set(cache_key, categories, timeout=3600)
+
+    return render(request, 'kotoba/main.html', {
+        'categories': categories,
+        'user': request.user
+    })
+
+@login_required
+@allow_free_access
+def kotoba_category_view(request, category_key):
+    """ことば カテゴリー詳細ページ（サブカテゴリー一覧）"""
+    from apps.learning.models import KotobaCategory, KotobaSubcategory, KotobaWord
+    from django.http import Http404
+    from django.core.cache import cache
+    from django.db.models import Count
+
+    # Get category with caching
+    try:
+        category = KotobaCategory.get_cached(category_key)
+    except KotobaCategory.DoesNotExist:
+        raise Http404("Category not found")
+
+    # Try to get subcategories from cache
+    cache_key = f'kotoba_subcategories_{category_key}'
+    subcategories = cache.get(cache_key)
+
+    if not subcategories:
+        # Load from database with word counts
+        subcategories = list(
+            KotobaSubcategory.objects.filter(main_category=category)
+            .annotate(word_count=Count('words'))
+            .values('subcategory_key', 'japanese_name', 'indonesian_translation', 'ruby_reading', 'order_number', 'word_count')
+        )
+        # Transform to match template expectations
+        subcategories = [{
+            'key': sub['subcategory_key'],
+            'japanese': sub['japanese_name'],
+            'indonesian': sub['indonesian_translation'],
+            'ruby': sub['ruby_reading'],
+            'order': sub['order_number'],
+            'word_count': sub['word_count']
+        } for sub in subcategories]
+        # Cache for 1 hour
+        cache.set(cache_key, subcategories, timeout=3600)
+
+    # Transform category to dict for template
+    category_dict = {
+        'key': category.category_key,
+        'japanese': category.japanese_name,
+        'indonesian': category.indonesian_translation,
+        'ruby': category.ruby_reading
+    }
+
+    return render(request, 'kotoba/category.html', {
+        'category': category_dict,
+        'subcategories': subcategories,
+        'user': request.user
+    })
+
+@login_required
+@allow_free_access
+def kotoba_subcategory_view(request, category_key, subcategory_key):
+    """ことば サブカテゴリー詳細ページ（単語学習）"""
+    from apps.learning.models import KotobaCategory, KotobaSubcategory, KotobaWord
+    from django.http import Http404
+    from django.core.cache import cache
+
+    # Get category
+    try:
+        category = KotobaCategory.get_cached(category_key)
+    except KotobaCategory.DoesNotExist:
+        raise Http404("Category not found")
+
+    # Get subcategory
+    try:
+        subcategory = KotobaSubcategory.objects.get(
+            main_category=category,
+            subcategory_key=subcategory_key
+        )
+    except KotobaSubcategory.DoesNotExist:
+        raise Http404("Subcategory not found")
+
+    # Try to get words from cache
+    cache_key = f'kotoba_words_{category_key}_{subcategory_key}'
+    words = cache.get(cache_key)
+
+    if not words:
+        # Load from database with related data
+        word_objects = KotobaWord.objects.filter(
+            main_category=category,
+            subcategory=subcategory
+        ).prefetch_related('examples__vocabulary').order_by('japanese_word')
+
+        # Transform to dict for template
+        words = []
+        for word in word_objects:
+            word_dict = {
+                'id': word.word_id,
+                'japanese': word.japanese_word,
+                'ruby': word.ruby_reading,
+                'indonesian': word.indonesian_translation,
+                'examples': []
+            }
+
+            # Add examples
+            for example in word.examples.all():
+                example_dict = {
+                    'id': example.example_id,
+                    'japanese': example.japanese_example,
+                    'indonesian': example.indonesian_example,
+                    'order': example.order_number,
+                    'vocabulary': []
+                }
+
+                # Add vocabulary
+                for vocab in example.vocabulary.all():
+                    example_dict['vocabulary'].append({
+                        'japanese': vocab.japanese_word,
+                        'ruby': vocab.ruby_reading,
+                        'indonesian': vocab.indonesian_translation
+                    })
+
+                word_dict['examples'].append(example_dict)
+
+            words.append(word_dict)
+
+        # Cache for 1 hour
+        cache.set(cache_key, words, timeout=3600)
+
+    # Transform category and subcategory to dict for template
+    category_dict = {
+        'key': category.category_key,
+        'japanese': category.japanese_name,
+        'indonesian': category.indonesian_translation,
+        'ruby': category.ruby_reading
+    }
+
+    subcategory_dict = {
+        'key': subcategory.subcategory_key,
+        'japanese': subcategory.japanese_name,
+        'indonesian': subcategory.indonesian_translation,
+        'ruby': subcategory.ruby_reading
+    }
+
+    return render(request, 'kotoba/subcategory.html', {
+        'category': category_dict,
+        'subcategory': subcategory_dict,
+        'words': words,
+        'user': request.user
+    })
+
+@login_required
+@allow_free_access
 def subject_learning_view(request):
     """科目学習メインページ"""
     import os
@@ -358,6 +538,9 @@ def subject_detail_view(request, subject_name):
 def chapter_learning_view(request, subject_name):
     """章学習ページ"""
     from django.http import Http404
+    import csv
+    import os
+    from django.conf import settings
 
     # セキュリティ: パストラバーサル攻撃を防ぐ
     if '..' in subject_name or '/' in subject_name:
@@ -366,6 +549,7 @@ def chapter_learning_view(request, subject_name):
     # URLパラメータから章情報を取得
     chapter = request.GET.get('chapter', '第1章')
     title = request.GET.get('title', '章学習')
+    item_key = request.GET.get('item', '介護保険')  # Get item key from URL
 
     # 利用可能な科目リスト
     available_subjects = {
@@ -406,106 +590,132 @@ def chapter_learning_view(request, subject_name):
 
     subject = available_subjects[subject_name]
 
-    # 章コンテンツのマッピング
-    chapter_content = {
-        '介護試験対策': {
-            '第1章': {
-                'title': '介護保険制度創設の背景及び目的',
-                'content': '''
-                <h3>1. 介護保険制度とは</h3>
-                <p>介護保険制度は、2000年（平成12年）4月に開始された社会保険制度です。</p>
+    # Load data from CSV files
+    data_dir = os.path.join(settings.BASE_DIR, 'data', 'テキスト')
 
-                <h4>制度創設の背景</h4>
-                <ul>
-                    <li>高齢化の進展（高齢化率の上昇）</li>
-                    <li>核家族化の進行</li>
-                    <li>女性の社会進出</li>
-                    <li>介護の社会化の必要性</li>
-                </ul>
+    # Determine chapter_key from chapter (e.g., "第1章" -> "chapter_1")
+    chapter_number = chapter.replace('第', '').replace('章', '')
+    chapter_key = f'chapter_{chapter_number}'
 
-                <h4>制度の目的</h4>
-                <ol>
-                    <li>尊厳を保持し、能力に応じた自立した日常生活を営むことができるよう支援</li>
-                    <li>要介護状態等の軽減・悪化防止</li>
-                    <li>医療と連携した総合的なサービス提供</li>
-                </ol>
+    # Load text content
+    texts = []
+    content_file = os.path.join(data_dir, 'テキスト５．コンテンツテキスト.csv')
+    if os.path.exists(content_file):
+        with open(content_file, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (row['subject_key'] == subject_name and
+                    row['item_key'] == item_key and
+                    row['chapter_key'] == chapter_key):
+                    texts.append({
+                        'order': int(row['text_order']),
+                        'japanese': row['japanese'],
+                        'indonesian': row['indonesian']
+                    })
 
-                <div class="practice-question">
-                    <h4>練習問題</h4>
-                    <p><strong>問1:</strong> 介護保険制度が開始された年度は？</p>
-                    <div class="choices">
-                        <label><input type="radio" name="q1" value="1"> 1998年</label>
-                        <label><input type="radio" name="q1" value="2"> 2000年</label>
-                        <label><input type="radio" name="q1" value="3"> 2002年</label>
-                    </div>
-                </div>
-                ''',
-                'vocabulary': {
-                    '介護保険': {'reading': 'かいごほけん', 'translation': 'asuransi perawatan'},
-                    '高齢化': {'reading': 'こうれいか', 'translation': 'penuaan populasi'},
-                    '核家族': {'reading': 'かくかぞく', 'translation': 'keluarga inti'},
-                    '自立': {'reading': 'じりつ', 'translation': 'kemandirian'},
-                    '要介護': {'reading': 'ようかいご', 'translation': 'membutuhkan perawatan'}
-                }
-            },
-            '第2章': {
-                'title': '被保険者（保険に加入する人）',
-                'content': '''
-                <h3>2. 被保険者の分類</h3>
+    # Sort texts by order
+    texts.sort(key=lambda x: x['order'])
 
-                <h4>第1号被保険者（65歳以上）</h4>
-                <ul>
-                    <li>年齢：65歳以上</li>
-                    <li>保険料：年金から特別徴収（原則）</li>
-                    <li>要介護認定：原因を問わず全ての要介護状態</li>
-                </ul>
+    # Load vocabulary
+    vocabulary = {}
+    vocab_file = os.path.join(data_dir, 'テキスト６．語彙データ.csv')
+    if os.path.exists(vocab_file):
+        with open(vocab_file, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (row['subject_key'] == subject_name and
+                    row['item_key'] == item_key and
+                    row['chapter_key'] == chapter_key):
+                    vocabulary[row['japanese_word']] = {
+                        'translation': row['indonesian_translation'],
+                        'context': row['usage_context']
+                    }
 
-                <h4>第2号被保険者（40歳以上65歳未満）</h4>
-                <ul>
-                    <li>年齢：40歳以上65歳未満</li>
-                    <li>加入条件：医療保険に加入している者</li>
-                    <li>要介護認定：特定疾病による要介護状態のみ</li>
-                </ul>
+    # Load quiz questions
+    questions = []
+    questions_file = os.path.join(data_dir, 'テキスト７．クイズ問題.csv')
+    if os.path.exists(questions_file):
+        with open(questions_file, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (row['subject_key'] == subject_name and
+                    row['item_key'] == item_key and
+                    row['chapter_key'] == chapter_key):
+                    questions.append({
+                        'number': int(row['question_number']),
+                        'japanese': row['japanese_question'],
+                        'indonesian': row['indonesian_question'],
+                        'options': []
+                    })
 
-                <h4>特定疾病（16疾病）</h4>
-                <ol>
-                    <li>がん（医師が一般に認められている医学的知見に基づき回復の見込みがない状態に至ったと判断したものに限る）</li>
-                    <li>関節リウマチ</li>
-                    <li>筋萎縮性側索硬化症</li>
-                    <li>後縦靱帯骨化症</li>
-                    <li>骨折を伴う骨粗鬆症</li>
-                    <li>初老期における認知症</li>
-                    <li>進行性核上性麻痺</li>
-                    <li>脊髄小脳変性症</li>
-                    <li>脊柱管狭窄症</li>
-                    <li>早老症</li>
-                    <li>多系統萎縮症</li>
-                    <li>糖尿病性神経障害、糖尿病性腎症及び糖尿病性網膜症</li>
-                    <li>脳血管疾患</li>
-                    <li>閉塞性動脈硬化症</li>
-                    <li>慢性閉塞性肺疾患</li>
-                    <li>両側の膝関節又は股関節に著しい変形を伴う変形性関節症</li>
-                </ol>
-                ''',
-                'vocabulary': {
-                    '被保険者': {'reading': 'ひほけんしゃ', 'translation': 'pemegang polis asuransi'},
-                    '特別徴収': {'reading': 'とくべつちょうしゅう', 'translation': 'pemotongan khusus'},
-                    '特定疾病': {'reading': 'とくていしっぺい', 'translation': 'penyakit tertentu'},
-                    '関節リウマチ': {'reading': 'かんせつリウマチ', 'translation': 'rheumatoid arthritis'},
-                    '認知症': {'reading': 'にんちしょう', 'translation': 'demensia'}
-                }
-            }
-        }
-    }
+    # Load quiz options
+    options_file = os.path.join(data_dir, 'テキスト８．クイズ選択肢.csv')
+    if os.path.exists(options_file):
+        with open(options_file, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (row['subject_key'] == subject_name and
+                    row['item_key'] == item_key and
+                    row['chapter_key'] == chapter_key):
+                    question_num = int(row['question_number'])
+                    # Find the matching question
+                    for q in questions:
+                        if q['number'] == question_num:
+                            q['options'].append({
+                                'number': int(row['option_number']),
+                                'japanese': row['japanese_option'],
+                                'indonesian': row['indonesian_option'],
+                                'is_correct': row['is_correct'].lower() == 'true'
+                            })
+                            break
 
-    # デフォルトコンテンツ
-    default_content = {
+    # Load feedback
+    feedback = {}
+    feedback_file = os.path.join(data_dir, 'テキスト９．フィードバック.csv')
+    if os.path.exists(feedback_file):
+        with open(feedback_file, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (row['subject_key'] == subject_name and
+                    row['item_key'] == item_key and
+                    row['chapter_key'] == chapter_key):
+                    q_num = int(row['question_number'])
+                    opt_num = int(row['option_number'])
+                    if q_num not in feedback:
+                        feedback[q_num] = {}
+                    feedback[q_num][opt_num] = {
+                        'japanese': row['japanese_feedback'],
+                        'indonesian': row['indonesian_feedback']
+                    }
+
+    # Sort questions by number
+    questions.sort(key=lambda x: x['number'])
+
+    # Sort options within each question
+    for q in questions:
+        q['options'].sort(key=lambda x: x['number'])
+
+    # Process text to add vocabulary word spans
+    import re
+    for text in texts:
+        japanese = text['japanese']
+        # Add vocabulary word spans
+        for word, data in vocabulary.items():
+            # Escape special regex characters
+            escaped_word = re.escape(word)
+            # Replace word with span containing translation
+            replacement = f'<span class="vocabulary-word" data-translation="{data["translation"]}">{word}</span>'
+            japanese = re.sub(escaped_word, replacement, japanese)
+        text['japanese'] = japanese
+
+    import json
+    chapter_data = {
         'title': title,
-        'content': f'<p>{title}の学習コンテンツを準備中です。</p>',
-        'vocabulary': {}
+        'texts': texts,
+        'vocabulary': vocabulary,
+        'questions': questions,
+        'feedback': json.dumps(feedback)  # Convert to JSON string
     }
-
-    chapter_data = chapter_content.get(subject_name, {}).get(chapter, default_content)
 
     return render(request, 'subjects/chapter_learning.html', {
         'subject_name': subject_name,

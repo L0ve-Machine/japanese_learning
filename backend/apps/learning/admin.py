@@ -5,10 +5,11 @@ from django.contrib import messages
 from django.http import HttpResponse
 from .models import (
     SubjectGroup, Subject, ExamYear, ExamSession, Question, Choice, Word, FlashCard, Video, StudyText,
-    SubjectItem, Chapter, Page, UserProgress
+    SubjectItem, Chapter, Page, UserProgress,
+    KotobaCategory, KotobaSubcategory, KotobaWord, KotobaExample, KotobaVocabulary, UserWordProgress
 )
 from .forms import DataImportForm
-from .services import DataImportService
+# from .services import DataImportService
 
 @admin.register(SubjectGroup)
 class SubjectGroupAdmin(admin.ModelAdmin):
@@ -133,6 +134,47 @@ class UserProgressAdmin(admin.ModelAdmin):
     list_filter = ['completed', 'subject']
     search_fields = ['user__email', 'subject__name']
     ordering = ['-last_accessed']
+
+# Kotoba Admin
+@admin.register(KotobaCategory)
+class KotobaCategoryAdmin(admin.ModelAdmin):
+    list_display = ['japanese_name', 'category_key', 'indonesian_translation', 'order_number', 'created_at']
+    search_fields = ['japanese_name', 'category_key', 'indonesian_translation']
+    ordering = ['order_number', 'japanese_name']
+
+@admin.register(KotobaSubcategory)
+class KotobaSubcategoryAdmin(admin.ModelAdmin):
+    list_display = ['japanese_name', 'subcategory_key', 'main_category', 'indonesian_translation', 'order_number']
+    list_filter = ['main_category']
+    search_fields = ['japanese_name', 'subcategory_key']
+    ordering = ['main_category__order_number', 'order_number']
+
+@admin.register(KotobaWord)
+class KotobaWordAdmin(admin.ModelAdmin):
+    list_display = ['japanese_word', 'word_id', 'main_category', 'subcategory', 'indonesian_translation']
+    list_filter = ['main_category', 'subcategory']
+    search_fields = ['japanese_word', 'word_id', 'indonesian_translation']
+    ordering = ['main_category__order_number', 'subcategory__order_number', 'japanese_word']
+
+@admin.register(KotobaExample)
+class KotobaExampleAdmin(admin.ModelAdmin):
+    list_display = ['example_id', 'word', 'japanese_example', 'order_number']
+    list_filter = ['word__main_category']
+    search_fields = ['example_id', 'japanese_example', 'indonesian_example']
+    ordering = ['word', 'order_number']
+
+@admin.register(KotobaVocabulary)
+class KotobaVocabularyAdmin(admin.ModelAdmin):
+    list_display = ['japanese_word', 'vocabulary_id', 'example', 'indonesian_translation']
+    search_fields = ['japanese_word', 'indonesian_translation']
+    ordering = ['example__word', 'japanese_word']
+
+@admin.register(UserWordProgress)
+class UserWordProgressAdmin(admin.ModelAdmin):
+    list_display = ['user', 'word', 'is_memorized', 'review_count', 'last_reviewed']
+    list_filter = ['is_memorized', 'word__main_category']
+    search_fields = ['user__email', 'word__japanese_word']
+    ordering = ['-last_reviewed']
 
 class LearningAdminSite(admin.AdminSite):
     """学習データ管理用のカスタム管理サイト"""

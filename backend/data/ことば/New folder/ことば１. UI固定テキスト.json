@@ -1,0 +1,50 @@
+[
+  {
+    "element_id": "app_title",
+    "japanese": "ことば",
+    "indonesian": "Kotoba",
+    "context": "アプリタイトル"
+  },
+  {
+    "element_id": "furigana_toggle",
+    "japanese": "ふりがな表示",
+    "indonesian": "Tampilkan Furigana",
+    "context": "ふりがな切り替え"
+  },
+  {
+    "element_id": "category_preparation",
+    "japanese": "このカテゴリーはまだ準備中です。",
+    "indonesian": "Kategori ini sedang dalam persiapan.",
+    "context": "準備中メッセージ"
+  },
+  {
+    "element_id": "no_examples",
+    "japanese": "例文はまだありません。",
+    "indonesian": "Contoh kalimat belum tersedia.",
+    "context": "例文なしメッセージ"
+  },
+  {
+    "element_id": "back_button_aria",
+    "japanese": "戻る",
+    "indonesian": "Kembali",
+    "context": "戻るボタン"
+  },
+  {
+    "element_id": "expand_icon_aria",
+    "japanese": "語彙を展開",
+    "indonesian": "Perluas Kosakata",
+    "context": "語彙展開アイコン"
+  },
+  {
+    "element_id": "japanese_side",
+    "japanese": "日本語",
+    "indonesian": "Bahasa Jepang",
+    "context": "日本語側ラベル"
+  },
+  {
+    "element_id": "translation_side",
+    "japanese": "翻訳",
+    "indonesian": "Terjemahan",
+    "context": "翻訳側ラベル"
+  }
+]

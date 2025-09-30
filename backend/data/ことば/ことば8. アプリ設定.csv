@@ -1,0 +1,9 @@
+setting_key,setting_value,description
+default_furigana,true,ふりがなデフォルト表示
+card_animation_duration,0.5s,カードアニメーション時間
+expand_transition_duration,0.4s,展開トランジション時間
+flashcard_flip_enabled,true,フラッシュカード反転機能
+vocabulary_auto_expand,false,語彙自動展開
+max_history_stack,50,履歴スタック最大数
+fade_in_animation,fadeIn 0.5s ease-in-out,フェードインアニメーション
+card_hover_transform,translateY(-4px),カードホバー変形

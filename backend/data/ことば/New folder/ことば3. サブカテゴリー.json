@@ -1,0 +1,170 @@
+[
+  {
+    "main_category_key": "care_study",
+    "subcategory_key": "care_basics",
+    "japanese_name": "介護の基本",
+    "indonesian_translation": "Dasar-dasar Perawatan",
+    "ruby_reading": "かいごのきほん",
+    "order_number": "1"
+  },
+  {
+    "main_category_key": "care_study",
+    "subcategory_key": "movement_care",
+    "japanese_name": "移動・移乗の介護",
+    "indonesian_translation": "Perawatan Pindah & Transfer",
+    "ruby_reading": "いどう・いじょうのかいご",
+    "order_number": "2"
+  },
+  {
+    "main_category_key": "care_study",
+    "subcategory_key": "meal_care",
+    "japanese_name": "食事の介護",
+    "indonesian_translation": "Perawatan Makan",
+    "ruby_reading": "しょくじのかいご",
+    "order_number": "3"
+  },
+  {
+    "main_category_key": "work",
+    "subcategory_key": "ho_ren_so",
+    "japanese_name": "報告・連絡・相談",
+    "indonesian_translation": "Lapor Kontak Konsultasi (Ho-Ren-So)",
+    "ruby_reading": "ほうこく・れんらく・そうだん",
+    "order_number": "1"
+  },
+  {
+    "main_category_key": "work",
+    "subcategory_key": "meetings",
+    "japanese_name": "会議",
+    "indonesian_translation": "Rapat",
+    "ruby_reading": "かいぎ",
+    "order_number": "2"
+  },
+  {
+    "main_category_key": "work",
+    "subcategory_key": "phone_response",
+    "japanese_name": "電話対応",
+    "indonesian_translation": "Korespondensi Telepon",
+    "ruby_reading": "でんわたいおう",
+    "order_number": "3"
+  },
+  {
+    "main_category_key": "conversation",
+    "subcategory_key": "invite_suggest",
+    "japanese_name": "誘う・提案する",
+    "indonesian_translation": "Mengajak & Menyarankan",
+    "ruby_reading": "さそう・ていあんする",
+    "order_number": "1"
+  },
+  {
+    "main_category_key": "conversation",
+    "subcategory_key": "thanks_apology",
+    "japanese_name": "感謝・謝罪",
+    "indonesian_translation": "Terima Kasih & Permintaan Maaf",
+    "ruby_reading": "かんしゃ・しゃざい",
+    "order_number": "2"
+  },
+  {
+    "main_category_key": "conversation",
+    "subcategory_key": "ask_permission",
+    "japanese_name": "許可を求める",
+    "indonesian_translation": "Meminta Izin",
+    "ruby_reading": "きょかをもとめる",
+    "order_number": "3"
+  },
+  {
+    "main_category_key": "songs_anime",
+    "subcategory_key": "anime_quotes",
+    "japanese_name": "アニメの名言",
+    "indonesian_translation": "Kutipan Terkenal Anime",
+    "ruby_reading": "アニメのめいげん",
+    "order_number": "1"
+  },
+  {
+    "main_category_key": "songs_anime",
+    "subcategory_key": "kpop_lyrics",
+    "japanese_name": "K-POPの歌詞",
+    "indonesian_translation": "Lirik K-POP",
+    "ruby_reading": "ケーポップのかし",
+    "order_number": "2"
+  },
+  {
+    "main_category_key": "songs_anime",
+    "subcategory_key": "anime_fan_terms",
+    "japanese_name": "アニメ・ファンの言葉",
+    "indonesian_translation": "Istilah Penggemar Anime",
+    "ruby_reading": "アニメファンのことば",
+    "order_number": "3"
+  },
+  {
+    "main_category_key": "casual_language",
+    "subcategory_key": "youth_slang",
+    "japanese_name": "若者言葉",
+    "indonesian_translation": "Bahasa Gaul Anak Muda",
+    "ruby_reading": "わかものことば",
+    "order_number": "1"
+  },
+  {
+    "main_category_key": "casual_language",
+    "subcategory_key": "casual_greetings",
+    "japanese_name": "あいさつ",
+    "indonesian_translation": "Sapaan Santai",
+    "ruby_reading": "あいさつ",
+    "order_number": "2"
+  },
+  {
+    "main_category_key": "casual_language",
+    "subcategory_key": "internet_slang",
+    "japanese_name": "ネットスラング",
+    "indonesian_translation": "Slang Internet",
+    "ruby_reading": "ネットスラング",
+    "order_number": "3"
+  },
+  {
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_grammar",
+    "japanese_name": "文法",
+    "indonesian_translation": "Tata Bahasa",
+    "ruby_reading": "ぶんぽう",
+    "order_number": "1"
+  },
+  {
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_reading",
+    "japanese_name": "読解",
+    "indonesian_translation": "Membaca Pemahaman",
+    "ruby_reading": "どっかい",
+    "order_number": "2"
+  },
+  {
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_vocabulary",
+    "japanese_name": "語彙",
+    "indonesian_translation": "Kosakata",
+    "ruby_reading": "ごい",
+    "order_number": "3"
+  },
+  {
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_grammar",
+    "japanese_name": "文法",
+    "indonesian_translation": "Tata Bahasa",
+    "ruby_reading": "ぶんぽう",
+    "order_number": "1"
+  },
+  {
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_reading",
+    "japanese_name": "読解",
+    "indonesian_translation": "Membaca Pemahaman",
+    "ruby_reading": "どっかい",
+    "order_number": "2"
+  },
+  {
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_vocabulary",
+    "japanese_name": "語彙",
+    "indonesian_translation": "Kosakata",
+    "ruby_reading": "ごい",
+    "order_number": "3"
+  }
+]

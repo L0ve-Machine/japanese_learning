@@ -1,0 +1,18 @@
+vocabulary_id,example_id,japanese_word,ruby_reading,indonesian_translation
+v_001,ex_001,介護福祉士,かいごふくしし,Care Worker bersertifikat
+v_002,ex_001,勉強,べんきょう,belajar
+v_003,ex_002,彼女,かのじょ,dia (perempuan)
+v_004,ex_002,経験豊富,けいけんほうふ,berpengalaman
+v_005,ex_002,介護福祉士,かいごふくしし,Care Worker bersertifikat
+v_006,ex_003,人間,にんげん,manusia
+v_007,ex_003,尊厳,そんげん,martabat
+v_008,ex_003,守る,まもる,menjaga
+v_009,ex_003,介護,かいご,perawatan
+v_010,ex_003,基本,きほん,dasar
+v_011,ex_004,人,ひと,orang
+v_012,ex_004,尊厳,そんげん,martabat
+v_013,ex_004,接する,せっする,memperlakukan
+v_014,ex_005,自立支援,じりつしえん,dukungan kemandirian
+v_015,ex_005,介護,かいご,perawatan
+v_016,ex_005,重要,じゅうよう,penting
+v_017,ex_005,目標,もくひょう,tujuan

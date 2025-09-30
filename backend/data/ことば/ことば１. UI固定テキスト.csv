@@ -1,0 +1,9 @@
+element_id,japanese,indonesian,context
+app_title,ことば,Kotoba,アプリタイトル
+furigana_toggle,ふりがな表示,Tampilkan Furigana,ふりがな切り替え
+category_preparation,このカテゴリーはまだ準備中です。,Kategori ini sedang dalam persiapan.,準備中メッセージ
+no_examples,例文はまだありません。,Contoh kalimat belum tersedia.,例文なしメッセージ
+back_button_aria,戻る,Kembali,戻るボタン
+expand_icon_aria,語彙を展開,Perluas Kosakata,語彙展開アイコン
+japanese_side,日本語,Bahasa Jepang,日本語側ラベル
+translation_side,翻訳,Terjemahan,翻訳側ラベル

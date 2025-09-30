@@ -1,0 +1,11 @@
+example_id,word_id,japanese_example,indonesian_example,order_number
+ex_001,w_001,介護福祉士になるために勉強しています。,Saya belajar untuk menjadi Care Worker bersertifikat.,1
+ex_002,w_001,彼女は経験豊富な介護福祉士です。,Dia (perempuan) adalah Care Worker bersertifikat yang sangat berpengalaman.,2
+ex_003,w_002,人間の尊厳を守ることは介護の基本です。,Menjaga martabat manusia adalah dasar dari perawatan.,1
+ex_004,w_002,どのような人にも尊厳を持って接するべきだ。,Kita harus memperlakukan semua orang dengan martabat.,2
+ex_005,w_003,自立支援は介護の重要な目標です。,Dukungan kemandirian adalah tujuan penting dalam perawatan.,1
+ex_006,w_003,私たちは利用者の自立支援を目指しています。,Kami bertujuan untuk mendukung kemandirian pengguna jasa.,2
+ex_007,w_004,ベッドから車椅子への移乗を手伝います。,Saya membantu transfer dari tempat tidur ke kursi roda.,1
+ex_008,w_004,安全な移乗の方法を学びました。,Saya telah mempelajari metode transfer yang aman.,2
+ex_009,w_005,2時間ごとに体位交換を行います。,Kami melakukan ubah posisi tubuh setiap 2 jam.,1
+ex_010,w_005,体位交換は床ずれの予防に効果的です。,Ubah posisi tubuh efektif untuk mencegah luka baring.,2

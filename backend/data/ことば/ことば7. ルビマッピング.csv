@@ -1,0 +1,11 @@
+ruby_id,original_text,ruby_text,base_word
+r_001,介護の勉強,介護の<ruby>勉強<rt>べんきょう</rt></ruby>,勉強
+r_002,仕事,<ruby>仕事<rt>しごと</rt></ruby>,仕事
+r_003,会話,<ruby>会話<rt>かいわ</rt></ruby>,会話
+r_004,歌＆アニメ,<ruby>歌<rt>うた</rt></ruby>＆アニメ,歌
+r_005,カジュアル言葉,カジュアル<ruby>言葉<rt>ことば</rt></ruby>,言葉
+r_006,N2勉強,N2<ruby>勉強<rt>べんきょう</rt></ruby>,勉強
+r_007,N3勉強,N3<ruby>勉強<rt>べんきょう</rt></ruby>,勉強
+r_008,介護の基本,介護の<ruby>基本<rt>きほん</rt></ruby>,基本
+r_009,移動・移乗の介護,<ruby>移動<rt>いどう</rt></ruby>・<ruby>移乗<rt>いじょう</rt></ruby>の<ruby>介護<rt>かいご</rt></ruby>,移動・移乗・介護
+r_010,食事の介護,<ruby>食事<rt>しょくじ</rt></ruby>の<ruby>介護<rt>かいご</rt></ruby>,食事・介護

@@ -1,0 +1,121 @@
+[
+  {
+    "vocabulary_id": "v_001",
+    "example_id": "ex_001",
+    "japanese_word": "介護福祉士",
+    "ruby_reading": "かいごふくしし",
+    "indonesian_translation": "Care Worker bersertifikat"
+  },
+  {
+    "vocabulary_id": "v_002",
+    "example_id": "ex_001",
+    "japanese_word": "勉強",
+    "ruby_reading": "べんきょう",
+    "indonesian_translation": "belajar"
+  },
+  {
+    "vocabulary_id": "v_003",
+    "example_id": "ex_002",
+    "japanese_word": "彼女",
+    "ruby_reading": "かのじょ",
+    "indonesian_translation": "dia (perempuan)"
+  },
+  {
+    "vocabulary_id": "v_004",
+    "example_id": "ex_002",
+    "japanese_word": "経験豊富",
+    "ruby_reading": "けいけんほうふ",
+    "indonesian_translation": "berpengalaman"
+  },
+  {
+    "vocabulary_id": "v_005",
+    "example_id": "ex_002",
+    "japanese_word": "介護福祉士",
+    "ruby_reading": "かいごふくしし",
+    "indonesian_translation": "Care Worker bersertifikat"
+  },
+  {
+    "vocabulary_id": "v_006",
+    "example_id": "ex_003",
+    "japanese_word": "人間",
+    "ruby_reading": "にんげん",
+    "indonesian_translation": "manusia"
+  },
+  {
+    "vocabulary_id": "v_007",
+    "example_id": "ex_003",
+    "japanese_word": "尊厳",
+    "ruby_reading": "そんげん",
+    "indonesian_translation": "martabat"
+  },
+  {
+    "vocabulary_id": "v_008",
+    "example_id": "ex_003",
+    "japanese_word": "守る",
+    "ruby_reading": "まもる",
+    "indonesian_translation": "menjaga"
+  },
+  {
+    "vocabulary_id": "v_009",
+    "example_id": "ex_003",
+    "japanese_word": "介護",
+    "ruby_reading": "かいご",
+    "indonesian_translation": "perawatan"
+  },
+  {
+    "vocabulary_id": "v_010",
+    "example_id": "ex_003",
+    "japanese_word": "基本",
+    "ruby_reading": "きほん",
+    "indonesian_translation": "dasar"
+  },
+  {
+    "vocabulary_id": "v_011",
+    "example_id": "ex_004",
+    "japanese_word": "人",
+    "ruby_reading": "ひと",
+    "indonesian_translation": "orang"
+  },
+  {
+    "vocabulary_id": "v_012",
+    "example_id": "ex_004",
+    "japanese_word": "尊厳",
+    "ruby_reading": "そんげん",
+    "indonesian_translation": "martabat"
+  },
+  {
+    "vocabulary_id": "v_013",
+    "example_id": "ex_004",
+    "japanese_word": "接する",
+    "ruby_reading": "せっする",
+    "indonesian_translation": "memperlakukan"
+  },
+  {
+    "vocabulary_id": "v_014",
+    "example_id": "ex_005",
+    "japanese_word": "自立支援",
+    "ruby_reading": "じりつしえん",
+    "indonesian_translation": "dukungan kemandirian"
+  },
+  {
+    "vocabulary_id": "v_015",
+    "example_id": "ex_005",
+    "japanese_word": "介護",
+    "ruby_reading": "かいご",
+    "indonesian_translation": "perawatan"
+  },
+  {
+    "vocabulary_id": "v_016",
+    "example_id": "ex_005",
+    "japanese_word": "重要",
+    "ruby_reading": "じゅうよう",
+    "indonesian_translation": "penting"
+  },
+  {
+    "vocabulary_id": "v_017",
+    "example_id": "ex_005",
+    "japanese_word": "目標",
+    "ruby_reading": "もくひょう",
+    "indonesian_translation": "tujuan"
+  }
+]

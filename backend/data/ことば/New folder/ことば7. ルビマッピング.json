@@ -1,0 +1,62 @@
+[
+  {
+    "ruby_id": "r_001",
+    "original_text": "介護の勉強",
+    "ruby_text": "介護の<ruby>勉強<rt>べんきょう</rt></ruby>",
+    "base_word": "勉強"
+  },
+  {
+    "ruby_id": "r_002",
+    "original_text": "仕事",
+    "ruby_text": "<ruby>仕事<rt>しごと</rt></ruby>",
+    "base_word": "仕事"
+  },
+  {
+    "ruby_id": "r_003",
+    "original_text": "会話",
+    "ruby_text": "<ruby>会話<rt>かいわ</rt></ruby>",
+    "base_word": "会話"
+  },
+  {
+    "ruby_id": "r_004",
+    "original_text": "歌＆アニメ",
+    "ruby_text": "<ruby>歌<rt>うた</rt></ruby>＆アニメ",
+    "base_word": "歌"
+  },
+  {
+    "ruby_id": "r_005",
+    "original_text": "カジュアル言葉",
+    "ruby_text": "カジュアル<ruby>言葉<rt>ことば</rt></ruby>",
+    "base_word": "言葉"
+  },
+  {
+    "ruby_id": "r_006",
+    "original_text": "N2勉強",
+    "ruby_text": "N2<ruby>勉強<rt>べんきょう</rt></ruby>",
+    "base_word": "勉強"
+  },
+  {
+    "ruby_id": "r_007",
+    "original_text": "N3勉強",
+    "ruby_text": "N3<ruby>勉強<rt>べんきょう</rt></ruby>",
+    "base_word": "勉強"
+  },
+  {
+    "ruby_id": "r_008",
+    "original_text": "介護の基本",
+    "ruby_text": "介護の<ruby>基本<rt>きほん</rt></ruby>",
+    "base_word": "基本"
+  },
+  {
+    "ruby_id": "r_009",
+    "original_text": "移動・移乗の介護",
+    "ruby_text": "<ruby>移動<rt>いどう</rt></ruby>・<ruby>移乗<rt>いじょう</rt></ruby>の<ruby>介護<rt>かいご</rt></ruby>",
+    "base_word": "移動・移乗・介護"
+  },
+  {
+    "ruby_id": "r_010",
+    "original_text": "食事の介護",
+    "ruby_text": "<ruby>食事<rt>しょくじ</rt></ruby>の<ruby>介護<rt>かいご</rt></ruby>",
+    "base_word": "食事・介護"
+  }
+]

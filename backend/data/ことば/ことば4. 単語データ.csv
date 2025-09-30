@@ -1,0 +1,64 @@
+word_id,main_category_key,subcategory_key,japanese_word,ruby_reading,indonesian_translation
+w_001,care_study,care_basics,介護福祉士,かいごふくしし,Care Worker Bersertifikat
+w_002,care_study,care_basics,尊厳,そんげん,Martabat
+w_003,care_study,care_basics,自立支援,じりつしえん,Dukungan Kemandirian
+w_004,care_study,movement_care,移乗,いじょう,Transfer
+w_005,care_study,movement_care,体位交換,たいいこうかん,Ubah Posisi Tubuh
+w_006,care_study,movement_care,起き上がり,おきあがり,Bangun (dari berbaring)
+w_007,care_study,meal_care,誤嚥,ごえん,Aspirasi / Tersedak
+w_008,care_study,meal_care,水分補給,すいぶんほきゅう,Hidrasi
+w_009,care_study,meal_care,口腔ケア,こうくうケア,Perawatan Mulut
+w_010,work,ho_ren_so,申し送り,もうしおくり,Serah Terima / Operan
+w_011,work,ho_ren_so,共有,きょうゆう,Berbagi (Informasi)
+w_012,work,ho_ren_so,至急,しきゅう,Segera / Cito
+w_013,work,meetings,議題,ぎだい,Agenda Rapat
+w_014,work,meetings,資料,しりょう,Materi / Dokumen
+w_015,work,meetings,議事録,ぎじろく,Notulen Rapat
+w_016,work,phone_response,折り返しお電話します,おりかえしおでんわします,Saya Akan Menelepon Kembali
+w_017,work,phone_response,伝言,でんごん,Pesan
+w_018,work,phone_response,少々お待ちください,しょうしょうおまちください,Mohon Tunggu Sebentar
+w_019,conversation,invite_suggest,今度,こんど,Lain Kali / Nanti
+w_020,conversation,invite_suggest,よかったら,よかったら,Kalau Berkenan
+w_021,conversation,invite_suggest,ご都合いかがですか,ごつごういかがですか,Apakah Anda Ada Waktu?
+w_022,conversation,thanks_apology,ありがとうございます,ありがとうございます,Terima Kasih
+w_023,conversation,thanks_apology,申し訳ありません,もうしわけありません,Mohon Maaf
+w_024,conversation,thanks_apology,助かります,たすかります,Sangat Membantu
+w_025,conversation,ask_permission,〜てもいいですか,〜てもいいですか,Bolehkah saya〜?
+w_026,conversation,ask_permission,〜させていただけませんか,〜させていただけませんか,Bolehkah saya diizinkan untuk〜?
+w_027,conversation,ask_permission,〜（さ）せてください,〜（さ）せてください,Tolong izinkan saya〜
+w_028,songs_anime,anime_quotes,呼吸,こきゅう,Napas / Pernapasan
+w_029,songs_anime,anime_quotes,柱,はしら,Hashira / Pilar
+w_030,songs_anime,anime_quotes,領域展開,りょういきてんかい,Ekspansi Domain
+w_031,songs_anime,kpop_lyrics,サビ,さび,Reff / Chorus
+w_032,songs_anime,kpop_lyrics,推し,おし,Oshi / Idola
+w_033,songs_anime,kpop_lyrics,歌詞,かし,Lirik Lagu
+w_034,songs_anime,anime_fan_terms,フラグが立つ,フラグがたつ,Mendapat Pertanda
+w_035,songs_anime,anime_fan_terms,神回,かみかい,Episode Dewa
+w_036,songs_anime,anime_fan_terms,沼る,ぬまる,Ngelumpur / Kecanduan
+w_037,casual_language,youth_slang,それな,それな,Betul banget / Setuju
+w_038,casual_language,youth_slang,エモい,エモい,Emo / Emosional
+w_039,casual_language,youth_slang,ぴえん,ぴえん,Pien (Sedih)
+w_040,casual_language,casual_greetings,おつ,おつ,Otsu (Terima kasih atas kerja kerasnya)
+w_041,casual_language,casual_greetings,ちーっす,ちーっす,Cissu (Halo / Yo)
+w_042,casual_language,casual_greetings,じゃね,じゃね,Ja ne (Dah / Sampai jumpa)
+w_043,casual_language,internet_slang,w,w,w (Tertawa)
+w_044,casual_language,internet_slang,草,くさ,Kusa (Rumput / Tertawa terbahak-bahak)
+w_045,casual_language,internet_slang,ググる,ググる,Googling
+w_046,n2_study,n2_grammar,〜てならない,〜てならない,Sangat〜 / Luar biasa〜
+w_047,n2_study,n2_grammar,〜しまつだ,〜しまつだ,Akhirnya jadi〜 (hasil buruk)
+w_048,n2_study,n2_grammar,〜（よ）うではないか,〜（よ）うではないか,Ayo kita〜 / Mari kita〜
+w_049,n2_study,n2_reading,筆者,ひっしゃ,Penulis
+w_050,n2_study,n2_reading,主張,しゅちょう,Argumen / Pendapat
+w_051,n2_study,n2_reading,傍線部,ぼうせんぶ,Bagian yang Digarisbawahi
+w_052,n2_study,n2_vocabulary,厄介,やっかい,Merepotkan / Sulit
+w_053,n2_study,n2_vocabulary,相次いで,あいついで,Berturut-turut
+w_054,n2_study,n2_vocabulary,幅広い,はばひろい,Luas / Beragam
+w_055,n3_study,n3_grammar,〜うちに,〜うちに,Selagi / Mumpung
+w_056,n3_study,n3_grammar,〜おかげで,〜おかげで,Berkat〜
+w_057,n3_study,n3_grammar,〜せいか,〜せいか,Mungkin karena〜
+w_058,n3_study,n3_reading,長文読解,ちょうぶんどっかい,Membaca Pemahaman Teks Panjang
+w_059,n3_study,n3_reading,要点,ようてん,Poin Utama
+w_060,n3_study,n3_reading,指示語,しじご,Kata Penunjuk
+w_061,n3_study,n3_vocabulary,曖昧,あいまい,Ambigius / Samar-samar
+w_062,n3_study,n3_vocabulary,具体的,ぐたいてき,Konkret / Spesifik
+w_063,n3_study,n3_vocabulary,抽象的,ちゅうしょうてき,Abstrak

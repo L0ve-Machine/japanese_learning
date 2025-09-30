@@ -16,4 +16,8 @@ urlpatterns = [
     path('subjects/', views.subject_learning_view, name='subject_learning'),
     path('subjects/<str:subject_name>/', views.subject_detail_view, name='subject_detail'),
     path('subjects/<str:subject_name>/chapter/', views.chapter_learning_view, name='chapter_learning'),
+    # ことば（語彙学習）
+    path('kotoba/', views.kotoba_view, name='kotoba'),
+    path('kotoba/<str:category_key>/', views.kotoba_category_view, name='kotoba_category'),
+    path('kotoba/<str:category_key>/<str:subcategory_key>/', views.kotoba_subcategory_view, name='kotoba_subcategory'),
 ]

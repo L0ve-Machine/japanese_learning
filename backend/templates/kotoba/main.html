@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ことば - 語彙学習 - 介護福祉士試験対策{% endblock %}
+
+{% block extra_head %}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            margin: 0 auto 20px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .category-header {
+            padding: 30px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+
+        .category-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .category-ruby {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .category-translation {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .category-body {
+            padding: 20px;
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #FF9800;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .category-btn {
+            width: 100%;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item:hover {
+            color: #FF9800;
+        }
+
+        .breadcrumb-item.active {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-card-icon {
+            font-size: 36px;
+            color: #FF9800;
+            margin-bottom: 10px;
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-card-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+            <a href="{% url 'dashboard' %}" class="breadcrumb-item">ダッシュボード</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-item active">ことば</span>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-icon">
+                <span class="material-icons" style="font-size: 48px;">translate</span>
+            </div>
+            <h1>ことば - 語彙学習</h1>
+            <p>重要単語を学習して、日本語力を向上させましょう</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <span class="material-icons">library_books</span>
+                    </div>
+                    <div class="stat-card-value">{{ categories|length }}</div>
+                    <div class="stat-card-label">カテゴリー</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <span class="material-icons">check_circle</span>
+                    </div>
+                    <div class="stat-card-value">156</div>
+                    <div class="stat-card-label">学習済み単語</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <span class="material-icons">trending_up</span>
+                    </div>
+                    <div class="stat-card-value">65%</div>
+                    <div class="stat-card-label">学習進捗</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <span class="material-icons">local_fire_department</span>
+                    </div>
+                    <div class="stat-card-value">7日</div>
+                    <div class="stat-card-label">連続学習</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Grid -->
+        <div class="categories-grid">
+            {% for category in categories %}
+            <div class="category-card" onclick="goToCategory('{{ category.key }}')">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <span class="material-icons">
+                            {% if category.key == 'care_study' %}medical_services
+                            {% elif category.key == 'work' %}work
+                            {% elif category.key == 'conversation' %}chat
+                            {% elif category.key == 'songs_anime' %}music_note
+                            {% elif category.key == 'casual_language' %}emoji_people
+                            {% elif category.key == 'n2_study' %}school
+                            {% elif category.key == 'n3_study' %}school
+                            {% else %}book{% endif %}
+                        </span>
+                    </div>
+                    <div class="category-title">{{ category.japanese }}</div>
+                    <div class="category-ruby">{{ category.ruby }}</div>
+                    <div class="category-translation">{{ category.indonesian }}</div>
+                </div>
+                <div class="category-body">
+                    <div class="category-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ category.word_count }}</div>
+                            <div class="stat-label">単語数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">--</div>
+                            <div class="stat-label">学習済み</div>
+                        </div>
+                    </div>
+                    <button class="category-btn">
+                        学習開始
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function goToCategory(categoryKey) {
+            // Navigate to category detail page
+            window.location.href = '{% url "kotoba" %}' + categoryKey + '/';
+        }
+
+        console.log('Kotoba main page loaded with {{ categories|length }} categories');
+    </script>
+{% endblock %}

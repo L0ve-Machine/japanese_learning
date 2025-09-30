@@ -1,0 +1,22 @@
+main_category_key,subcategory_key,japanese_name,indonesian_translation,ruby_reading,order_number
+care_study,care_basics,介護の基本,Dasar-dasar Perawatan,かいごのきほん,1
+care_study,movement_care,移動・移乗の介護,Perawatan Pindah & Transfer,いどう・いじょうのかいご,2
+care_study,meal_care,食事の介護,Perawatan Makan,しょくじのかいご,3
+work,ho_ren_so,報告・連絡・相談,Lapor Kontak Konsultasi (Ho-Ren-So),ほうこく・れんらく・そうだん,1
+work,meetings,会議,Rapat,かいぎ,2
+work,phone_response,電話対応,Korespondensi Telepon,でんわたいおう,3
+conversation,invite_suggest,誘う・提案する,Mengajak & Menyarankan,さそう・ていあんする,1
+conversation,thanks_apology,感謝・謝罪,Terima Kasih & Permintaan Maaf,かんしゃ・しゃざい,2
+conversation,ask_permission,許可を求める,Meminta Izin,きょかをもとめる,3
+songs_anime,anime_quotes,アニメの名言,Kutipan Terkenal Anime,アニメのめいげん,1
+songs_anime,kpop_lyrics,K-POPの歌詞,Lirik K-POP,ケーポップのかし,2
+songs_anime,anime_fan_terms,アニメ・ファンの言葉,Istilah Penggemar Anime,アニメファンのことば,3
+casual_language,youth_slang,若者言葉,Bahasa Gaul Anak Muda,わかものことば,1
+casual_language,casual_greetings,あいさつ,Sapaan Santai,あいさつ,2
+casual_language,internet_slang,ネットスラング,Slang Internet,ネットスラング,3
+n2_study,n2_grammar,文法,Tata Bahasa,ぶんぽう,1
+n2_study,n2_reading,読解,Membaca Pemahaman,どっかい,2
+n2_study,n2_vocabulary,語彙,Kosakata,ごい,3
+n3_study,n3_grammar,文法,Tata Bahasa,ぶんぽう,1
+n3_study,n3_reading,読解,Membaca Pemahaman,どっかい,2
+n3_study,n3_vocabulary,語彙,Kosakata,ごい,3

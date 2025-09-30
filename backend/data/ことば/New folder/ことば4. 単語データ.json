@@ -1,0 +1,506 @@
+[
+  {
+    "word_id": "w_001",
+    "main_category_key": "care_study",
+    "subcategory_key": "care_basics",
+    "japanese_word": "介護福祉士",
+    "ruby_reading": "かいごふくしし",
+    "indonesian_translation": "Care Worker Bersertifikat"
+  },
+  {
+    "word_id": "w_002",
+    "main_category_key": "care_study",
+    "subcategory_key": "care_basics",
+    "japanese_word": "尊厳",
+    "ruby_reading": "そんげん",
+    "indonesian_translation": "Martabat"
+  },
+  {
+    "word_id": "w_003",
+    "main_category_key": "care_study",
+    "subcategory_key": "care_basics",
+    "japanese_word": "自立支援",
+    "ruby_reading": "じりつしえん",
+    "indonesian_translation": "Dukungan Kemandirian"
+  },
+  {
+    "word_id": "w_004",
+    "main_category_key": "care_study",
+    "subcategory_key": "movement_care",
+    "japanese_word": "移乗",
+    "ruby_reading": "いじょう",
+    "indonesian_translation": "Transfer"
+  },
+  {
+    "word_id": "w_005",
+    "main_category_key": "care_study",
+    "subcategory_key": "movement_care",
+    "japanese_word": "体位交換",
+    "ruby_reading": "たいいこうかん",
+    "indonesian_translation": "Ubah Posisi Tubuh"
+  },
+  {
+    "word_id": "w_006",
+    "main_category_key": "care_study",
+    "subcategory_key": "movement_care",
+    "japanese_word": "起き上がり",
+    "ruby_reading": "おきあがり",
+    "indonesian_translation": "Bangun (dari berbaring)"
+  },
+  {
+    "word_id": "w_007",
+    "main_category_key": "care_study",
+    "subcategory_key": "meal_care",
+    "japanese_word": "誤嚥",
+    "ruby_reading": "ごえん",
+    "indonesian_translation": "Aspirasi / Tersedak"
+  },
+  {
+    "word_id": "w_008",
+    "main_category_key": "care_study",
+    "subcategory_key": "meal_care",
+    "japanese_word": "水分補給",
+    "ruby_reading": "すいぶんほきゅう",
+    "indonesian_translation": "Hidrasi"
+  },
+  {
+    "word_id": "w_009",
+    "main_category_key": "care_study",
+    "subcategory_key": "meal_care",
+    "japanese_word": "口腔ケア",
+    "ruby_reading": "こうくうケア",
+    "indonesian_translation": "Perawatan Mulut"
+  },
+  {
+    "word_id": "w_010",
+    "main_category_key": "work",
+    "subcategory_key": "ho_ren_so",
+    "japanese_word": "申し送り",
+    "ruby_reading": "もうしおくり",
+    "indonesian_translation": "Serah Terima / Operan"
+  },
+  {
+    "word_id": "w_011",
+    "main_category_key": "work",
+    "subcategory_key": "ho_ren_so",
+    "japanese_word": "共有",
+    "ruby_reading": "きょうゆう",
+    "indonesian_translation": "Berbagi (Informasi)"
+  },
+  {
+    "word_id": "w_012",
+    "main_category_key": "work",
+    "subcategory_key": "ho_ren_so",
+    "japanese_word": "至急",
+    "ruby_reading": "しきゅう",
+    "indonesian_translation": "Segera / Cito"
+  },
+  {
+    "word_id": "w_013",
+    "main_category_key": "work",
+    "subcategory_key": "meetings",
+    "japanese_word": "議題",
+    "ruby_reading": "ぎだい",
+    "indonesian_translation": "Agenda Rapat"
+  },
+  {
+    "word_id": "w_014",
+    "main_category_key": "work",
+    "subcategory_key": "meetings",
+    "japanese_word": "資料",
+    "ruby_reading": "しりょう",
+    "indonesian_translation": "Materi / Dokumen"
+  },
+  {
+    "word_id": "w_015",
+    "main_category_key": "work",
+    "subcategory_key": "meetings",
+    "japanese_word": "議事録",
+    "ruby_reading": "ぎじろく",
+    "indonesian_translation": "Notulen Rapat"
+  },
+  {
+    "word_id": "w_016",
+    "main_category_key": "work",
+    "subcategory_key": "phone_response",
+    "japanese_word": "折り返しお電話します",
+    "ruby_reading": "おりかえしおでんわします",
+    "indonesian_translation": "Saya Akan Menelepon Kembali"
+  },
+  {
+    "word_id": "w_017",
+    "main_category_key": "work",
+    "subcategory_key": "phone_response",
+    "japanese_word": "伝言",
+    "ruby_reading": "でんごん",
+    "indonesian_translation": "Pesan"
+  },
+  {
+    "word_id": "w_018",
+    "main_category_key": "work",
+    "subcategory_key": "phone_response",
+    "japanese_word": "少々お待ちください",
+    "ruby_reading": "しょうしょうおまちください",
+    "indonesian_translation": "Mohon Tunggu Sebentar"
+  },
+  {
+    "word_id": "w_019",
+    "main_category_key": "conversation",
+    "subcategory_key": "invite_suggest",
+    "japanese_word": "今度",
+    "ruby_reading": "こんど",
+    "indonesian_translation": "Lain Kali / Nanti"
+  },
+  {
+    "word_id": "w_020",
+    "main_category_key": "conversation",
+    "subcategory_key": "invite_suggest",
+    "japanese_word": "よかったら",
+    "ruby_reading": "よかったら",
+    "indonesian_translation": "Kalau Berkenan"
+  },
+  {
+    "word_id": "w_021",
+    "main_category_key": "conversation",
+    "subcategory_key": "invite_suggest",
+    "japanese_word": "ご都合いかがですか",
+    "ruby_reading": "ごつごういかがですか",
+    "indonesian_translation": "Apakah Anda Ada Waktu?"
+  },
+  {
+    "word_id": "w_022",
+    "main_category_key": "conversation",
+    "subcategory_key": "thanks_apology",
+    "japanese_word": "ありがとうございます",
+    "ruby_reading": "ありがとうございます",
+    "indonesian_translation": "Terima Kasih"
+  },
+  {
+    "word_id": "w_023",
+    "main_category_key": "conversation",
+    "subcategory_key": "thanks_apology",
+    "japanese_word": "申し訳ありません",
+    "ruby_reading": "もうしわけありません",
+    "indonesian_translation": "Mohon Maaf"
+  },
+  {
+    "word_id": "w_024",
+    "main_category_key": "conversation",
+    "subcategory_key": "thanks_apology",
+    "japanese_word": "助かります",
+    "ruby_reading": "たすかります",
+    "indonesian_translation": "Sangat Membantu"
+  },
+  {
+    "word_id": "w_025",
+    "main_category_key": "conversation",
+    "subcategory_key": "ask_permission",
+    "japanese_word": "〜てもいいですか",
+    "ruby_reading": "〜てもいいですか",
+    "indonesian_translation": "Bolehkah saya〜?"
+  },
+  {
+    "word_id": "w_026",
+    "main_category_key": "conversation",
+    "subcategory_key": "ask_permission",
+    "japanese_word": "〜させていただけませんか",
+    "ruby_reading": "〜させていただけませんか",
+    "indonesian_translation": "Bolehkah saya diizinkan untuk〜?"
+  },
+  {
+    "word_id": "w_027",
+    "main_category_key": "conversation",
+    "subcategory_key": "ask_permission",
+    "japanese_word": "〜（さ）せてください",
+    "ruby_reading": "〜（さ）せてください",
+    "indonesian_translation": "Tolong izinkan saya〜"
+  },
+  {
+    "word_id": "w_028",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "anime_quotes",
+    "japanese_word": "呼吸",
+    "ruby_reading": "こきゅう",
+    "indonesian_translation": "Napas / Pernapasan"
+  },
+  {
+    "word_id": "w_029",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "anime_quotes",
+    "japanese_word": "柱",
+    "ruby_reading": "はしら",
+    "indonesian_translation": "Hashira / Pilar"
+  },
+  {
+    "word_id": "w_030",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "anime_quotes",
+    "japanese_word": "領域展開",
+    "ruby_reading": "りょういきてんかい",
+    "indonesian_translation": "Ekspansi Domain"
+  },
+  {
+    "word_id": "w_031",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "kpop_lyrics",
+    "japanese_word": "サビ",
+    "ruby_reading": "さび",
+    "indonesian_translation": "Reff / Chorus"
+  },
+  {
+    "word_id": "w_032",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "kpop_lyrics",
+    "japanese_word": "推し",
+    "ruby_reading": "おし",
+    "indonesian_translation": "Oshi / Idola"
+  },
+  {
+    "word_id": "w_033",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "kpop_lyrics",
+    "japanese_word": "歌詞",
+    "ruby_reading": "かし",
+    "indonesian_translation": "Lirik Lagu"
+  },
+  {
+    "word_id": "w_034",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "anime_fan_terms",
+    "japanese_word": "フラグが立つ",
+    "ruby_reading": "フラグがたつ",
+    "indonesian_translation": "Mendapat Pertanda"
+  },
+  {
+    "word_id": "w_035",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "anime_fan_terms",
+    "japanese_word": "神回",
+    "ruby_reading": "かみかい",
+    "indonesian_translation": "Episode Dewa"
+  },
+  {
+    "word_id": "w_036",
+    "main_category_key": "songs_anime",
+    "subcategory_key": "anime_fan_terms",
+    "japanese_word": "沼る",
+    "ruby_reading": "ぬまる",
+    "indonesian_translation": "Ngelumpur / Kecanduan"
+  },
+  {
+    "word_id": "w_037",
+    "main_category_key": "casual_language",
+    "subcategory_key": "youth_slang",
+    "japanese_word": "それな",
+    "ruby_reading": "それな",
+    "indonesian_translation": "Betul banget / Setuju"
+  },
+  {
+    "word_id": "w_038",
+    "main_category_key": "casual_language",
+    "subcategory_key": "youth_slang",
+    "japanese_word": "エモい",
+    "ruby_reading": "エモい",
+    "indonesian_translation": "Emo / Emosional"
+  },
+  {
+    "word_id": "w_039",
+    "main_category_key": "casual_language",
+    "subcategory_key": "youth_slang",
+    "japanese_word": "ぴえん",
+    "ruby_reading": "ぴえん",
+    "indonesian_translation": "Pien (Sedih)"
+  },
+  {
+    "word_id": "w_040",
+    "main_category_key": "casual_language",
+    "subcategory_key": "casual_greetings",
+    "japanese_word": "おつ",
+    "ruby_reading": "おつ",
+    "indonesian_translation": "Otsu (Terima kasih atas kerja kerasnya)"
+  },
+  {
+    "word_id": "w_041",
+    "main_category_key": "casual_language",
+    "subcategory_key": "casual_greetings",
+    "japanese_word": "ちーっす",
+    "ruby_reading": "ちーっす",
+    "indonesian_translation": "Cissu (Halo / Yo)"
+  },
+  {
+    "word_id": "w_042",
+    "main_category_key": "casual_language",
+    "subcategory_key": "casual_greetings",
+    "japanese_word": "じゃね",
+    "ruby_reading": "じゃね",
+    "indonesian_translation": "Ja ne (Dah / Sampai jumpa)"
+  },
+  {
+    "word_id": "w_043",
+    "main_category_key": "casual_language",
+    "subcategory_key": "internet_slang",
+    "japanese_word": "w",
+    "ruby_reading": "w",
+    "indonesian_translation": "w (Tertawa)"
+  },
+  {
+    "word_id": "w_044",
+    "main_category_key": "casual_language",
+    "subcategory_key": "internet_slang",
+    "japanese_word": "草",
+    "ruby_reading": "くさ",
+    "indonesian_translation": "Kusa (Rumput / Tertawa terbahak-bahak)"
+  },
+  {
+    "word_id": "w_045",
+    "main_category_key": "casual_language",
+    "subcategory_key": "internet_slang",
+    "japanese_word": "ググる",
+    "ruby_reading": "ググる",
+    "indonesian_translation": "Googling"
+  },
+  {
+    "word_id": "w_046",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_grammar",
+    "japanese_word": "〜てならない",
+    "ruby_reading": "〜てならない",
+    "indonesian_translation": "Sangat〜 / Luar biasa〜"
+  },
+  {
+    "word_id": "w_047",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_grammar",
+    "japanese_word": "〜しまつだ",
+    "ruby_reading": "〜しまつだ",
+    "indonesian_translation": "Akhirnya jadi〜 (hasil buruk)"
+  },
+  {
+    "word_id": "w_048",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_grammar",
+    "japanese_word": "〜（よ）うではないか",
+    "ruby_reading": "〜（よ）うではないか",
+    "indonesian_translation": "Ayo kita〜 / Mari kita〜"
+  },
+  {
+    "word_id": "w_049",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_reading",
+    "japanese_word": "筆者",
+    "ruby_reading": "ひっしゃ",
+    "indonesian_translation": "Penulis"
+  },
+  {
+    "word_id": "w_050",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_reading",
+    "japanese_word": "主張",
+    "ruby_reading": "しゅちょう",
+    "indonesian_translation": "Argumen / Pendapat"
+  },
+  {
+    "word_id": "w_051",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_reading",
+    "japanese_word": "傍線部",
+    "ruby_reading": "ぼうせんぶ",
+    "indonesian_translation": "Bagian yang Digarisbawahi"
+  },
+  {
+    "word_id": "w_052",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_vocabulary",
+    "japanese_word": "厄介",
+    "ruby_reading": "やっかい",
+    "indonesian_translation": "Merepotkan / Sulit"
+  },
+  {
+    "word_id": "w_053",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_vocabulary",
+    "japanese_word": "相次いで",
+    "ruby_reading": "あいついで",
+    "indonesian_translation": "Berturut-turut"
+  },
+  {
+    "word_id": "w_054",
+    "main_category_key": "n2_study",
+    "subcategory_key": "n2_vocabulary",
+    "japanese_word": "幅広い",
+    "ruby_reading": "はばひろい",
+    "indonesian_translation": "Luas / Beragam"
+  },
+  {
+    "word_id": "w_055",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_grammar",
+    "japanese_word": "〜うちに",
+    "ruby_reading": "〜うちに",
+    "indonesian_translation": "Selagi / Mumpung"
+  },
+  {
+    "word_id": "w_056",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_grammar",
+    "japanese_word": "〜おかげで",
+    "ruby_reading": "〜おかげで",
+    "indonesian_translation": "Berkat〜"
+  },
+  {
+    "word_id": "w_057",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_grammar",
+    "japanese_word": "〜せいか",
+    "ruby_reading": "〜せいか",
+    "indonesian_translation": "Mungkin karena〜"
+  },
+  {
+    "word_id": "w_058",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_reading",
+    "japanese_word": "長文読解",
+    "ruby_reading": "ちょうぶんどっかい",
+    "indonesian_translation": "Membaca Pemahaman Teks Panjang"
+  },
+  {
+    "word_id": "w_059",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_reading",
+    "japanese_word": "要点",
+    "ruby_reading": "ようてん",
+    "indonesian_translation": "Poin Utama"
+  },
+  {
+    "word_id": "w_060",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_reading",
+    "japanese_word": "指示語",
+    "ruby_reading": "しじご",
+    "indonesian_translation": "Kata Penunjuk"
+  },
+  {
+    "word_id": "w_061",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_vocabulary",
+    "japanese_word": "曖昧",
+    "ruby_reading": "あいまい",
+    "indonesian_translation": "Ambigius / Samar-samar"
+  },
+  {
+    "word_id": "w_062",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_vocabulary",
+    "japanese_word": "具体的",
+    "ruby_reading": "ぐたいてき",
+    "indonesian_translation": "Konkret / Spesifik"
+  },
+  {
+    "word_id": "w_063",
+    "main_category_key": "n3_study",
+    "subcategory_key": "n3_vocabulary",
+    "japanese_word": "抽象的",
+    "ruby_reading": "ちゅうしょうてき",
+    "indonesian_translation": "Abstrak"
+  }
+]

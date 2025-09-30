@@ -1,0 +1,42 @@
+[
+  {
+    "setting_key": "default_furigana",
+    "setting_value": "true",
+    "description": "ふりがなデフォルト表示"
+  },
+  {
+    "setting_key": "card_animation_duration",
+    "setting_value": "0.5s",
+    "description": "カードアニメーション時間"
+  },
+  {
+    "setting_key": "expand_transition_duration",
+    "setting_value": "0.4s",
+    "description": "展開トランジション時間"
+  },
+  {
+    "setting_key": "flashcard_flip_enabled",
+    "setting_value": "true",
+    "description": "フラッシュカード反転機能"
+  },
+  {
+    "setting_key": "vocabulary_auto_expand",
+    "setting_value": "false",
+    "description": "語彙自動展開"
+  },
+  {
+    "setting_key": "max_history_stack",
+    "setting_value": "50",
+    "description": "履歴スタック最大数"
+  },
+  {
+    "setting_key": "fade_in_animation",
+    "setting_value": "fadeIn 0.5s ease-in-out",
+    "description": "フェードインアニメーション"
+  },
+  {
+    "setting_key": "card_hover_transform",
+    "setting_value": "translateY(-4px)",
+    "description": "カードホバー変形"
+  }
+]

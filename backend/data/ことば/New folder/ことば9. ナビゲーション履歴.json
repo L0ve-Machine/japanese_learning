@@ -1,0 +1,38 @@
+[
+  {
+    "level": "1",
+    "description": "メインカテゴリー",
+    "data_structure": "Top level categories",
+    "example_path": "[\"介護の勉強\"]"
+  },
+  {
+    "level": "2",
+    "description": "サブカテゴリー",
+    "data_structure": "Category subdivisions",
+    "example_path": "[\"介護の勉強\"",
+    "null": [
+      " \"介護の基本\"]"
+    ]
+  },
+  {
+    "level": "3",
+    "description": "単語リスト",
+    "data_structure": "Word list within subcategory",
+    "example_path": "[\"介護の勉強\"",
+    "null": [
+      " \"介護の基本\"",
+      " \"介護福祉士\"]"
+    ]
+  },
+  {
+    "level": "4",
+    "description": "単語詳細",
+    "data_structure": "Individual word with examples",
+    "example_path": "[\"介護の勉強\"",
+    "null": [
+      " \"介護の基本\"",
+      " \"介護福祉士\"",
+      " \"examples\"]"
+    ]
+  }
+]

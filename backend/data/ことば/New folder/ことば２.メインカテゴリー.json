@@ -1,0 +1,51 @@
+[
+  {
+    "category_key": "care_study",
+    "japanese_name": "介護の勉強",
+    "indonesian_translation": "Belajar Perawatan",
+    "ruby_reading": "かいごのべんきょう",
+    "order_number": "1"
+  },
+  {
+    "category_key": "work",
+    "japanese_name": "仕事",
+    "indonesian_translation": "Pekerjaan",
+    "ruby_reading": "しごと",
+    "order_number": "2"
+  },
+  {
+    "category_key": "conversation",
+    "japanese_name": "会話",
+    "indonesian_translation": "Percakapan",
+    "ruby_reading": "かいわ",
+    "order_number": "3"
+  },
+  {
+    "category_key": "songs_anime",
+    "japanese_name": "歌＆アニメ",
+    "indonesian_translation": "Lagu & Anime",
+    "ruby_reading": "うた",
+    "order_number": "4"
+  },
+  {
+    "category_key": "casual_language",
+    "japanese_name": "カジュアル言葉",
+    "indonesian_translation": "Bahasa Kasual",
+    "ruby_reading": "カジュアルことば",
+    "order_number": "5"
+  },
+  {
+    "category_key": "n2_study",
+    "japanese_name": "N2勉強",
+    "indonesian_translation": "Belajar N2",
+    "ruby_reading": "N2べんきょう",
+    "order_number": "6"
+  },
+  {
+    "category_key": "n3_study",
+    "japanese_name": "N3勉強",
+    "indonesian_translation": "Belajar N3",
+    "ruby_reading": "N3べんきょう",
+    "order_number": "7"
+  }
+]

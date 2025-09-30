@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ subcategory.japanese }} - {{ category.japanese }} - ことば{% endblock %}
+
+{% block extra_head %}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item:hover {
+            color: #FF9800;
+        }
+
+        .breadcrumb-item.active {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .header-ruby {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .header-translation {
+            font-size: 1.1rem;
+            color: #FF9800;
+            margin-bottom: 15px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            color: #FF9800;
+            font-size: 24px;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* Word List */
+        .word-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .word-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .word-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .word-header {
+            padding: 25px;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .word-main {
+            flex: 1;
+        }
+
+        .word-japanese {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .word-ruby {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .word-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .word-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .word-toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .word-toggle.open .word-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .word-translation {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #fff8f0;
+        }
+
+        .word-translation.open {
+            max-height: 200px;
+        }
+
+        .word-translation-content {
+            padding: 20px 25px;
+            font-size: 1.2rem;
+            color: #F57C00;
+            font-weight: 500;
+        }
+
+        .word-body {
+            padding: 25px;
+        }
+
+        .examples-section {
+            margin-top: 20px;
+        }
+
+        .examples-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .example-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #FF9800;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 15px;
+        }
+
+        .example-japanese {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .example-indonesian {
+            font-size: 1rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .vocabulary-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .vocabulary-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .vocabulary-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .vocabulary-item {
+            display: inline-flex;
+            flex-direction: column;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .vocab-japanese {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .vocab-ruby {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .vocab-indonesian {
+            font-size: 0.85rem;
+            color: #FF9800;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .word-japanese {
+                font-size: 1.5rem;
+            }
+
+            .header-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+            <a href="{% url 'dashboard' %}" class="breadcrumb-item">ダッシュボード</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="{% url 'kotoba' %}" class="breadcrumb-item">ことば</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="{% url 'kotoba_category' category.key %}" class="breadcrumb-item">{{ category.japanese }}</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-item active">{{ subcategory.japanese }}</span>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>{{ subcategory.japanese }}</h1>
+            <div class="header-ruby">{{ subcategory.ruby }}</div>
+            <div class="header-translation">{{ subcategory.indonesian }}</div>
+
+            <div class="header-stats">
+                <div class="stat">
+                    <span class="material-icons stat-icon">library_books</span>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ words|length }}</div>
+                        <div class="stat-label">単語数</div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span class="material-icons stat-icon">check_circle</span>
+                    <div class="stat-info">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">学習済み</div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span class="material-icons stat-icon">insert_comment</span>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ words|length|add:words|length }}</div>
+                        <div class="stat-label">例文数</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Word List -->
+        <div class="word-list">
+            {% for word in words %}
+            <div class="word-card">
+                <div class="word-header" onclick="toggleTranslation({{ forloop.counter0 }})">
+                    <div class="word-main">
+                        <div class="word-japanese">{{ word.japanese }}</div>
+                        <div class="word-ruby">{{ word.ruby }}</div>
+                    </div>
+                    <div class="word-toggle" id="toggle-{{ forloop.counter0 }}">
+                        <span>翻訳を見る</span>
+                        <span class="material-icons word-toggle-icon">expand_more</span>
+                    </div>
+                </div>
+
+                <div class="word-translation" id="translation-{{ forloop.counter0 }}">
+                    <div class="word-translation-content">
+                        {{ word.indonesian }}
+                    </div>
+                </div>
+
+                <div class="word-body">
+                    {% if word.examples %}
+                    <div class="examples-section">
+                        <div class="examples-title">
+                            <span class="material-icons">format_quote</span>
+                            例文 (Contoh Kalimat)
+                        </div>
+                        {% for example in word.examples %}
+                        <div class="example-item">
+                            <div class="example-japanese">{{ example.japanese }}</div>
+                            <div class="example-indonesian">{{ example.indonesian }}</div>
+
+                            {% if example.vocabulary %}
+                            <div class="vocabulary-section">
+                                <div class="vocabulary-title">語彙 (Kosakata):</div>
+                                <div class="vocabulary-list">
+                                    {% for vocab in example.vocabulary %}
+                                    <div class="vocabulary-item">
+                                        <span class="vocab-japanese">{{ vocab.japanese }}</span>
+                                        <span class="vocab-ruby">{{ vocab.ruby }}</span>
+                                        <span class="vocab-indonesian">{{ vocab.indonesian }}</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function toggleTranslation(index) {
+            const translationDiv = document.getElementById('translation-' + index);
+            const toggleDiv = document.getElementById('toggle-' + index);
+            const toggleText = toggleDiv.querySelector('span:first-child');
+
+            translationDiv.classList.toggle('open');
+            toggleDiv.classList.toggle('open');
+
+            if (translationDiv.classList.contains('open')) {
+                toggleText.textContent = '翻訳を隠す';
+            } else {
+                toggleText.textContent = '翻訳を見る';
+            }
+        }
+
+        console.log('Subcategory page loaded: {{ category.key }}/{{ subcategory.key }} with {{ words|length }} words');
+    </script>
+{% endblock %}

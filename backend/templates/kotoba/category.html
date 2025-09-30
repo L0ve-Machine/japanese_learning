@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.japanese }} - ことば - 介護福祉士試験対策{% endblock %}
+
+{% block extra_head %}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .breadcrumb-item:hover {
+            color: #FF9800;
+        }
+
+        .breadcrumb-item.active {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .header-info h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .header-ruby {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .header-translation {
+            font-size: 1.1rem;
+            color: #FF9800;
+        }
+
+        /* Subcategories Grid */
+        .subcategories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .subcategory-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .subcategory-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .subcategory-header {
+            padding: 25px 20px;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+
+        .subcategory-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .subcategory-ruby {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .subcategory-translation {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .subcategory-body {
+            padding: 20px;
+        }
+
+        .subcategory-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #FF9800;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .subcategory-btn {
+            width: 100%;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .subcategory-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .subcategories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-info h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+            <a href="{% url 'dashboard' %}" class="breadcrumb-item">ダッシュボード</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="{% url 'kotoba' %}" class="breadcrumb-item">ことば</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-item active">{{ category.japanese }}</span>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="header-icon">
+                    <span class="material-icons" style="font-size: 48px;">medical_services</span>
+                </div>
+                <div class="header-info">
+                    <h1>{{ category.japanese }}</h1>
+                    <div class="header-ruby">{{ category.ruby }}</div>
+                    <div class="header-translation">{{ category.indonesian }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategories -->
+        {% if subcategories %}
+            <div class="subcategories-grid">
+                {% for subcategory in subcategories %}
+                <div class="subcategory-card" onclick="goToSubcategory('{{ category.key }}', '{{ subcategory.key }}')">
+                    <div class="subcategory-header">
+                        <div class="subcategory-title">{{ subcategory.japanese }}</div>
+                        <div class="subcategory-ruby">{{ subcategory.ruby }}</div>
+                        <div class="subcategory-translation">{{ subcategory.indonesian }}</div>
+                    </div>
+                    <div class="subcategory-body">
+                        <div class="subcategory-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">{{ subcategory.word_count }}</div>
+                                <div class="stat-label">単語数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">0</div>
+                                <div class="stat-label">学習済み</div>
+                            </div>
+                        </div>
+                        <button class="subcategory-btn">
+                            <span class="material-icons">play_circle</span>
+                            学習開始
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <span class="material-icons" style="font-size: 64px;">inbox</span>
+                </div>
+                <h3>サブカテゴリーがありません</h3>
+                <p>このカテゴリーにはまだコンテンツがありません</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function goToSubcategory(categoryKey, subcategoryKey) {
+            // Navigate to subcategory learning page
+            window.location.href = '/kotoba/' + categoryKey + '/' + subcategoryKey + '/';
+        }
+
+        console.log('Category page loaded: {{ category.key }} with {{ subcategories|length }} subcategories');
+    </script>
+{% endblock %}
