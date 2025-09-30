@@ -6,6 +6,7 @@
 {% block extra_head %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -311,6 +312,93 @@
                 flex-direction: column;
             }
         }
+
+        /* Interactive text block styles */
+        .text-block {
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+
+        .japanese-text-container {
+            line-height: 2.2;
+            font-size: 1.1rem;
+        }
+
+        .indonesian-text-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-left: 0.5rem;
+            margin-right: 4rem;
+        }
+
+        .indonesian-text-wrapper.open {
+            max-height: 300px;
+        }
+
+        .indonesian-text {
+            color: #4b5563;
+            font-size: 0.95rem;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-left: 3px solid #d1d5db;
+        }
+
+        .translation-toggle {
+            background: none;
+            border: none;
+            color: #6b7280;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .translation-toggle:hover {
+            background-color: #f3f4f6;
+        }
+
+        .translation-toggle i {
+            transition: all 0.3s ease;
+        }
+
+        .translation-toggle.open i {
+            transform: rotate(180deg);
+        }
+
+        .text-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        /* Vocabulary word styling */
+        .vocabulary-word {
+            cursor: pointer;
+            border-bottom: 1px dotted #9ca3af;
+            transition: border-color 0.2s;
+        }
+
+        .vocabulary-word:hover {
+            border-color: #374151;
+        }
+
+        #translation-popup {
+            max-width: 250px;
+            line-height: 1.5;
+            position: absolute;
+            z-index: 50;
+            padding: 12px;
+            background-color: #1f2937;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            font-size: 0.875rem;
+            display: none;
+        }
     </style>
 {% endblock %}
 
@@ -347,7 +435,63 @@
                     <h2>{{ chapter_data.title }}</h2>
                 </div>
                 <div class="content-body">
-                    {{ chapter_data.content|safe }}
+                    <h2>{{ chapter_data.title }}</h2>
+
+                    <!-- Text blocks from CSV -->
+                    {% for text in chapter_data.texts %}
+                    <div class="text-block">
+                        <div class="text-container">
+                            <p class="japanese-text-container" style="flex-grow: 1; padding-right: 1rem;">
+                                {{ text.japanese|safe }}
+                            </p>
+                            <button class="translation-toggle" title="全文翻訳">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                        </div>
+                        <div class="indonesian-text-wrapper">
+                            <p class="indonesian-text">
+                                {{ text.indonesian }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- Quiz Section -->
+                    {% if chapter_data.questions %}
+                    <div class="quiz-section" style="margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+                        <h3 style="color: #007bff; margin-bottom: 20px;">📝 確認問題</h3>
+
+                        {% for question in chapter_data.questions %}
+                        <div class="quiz-question" style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 6px; border-left: 4px solid #007bff;">
+                            <h4 style="color: #333; margin-bottom: 15px;">問題{{ question.number }}</h4>
+                            <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">
+                                {{ question.japanese }}
+                            </p>
+                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px; font-style: italic;">
+                                {{ question.indonesian }}
+                            </p>
+                            <div class="quiz-options">
+                                {% for option in question.options %}
+                                <div class="option {% if option.is_correct %}correct-answer{% endif %}"
+                                     style="margin-bottom: 10px; padding: 12px; border: 1px solid #dee2e6; border-radius: 4px; cursor: pointer; transition: background-color 0.2s;"
+                                     data-question="{{ question.number }}" data-option="{{ option.number }}">
+                                    <label style="cursor: pointer; width: 100%; display: block;">
+                                        <input type="radio" name="question{{ question.number }}" value="{{ option.number }}" style="margin-right: 10px;">
+                                        {{ option.number }}. {{ option.japanese }}
+                                        <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">{{ option.indonesian }}</div>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button class="check-answer-btn" onclick="checkAnswer({{ question.number }})"
+                                    style="margin-top: 15px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                                答えを確認
+                            </button>
+                            <div class="feedback" id="feedback{{ question.number }}" style="margin-top: 15px; padding: 15px; border-radius: 4px; display: none;"></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -415,50 +559,130 @@
         </div>
     </div>
 
+    <!-- Translation popup -->
+    <div id="translation-popup"></div>
+
     <script>
+        // Get translation popup element
+        const translationPopup = document.getElementById('translation-popup');
+
+        // Toggle functionality for translation buttons
+        function handleToggle(e, toggleClass, wrapperClass) {
+            const toggleBtn = e.target.closest(toggleClass);
+            if (toggleBtn) {
+                e.stopPropagation();
+                toggleBtn.classList.toggle('open');
+                const parent = toggleBtn.closest('.text-block');
+                if (parent) {
+                    const wrapper = parent.querySelector(wrapperClass);
+                    if (wrapper) wrapper.classList.toggle('open');
+                }
+            }
+        }
+
+        // Add event listeners for translation toggles
+        document.body.addEventListener('click', (e) => {
+            const wordSpan = e.target.closest('.vocabulary-word');
+
+            // Handle vocabulary word clicks
+            if (wordSpan) {
+                // Don't close popup if clicking on the popup itself
+                if (e.target.closest('#translation-popup')) return;
+
+                // Toggle popup if same word clicked again
+                if (translationPopup.style.display === 'block' && translationPopup.dataset.owner === wordSpan.outerHTML) {
+                    translationPopup.style.display = 'none';
+                    return;
+                }
+
+                // Show translation popup
+                const translation = wordSpan.dataset.translation;
+                translationPopup.innerHTML = translation;
+                translationPopup.dataset.owner = wordSpan.outerHTML;
+
+                // Position popup
+                const rect = wordSpan.getBoundingClientRect();
+                translationPopup.style.display = 'block';
+                const popupRect = translationPopup.getBoundingClientRect();
+
+                let top = window.scrollY + rect.bottom + 8;
+                let left = window.scrollX + rect.left + (rect.width / 2) - (popupRect.width / 2);
+
+                // Adjust if popup goes off screen
+                if (top + popupRect.height > window.innerHeight + window.scrollY) {
+                    top = window.scrollY + rect.top - popupRect.height - 8;
+                }
+                if (left < 0) left = 10;
+                else if (left + popupRect.width > window.innerWidth) left = window.innerWidth - popupRect.width - 10;
+
+                translationPopup.style.top = `${top}px`;
+                translationPopup.style.left = `${left}px`;
+
+                e.stopPropagation();
+            }
+            // Handle translation toggle buttons
+            else if (!e.target.closest('.translation-toggle')) {
+                // Hide popup when clicking elsewhere
+                translationPopup.style.display = 'none';
+            }
+
+            // Handle translation toggles
+            handleToggle(e, '.translation-toggle', '.indonesian-text-wrapper');
+        });
+
+        // Quiz functionality
+        const feedbackData = {{ chapter_data.feedback|safe }};
+
+        function checkAnswer(questionNumber) {
+            const selectedOption = document.querySelector(`input[name="question${questionNumber}"]:checked`);
+            const feedbackDiv = document.getElementById(`feedback${questionNumber}`);
+
+            if (!selectedOption) {
+                alert('選択肢を選んでください。');
+                return;
+            }
+
+            const selectedValue = parseInt(selectedOption.value);
+            const feedback = feedbackData[questionNumber]?.[selectedValue];
+            const correctOption = document.querySelector(`.quiz-question [data-question="${questionNumber}"] .correct-answer`);
+            const isCorrect = selectedOption.closest('.option').classList.contains('correct-answer');
+
+            // Show feedback
+            feedbackDiv.style.display = 'block';
+            feedbackDiv.innerHTML = `
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="font-weight: bold; color: ${isCorrect ? '#28a745' : '#dc3545'};">
+                        ${isCorrect ? '✓ 正解' : '✗ 不正解'}
+                    </span>
+                </div>
+                <div style="background-color: #f8f9fa; padding: 12px; border-radius: 4px; border-left: 3px solid ${isCorrect ? '#28a745' : '#dc3545'};">
+                    <strong>解説:</strong><br>
+                    ${feedback?.japanese || ''}
+                </div>
+                <div style="background-color: #f1f3f4; padding: 12px; border-radius: 4px; margin-top: 10px; border-left: 3px solid #6c757d;">
+                    <strong>インドネシア語:</strong><br>
+                    ${feedback?.indonesian || ''}
+                </div>
+            `;
+
+            // Highlight correct answer if user got it right
+            if (isCorrect && correctOption) {
+                correctOption.style.backgroundColor = '#d4edda';
+                correctOption.style.borderColor = '#28a745';
+            }
+        }
+
         function goToPreviousChapter() {
-            // Navigate to previous chapter
             alert('前の章の機能は準備中です');
         }
 
         function goToNextChapter() {
-            // Navigate to next chapter
             alert('次の章の機能は準備中です');
         }
 
         function goToSubjectDetail() {
             window.location.href = '{% url "subject_detail" subject_name %}';
         }
-
-        // Practice question functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const radioButtons = document.querySelectorAll('.choices input[type="radio"]');
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    // Remove previous feedback
-                    document.querySelectorAll('.choice-feedback').forEach(feedback => {
-                        feedback.remove();
-                    });
-
-                    // Add feedback
-                    const label = this.closest('label');
-                    const feedback = document.createElement('div');
-                    feedback.className = 'choice-feedback';
-                    feedback.style.marginTop = '8px';
-                    feedback.style.fontSize = '0.8rem';
-
-                    if (this.value === '2') { // Correct answer
-                        feedback.style.color = '#4caf50';
-                        feedback.textContent = '正解！介護保険制度は2000年4月に開始されました。';
-                    } else {
-                        feedback.style.color = '#f44336';
-                        feedback.textContent = '不正解。正しくは2000年です。';
-                    }
-
-                    label.appendChild(feedback);
-                });
-            });
-        });
 
         console.log('Chapter learning page loaded: {{ subject_name }} - {{ chapter }}');
     </script>
