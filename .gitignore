@@ -9,8 +9,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-*.sqlite3
-db.sqlite3
+# *.sqlite3
+# db.sqlite3
 
 # Django
 *.log
@@ -67,5 +67,7 @@ build/
 
 # Backend specific
 backend/venv/
-*.sqlite3-journal
-sample_data.csv.claude/settings.local.json
+# *.sqlite3-journal
+sample_data.csv
+
+.claude/settings.local.json
