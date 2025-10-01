@@ -24,4 +24,6 @@ urlpatterns = [
     path('flashcards/', views.flashcards_view, name='flashcards'),
     path('flashcards/<int:deck_id>/study/', views.flashcards_study_view, name='flashcards_study'),
     path('flashcards/update/<int:card_id>/', views.flashcards_update_progress, name='flashcards_update_progress'),
+    # CSV インポート
+    path('admin/csv-import/', views.csv_import_view, name='csv_import'),
 ]

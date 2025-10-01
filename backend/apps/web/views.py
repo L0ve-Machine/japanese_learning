@@ -875,3 +875,154 @@ def flashcards_update_progress(request, card_id):
         'interval_days': progress.interval_days,
         'is_mastered': progress.is_mastered
     })
+
+@login_required
+def csv_import_view(request):
+    """CSV/Excelインポート画面"""
+    from apps.learning.models import Question, Choice
+
+    if not request.user.is_staff:
+        messages.error(request, '管理者権限が必要です。')
+        return redirect('dashboard')
+
+    if request.method == 'POST' and request.FILES.get('csv_file'):
+        import csv
+        import json
+        from apps.learning.models import ExamYear, ExamSession, Subject
+
+        csv_file = request.FILES['csv_file']
+        file_name = csv_file.name.lower()
+
+        # Check file extension
+        if not (file_name.endswith('.csv') or file_name.endswith('.xlsx') or file_name.endswith('.xls')):
+            messages.error(request, 'CSV または Excel ファイル (.csv, .xlsx, .xls) をアップロードしてください。')
+            return redirect('csv_import')
+
+        try:
+            # Handle Excel files
+            if file_name.endswith(('.xlsx', '.xls')):
+                import openpyxl
+                import io
+
+                workbook = openpyxl.load_workbook(io.BytesIO(csv_file.read()))
+                sheet = workbook.active
+
+                # Convert to list of dicts
+                headers = [cell.value for cell in sheet[1]]
+                rows = []
+                for row in sheet.iter_rows(min_row=2, values_only=True):
+                    rows.append(dict(zip(headers, row)))
+            else:
+                # Handle CSV files
+                decoded_file = csv_file.read().decode('utf-8').splitlines()
+                reader = csv.DictReader(decoded_file)
+                rows = list(reader)
+
+            success_count = 0
+            error_count = 0
+            error_messages = []
+
+            for row in rows:
+                try:
+                    # Get exam year
+                    year = int(row['year'])
+                    exam_year = ExamYear.objects.get(year=year)
+
+                    # Get exam session
+                    session_number = int(row['session'])
+                    exam_session = ExamSession.objects.get(
+                        year=exam_year,
+                        session_number=session_number
+                    )
+
+                    # Get subject
+                    subject_key = row['subject_key']
+                    subject = Subject.objects.get(subject_key=subject_key)
+
+                    # Parse vocabulary
+                    vocabulary = {}
+                    try:
+                        if row.get('vocabulary_json'):
+                            vocabulary = json.loads(row['vocabulary_json'])
+                    except (json.JSONDecodeError, KeyError):
+                        vocabulary = {}
+
+                    # Create question
+                    question, created = Question.objects.get_or_create(
+                        exam_session=exam_session,
+                        subject=subject,
+                        question_number=int(row['question_number']),
+                        defaults={
+                            'question_type': 'past_exam',
+                            'year': year,
+                            'question_text': row['japanese_question'],
+                            'explanation': row.get('explanation', ''),
+                            'translations': {
+                                'id': row.get('indonesian_question', '')
+                            },
+                            'vocabulary': vocabulary
+                        }
+                    )
+
+                    if created:
+                        # Add choices
+                        choices_data = [
+                            (1, row.get('choice_1'), row.get('choice_1_correct') == 'TRUE'),
+                            (2, row.get('choice_2'), row.get('choice_2_correct') == 'TRUE'),
+                            (3, row.get('choice_3'), row.get('choice_3_correct') == 'TRUE'),
+                            (4, row.get('choice_4'), row.get('choice_4_correct') == 'TRUE'),
+                            (5, row.get('choice_5'), row.get('choice_5_correct') == 'TRUE'),
+                        ]
+
+                        for choice_num, choice_text, is_correct in choices_data:
+                            if choice_text:
+                                Choice.objects.create(
+                                    question=question,
+                                    choice_number=choice_num,
+                                    choice_text=choice_text,
+                                    is_correct=is_correct
+                                )
+
+                        success_count += 1
+                    else:
+                        error_count += 1
+                        error_messages.append(f"問題 {row['question_number']} は既に存在します")
+
+                except Exception as e:
+                    error_count += 1
+                    error_messages.append(f"行の処理エラー: {str(e)}")
+
+            # Show results
+            if success_count > 0:
+                messages.success(request, f'{success_count} 件の問題をインポートしました。')
+            if error_count > 0:
+                messages.warning(request, f'{error_count} 件のエラーがありました。')
+                for err_msg in error_messages[:5]:  # Show first 5 errors
+                    messages.error(request, err_msg)
+
+        except Exception as e:
+            messages.error(request, f'ファイルの処理中にエラーが発生しました: {str(e)}')
+
+        return redirect('csv_import')
+
+    # Get statistics
+    from apps.learning.models import Question, Choice, ExamSession
+    total_questions = Question.objects.count()
+    total_choices = Choice.objects.count()
+    sessions_with_questions = []
+
+    for session in ExamSession.objects.all().order_by('-year__year', '-session_number'):
+        question_count = Question.objects.filter(exam_session=session).count()
+        if question_count > 0:
+            sessions_with_questions.append({
+                'session': session,
+                'count': question_count
+            })
+
+    context = {
+        'total_questions': total_questions,
+        'total_choices': total_choices,
+        'sessions_with_questions': sessions_with_questions,
+    }
+
+    return render(request, 'admin/csv_import.html', context)
