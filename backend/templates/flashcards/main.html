@@ -209,22 +209,10 @@
             {% endif %}
 
             <div class="deck-stats">
-                <div class="stat-item new">
-                    <div class="stat-value">{{ data.new_count }}</div>
-                    <div class="stat-label">新規</div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ data.total_cards }}</div>
+                    <div class="stat-label">カード数</div>
                 </div>
-                <div class="stat-item learning">
-                    <div class="stat-value">{{ data.learning_count }}</div>
-                    <div class="stat-label">学習中</div>
-                </div>
-                <div class="stat-item mastered">
-                    <div class="stat-value">{{ data.mastered_count }}</div>
-                    <div class="stat-label">習得済み</div>
-                </div>
-            </div>
-
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: {{ data.progress_percentage }}%;"></div>
             </div>
 
             <div class="deck-actions">

@@ -64,7 +64,9 @@
       "Bash(if exist db.sqlite3 del db.sqlite3)",
       "Bash(\"C:\\Users\\genki\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe\" manage.py makemigrations)",
       "Bash(timeout:*)",
-      "Bash(start:*)"
+      "Bash(start:*)",
+      "Bash(.venvScriptsactivate)",
+      "Bash(venvScriptspip.exe install:*)"
     ],
     "deny": [],
     "ask": []

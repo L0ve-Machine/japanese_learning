@@ -137,61 +137,27 @@
         font-size: 1.2rem;
     }
 
-    .difficulty-buttons {
+    .navigation-buttons {
         display: flex;
         gap: 1rem;
         justify-content: center;
         margin-top: 2rem;
     }
 
-    .difficulty-buttons.hidden {
-        display: none;
-    }
-
-    .btn-difficulty {
-        padding: 1rem 2rem;
+    .btn-next {
+        padding: 1rem 2.5rem;
         border: none;
         border-radius: 8px;
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s;
         color: white;
+        background: #9C27B0;
     }
 
-    .btn-again {
-        background: #f44336;
-    }
-
-    .btn-again:hover {
-        background: #d32f2f;
-        transform: translateY(-2px);
-    }
-
-    .btn-hard {
-        background: #ff9800;
-    }
-
-    .btn-hard:hover {
-        background: #f57c00;
-        transform: translateY(-2px);
-    }
-
-    .btn-good {
-        background: #4caf50;
-    }
-
-    .btn-good:hover {
-        background: #388e3c;
-        transform: translateY(-2px);
-    }
-
-    .btn-easy {
-        background: #2196f3;
-    }
-
-    .btn-easy:hover {
-        background: #1976d2;
+    .btn-next:hover {
+        background: #7B1FA2;
         transform: translateY(-2px);
     }
 
@@ -251,8 +217,7 @@
             <h1 style="margin: 0;">{{ deck.name }}</h1>
         </div>
         <div class="study-progress">
-            <span>復習カード: <strong id="cards-remaining">{{ cards_to_review|length }}</strong></span>
-            <span>全カード: <strong>{{ total_cards }}</strong></span>
+            <span>カード: <strong id="current-card">1</strong> / <strong id="total-cards">{{ total_cards }}</strong></span>
         </div>
     </div>
 
@@ -283,18 +248,9 @@
             カードをクリックして裏返す
         </div>
 
-        <div class="difficulty-buttons hidden" id="difficulty-buttons">
-            <button class="btn-difficulty btn-again" onclick="answerCard(1)">
-                もう一度<br><small>1日</small>
-            </button>
-            <button class="btn-difficulty btn-hard" onclick="answerCard(2)">
-                難しい<br><small>3日</small>
-            </button>
-            <button class="btn-difficulty btn-good" onclick="answerCard(3)">
-                普通<br><small>7日</small>
-            </button>
-            <button class="btn-difficulty btn-easy" onclick="answerCard(4)">
-                簡単<br><small>14日</small>
+        <div class="navigation-buttons">
+            <button class="btn-next" onclick="nextCard()">
+                次のカード
             </button>
         </div>
     </div>
@@ -357,45 +313,21 @@
 
         // Reset flip state
         document.getElementById('flashcard').classList.remove('flipped');
-        document.getElementById('difficulty-buttons').classList.add('hidden');
         isFlipped = false;
 
-        // Update remaining count
-        document.getElementById('cards-remaining').textContent = cardsData.length - index;
+        // Update card counter
+        document.getElementById('current-card').textContent = index + 1;
     }
 
     function flipCard() {
         const flashcard = document.getElementById('flashcard');
         flashcard.classList.toggle('flipped');
         isFlipped = !isFlipped;
-
-        if (isFlipped) {
-            document.getElementById('difficulty-buttons').classList.remove('hidden');
-        }
     }
 
-    function answerCard(difficulty) {
-        // Send progress update to server
-        fetch(`/flashcards/update/${currentCardId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({ difficulty: difficulty })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Move to next card
-            currentCardIndex++;
-            loadCard(currentCardIndex);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // Still move to next card even if there's an error
-            currentCardIndex++;
-            loadCard(currentCardIndex);
-        });
+    function nextCard() {
+        currentCardIndex++;
+        loadCard(currentCardIndex);
     }
 
     function showCompletionScreen() {

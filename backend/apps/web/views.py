@@ -738,29 +738,13 @@ def flashcards_view(request):
         card_count=Count('cards')
     ).order_by('order', 'name')
 
-    # Get user's progress for each deck
+    # Get deck data with card counts
     deck_data = []
     for deck in decks:
-        # Calculate user progress
-        total_cards = deck.card_count
-        if total_cards > 0:
-            from apps.learning.models import UserFlashcardProgress
-            user_progress = UserFlashcardProgress.objects.filter(
-                user=request.user,
-                card__deck=deck
-            )
-            mastered_count = user_progress.filter(is_mastered=True).count()
-            learning_count = user_progress.filter(is_mastered=False).count()
-            new_count = total_cards - user_progress.count()
-
-            deck_data.append({
-                'deck': deck,
-                'total_cards': total_cards,
-                'new_count': new_count,
-                'learning_count': learning_count,
-                'mastered_count': mastered_count,
-                'progress_percentage': (mastered_count / total_cards) * 100 if total_cards > 0 else 0
-            })
+        deck_data.append({
+            'deck': deck,
+            'total_cards': deck.card_count
+        })
 
     return render(request, 'flashcards/main.html', {
         'deck_data': deck_data,
@@ -771,37 +755,20 @@ def flashcards_view(request):
 @allow_free_access
 def flashcards_study_view(request, deck_id):
     """暗記カード学習ページ"""
-    from apps.learning.models import FlashcardDeck, FlashcardCard, UserFlashcardProgress
+    from apps.learning.models import FlashcardDeck, FlashcardCard
     from django.shortcuts import get_object_or_404
-    from django.utils import timezone
-    from datetime import date
 
     deck = get_object_or_404(FlashcardDeck, id=deck_id, is_active=True)
-
-    # Get cards that need review (new cards or cards due for review)
-    cards_to_review = []
 
     # Get all cards in deck
     all_cards = FlashcardCard.objects.filter(deck=deck).order_by('order')
 
+    cards_to_review = []
     for card in all_cards:
-        try:
-            progress = UserFlashcardProgress.objects.get(user=request.user, card=card)
-            # Include if due for review or not mastered
-            if not progress.is_mastered:
-                if progress.next_review_date is None or progress.next_review_date <= date.today():
-                    cards_to_review.append({
-                        'card': card,
-                        'progress': progress,
-                        'is_new': False
-                    })
-        except UserFlashcardProgress.DoesNotExist:
-            # New card
-            cards_to_review.append({
-                'card': card,
-                'progress': None,
-                'is_new': True
-            })
+        cards_to_review.append({
+            'card': card,
+            'is_new': False
+        })
 
     return render(request, 'flashcards/study.html', {
         'deck': deck,
@@ -812,20 +779,16 @@ def flashcards_study_view(request, deck_id):
 
 @login_required
 def flashcards_update_progress(request, card_id):
-    """Update flashcard progress based on user response"""
+    """Update flashcard progress - simple review count only"""
     from apps.learning.models import FlashcardCard, UserFlashcardProgress
     from django.shortcuts import get_object_or_404
     from django.http import JsonResponse
     from django.utils import timezone
-    from datetime import date, timedelta
-    import json
 
     if request.method != 'POST':
         return JsonResponse({'error': 'POST required'}, status=400)
 
     card = get_object_or_404(FlashcardCard, id=card_id)
-    data = json.loads(request.body)
-    difficulty = int(data.get('difficulty', 3))  # 1=Again, 2=Hard, 3=Good, 4=Easy
 
     # Get or create progress
     progress, created = UserFlashcardProgress.objects.get_or_create(
@@ -838,40 +801,12 @@ def flashcards_update_progress(request, card_id):
         }
     )
 
-    # SM-2 Algorithm implementation
-    if difficulty >= 3:
-        # Correct response
-        progress.correct_reviews += 1
-        if progress.repetitions == 0:
-            progress.interval_days = 1
-        elif progress.repetitions == 1:
-            progress.interval_days = 6
-        else:
-            progress.interval_days = int(progress.interval_days * progress.ease_factor)
-        progress.repetitions += 1
-    else:
-        # Incorrect response - restart
-        progress.repetitions = 0
-        progress.interval_days = 1
-
-    # Update ease factor
-    progress.ease_factor = max(1.3, progress.ease_factor + (0.1 - (5 - difficulty) * (0.08 + (5 - difficulty) * 0.02)))
-
-    # Set next review date
-    progress.next_review_date = date.today() + timedelta(days=progress.interval_days)
-
-    # Mark as mastered if interval is > 21 days and repetitions > 3
-    if progress.interval_days > 21 and progress.repetitions > 3:
-        progress.is_mastered = True
-
-    progress.last_difficulty = difficulty
-    progress.last_reviewed = timezone.now()
+    # Simple review count increment
     progress.total_reviews += 1
+    progress.last_reviewed = timezone.now()
     progress.save()
 
     return JsonResponse({
         'success': True,
-        'next_review_date': progress.next_review_date.isoformat(),
-        'interval_days': progress.interval_days,
-        'is_mastered': progress.is_mastered
+        'total_reviews': progress.total_reviews
     })
