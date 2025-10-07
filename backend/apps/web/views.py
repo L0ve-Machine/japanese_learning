@@ -1026,3 +1026,24 @@ def csv_import_view(request):
     }
 
     return render(request, 'admin/csv_import.html', context)
+
+@login_required
+def chapter_page_view(request, page_id):
+    """Chapter page view with text blocks, vocabulary, and quiz"""
+    from apps.learning.models import Page, TextBlock, QuizQuestion
+    from django.shortcuts import get_object_or_404
+
+    page = get_object_or_404(Page, id=page_id)
+    text_blocks = page.text_blocks.all().prefetch_related('vocabulary')
+    quiz_questions = page.quiz_questions.all().prefetch_related('options')
+
+    context = {
+        'page': page,
+        'text_blocks': text_blocks,
+        'quiz_questions': quiz_questions,
+        'chapter': page.chapter,
+        'item': page.chapter.item,
+        'subject': page.chapter.item.subject,
+    }
+
+    return render(request, 'subjects/chapter_page.html', context)

@@ -7,7 +7,8 @@ from .models import (
     SubjectGroup, Subject, ExamYear, ExamSession, Question, Choice, Word, FlashCard, Video, StudyText,
     SubjectItem, Chapter, Page, UserProgress,
     KotobaCategory, KotobaSubcategory, KotobaWord, KotobaExample, KotobaVocabulary, UserWordProgress,
-    FlashcardDeck, FlashcardCard, UserFlashcardProgress
+    FlashcardDeck, FlashcardCard, UserFlashcardProgress,
+    TextBlock, VocabularyEntry, QuizQuestion, QuizOption
 )
 from .forms import DataImportForm
 # from .services import DataImportService
@@ -128,6 +129,58 @@ class StudyTextAdmin(admin.ModelAdmin):
     def get_subject(self, obj):
         return obj.page.chapter.item.subject.name
     get_subject.short_description = 'Subject'
+
+class VocabularyEntryInline(admin.TabularInline):
+    model = VocabularyEntry
+    extra = 1
+    fields = ['japanese_word', 'indonesian_translation', 'order']
+
+@admin.register(TextBlock)
+class TextBlockAdmin(admin.ModelAdmin):
+    list_display = ['page', 'order', 'japanese_text_preview', 'created_at']
+    list_filter = ['page__chapter__item__subject']
+    search_fields = ['japanese_text', 'indonesian_translation']
+    ordering = ['page', 'order']
+    inlines = [VocabularyEntryInline]
+
+    def japanese_text_preview(self, obj):
+        return obj.japanese_text[:50] + '...' if len(obj.japanese_text) > 50 else obj.japanese_text
+    japanese_text_preview.short_description = 'Japanese Text'
+
+@admin.register(VocabularyEntry)
+class VocabularyEntryAdmin(admin.ModelAdmin):
+    list_display = ['japanese_word', 'indonesian_translation', 'text_block', 'order']
+    list_filter = ['text_block__page__chapter__item__subject']
+    search_fields = ['japanese_word', 'indonesian_translation']
+    ordering = ['text_block', 'order']
+
+class QuizOptionInline(admin.TabularInline):
+    model = QuizOption
+    extra = 5
+    fields = ['option_number', 'option_text', 'is_correct']
+
+@admin.register(QuizQuestion)
+class QuizQuestionAdmin(admin.ModelAdmin):
+    list_display = ['question_number', 'page', 'question_preview', 'created_at']
+    list_filter = ['page__chapter__item__subject']
+    search_fields = ['question_text']
+    ordering = ['page', 'order', 'question_number']
+    inlines = [QuizOptionInline]
+
+    def question_preview(self, obj):
+        return obj.question_text[:50] + '...' if len(obj.question_text) > 50 else obj.question_text
+    question_preview.short_description = 'Question Text'
+
+@admin.register(QuizOption)
+class QuizOptionAdmin(admin.ModelAdmin):
+    list_display = ['option_number', 'question', 'option_text_preview', 'is_correct']
+    list_filter = ['is_correct', 'question__page__chapter__item__subject']
+    search_fields = ['option_text', 'explanation_japanese', 'explanation_indonesian']
+    ordering = ['question', 'option_number']
+
+    def option_text_preview(self, obj):
+        return obj.option_text[:50] + '...' if len(obj.option_text) > 50 else obj.option_text
+    option_text_preview.short_description = 'Option Text'
 
 @admin.register(UserProgress)
 class UserProgressAdmin(admin.ModelAdmin):

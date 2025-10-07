@@ -236,6 +236,73 @@ class StudyText(models.Model):
     def __str__(self):
         return f"{self.page.name} - {self.title}"
 
+class TextBlock(models.Model):
+    """Individual text block within a study text/page"""
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='text_blocks')
+    japanese_text = models.TextField(help_text='Japanese text content')
+    indonesian_translation = models.TextField(help_text='Full Indonesian translation')
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'text_blocks'
+        ordering = ['page', 'order']
+
+    def __str__(self):
+        return f"{self.page.name} - Block {self.order}: {self.japanese_text[:50]}..."
+
+class VocabularyEntry(models.Model):
+    """Vocabulary word within a text block"""
+    text_block = models.ForeignKey(TextBlock, on_delete=models.CASCADE, related_name='vocabulary')
+    japanese_word = models.CharField(max_length=200)
+    indonesian_translation = models.CharField(max_length=200)
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'vocabulary_entries'
+        ordering = ['text_block', 'order']
+
+    def __str__(self):
+        return f"{self.japanese_word} - {self.indonesian_translation}"
+
+class QuizQuestion(models.Model):
+    """Quiz question for a chapter/page"""
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='quiz_questions')
+    question_number = models.IntegerField()
+    question_text = models.TextField(help_text='Question text in Japanese')
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'quiz_questions'
+        ordering = ['page', 'order', 'question_number']
+
+    def __str__(self):
+        return f"{self.page.name} - 問題{self.question_number}"
+
+class QuizOption(models.Model):
+    """Option/choice for a quiz question"""
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE, related_name='options')
+    option_number = models.IntegerField()
+    option_text = models.TextField()
+    is_correct = models.BooleanField(default=False)
+    explanation_japanese = models.TextField(help_text='Explanation in Japanese')
+    explanation_indonesian = models.TextField(help_text='Explanation in Indonesian')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'quiz_options'
+        ordering = ['question', 'option_number']
+        unique_together = ['question', 'option_number']
+
+    def __str__(self):
+        return f"Option {self.option_number}: {self.option_text[:30]}..."
+
 # User Progress Tracking
 class UserProgress(models.Model):
     """Track user progress through the hierarchical content"""

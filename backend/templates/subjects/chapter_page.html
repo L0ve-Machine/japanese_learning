@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ chapter.name }} - {{ subject.name }}{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .chapter-title {
+            font-size: 2rem;
+            margin: 20px 0 10px 0;
+        }
+        .content {
+            background: white;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+
+        /* Interactive text block styles */
+        .text-block {
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+        .japanese-text-container {
+            line-height: 2.2;
+            font-size: 1.1rem;
+        }
+        .indonesian-text-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-left: 0.5rem;
+            margin-right: 4rem;
+        }
+        .indonesian-text-wrapper.open {
+            max-height: 300px;
+        }
+        .indonesian-text {
+            color: #4b5563;
+            font-size: 0.95rem;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-left: 3px solid #d1d5db;
+        }
+        .translation-toggle {
+            background: none;
+            border: none;
+            color: #6b7280;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .translation-toggle:hover {
+            background-color: #f3f4f6;
+        }
+        .translation-toggle i {
+            transition: all 0.3s ease;
+        }
+        .translation-toggle.open i {
+            transform: rotate(180deg);
+        }
+        .text-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        /* Vocabulary word styling */
+        .vocabulary-word {
+            cursor: pointer;
+            border-bottom: 1px dotted #9ca3af;
+            transition: border-color 0.2s;
+        }
+        .vocabulary-word:hover {
+            border-color: #374151;
+        }
+        #translation-popup {
+            max-width: 250px;
+            line-height: 1.5;
+            position: absolute;
+            z-index: 50;
+            padding: 12px;
+            background-color: #1f2937;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        /* Quiz styles */
+        .quiz-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .quiz-question {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+        .quiz-options .option {
+            margin-bottom: 10px;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .quiz-options .option:hover {
+            background-color: #f8f9fa;
+        }
+        .check-answer-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <a href="{% url 'dashboard' %}" class="back-btn">← 戻る</a>
+        <h1 class="chapter-title">{{ chapter.name }}</h1>
+        <p><strong>章名:</strong> {{ page.name }}</p>
+    </div>
+
+    <div class="content">
+        <h2>{{ page.name }}</h2>
+
+        <div class="text-content">
+            {% for text_block in text_blocks %}
+            <!-- Text Block {{ forloop.counter }} -->
+            <div class="text-block" data-japanese="{{ text_block.japanese_text }}" data-vocab="{{ text_block.vocabulary.all|length }}">
+                <div class="text-container">
+                    <p class="japanese-text-container" id="text-{{ text_block.id }}" style="flex-grow: 1; padding-right: 1rem;">
+                        {{ text_block.japanese_text }}
+                    </p>
+                    <button class="translation-toggle" title="全文翻訳">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div class="indonesian-text-wrapper">
+                    <p class="indonesian-text">
+                        {{ text_block.indonesian_translation }}
+                    </p>
+                    <div class="indonesian-text" style="margin-top: 10px; overflow-x: auto; max-height: 300px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                            <thead>
+                                <tr style="background-color: #f3f4f6;">
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">日本語</th>
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">インドネシア語</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vocab in text_block.vocabulary.all %}
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">{{ vocab.japanese_word }}</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">{{ vocab.indonesian_translation }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <!-- Quiz Section -->
+            {% if quiz_questions %}
+            <div class="quiz-section">
+                <h3 style="color: #007bff; margin-bottom: 20px;">📝 確認問題</h3>
+
+                {% for question in quiz_questions %}
+                <!-- Question {{ question.question_number }} -->
+                <div class="quiz-question">
+                    <h4 style="color: #333; margin-bottom: 15px;">問題{{ question.question_number }}</h4>
+                    <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px;">
+                        {{ question.question_text }}
+                    </p>
+                    <div class="quiz-options">
+                        {% for option in question.options.all %}
+                        <div class="option{% if option.is_correct %} correct-answer{% endif %}" data-question="{{ question.question_number }}" data-option="{{ option.option_number }}">
+                            <label style="cursor: pointer; width: 100%; display: block;">
+                                <input type="radio" name="question{{ question.question_number }}" value="{{ option.option_number }}" style="margin-right: 10px;">
+                                {{ option.option_number }}. {{ option.option_text }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="check-answer-btn" onclick="checkAnswer({{ question.question_number }})">答えを確認</button>
+                    <div class="feedback" id="feedback{{ question.question_number }}"></div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Translation popup -->
+    <div id="translation-popup"></div>
+
+    <script>
+        // Get translation popup element
+        const translationPopup = document.getElementById('translation-popup');
+
+        // Toggle functionality for translation buttons
+        function handleToggle(e, toggleClass, wrapperClass) {
+            const toggleBtn = e.target.closest(toggleClass);
+            if (toggleBtn) {
+                e.stopPropagation();
+                toggleBtn.classList.toggle('open');
+                const parent = toggleBtn.closest('.text-block');
+                if (parent) {
+                    const wrapper = parent.querySelector(wrapperClass);
+                    if (wrapper) wrapper.classList.toggle('open');
+                }
+            }
+        }
+
+        // Add event listeners
+        document.body.addEventListener('click', (e) => {
+            const wordSpan = e.target.closest('.vocabulary-word');
+
+            // Handle vocabulary word clicks
+            if (wordSpan) {
+                if (e.target.closest('#translation-popup')) return;
+
+                if (translationPopup.style.display === 'block' && translationPopup.dataset.owner === wordSpan.outerHTML) {
+                    translationPopup.style.display = 'none';
+                    return;
+                }
+
+                const translation = wordSpan.dataset.translation;
+                translationPopup.innerHTML = translation;
+                translationPopup.dataset.owner = wordSpan.outerHTML;
+
+                const rect = wordSpan.getBoundingClientRect();
+                translationPopup.style.display = 'block';
+                const popupRect = translationPopup.getBoundingClientRect();
+
+                let top = window.scrollY + rect.bottom + 8;
+                let left = window.scrollX + rect.left + (rect.width / 2) - (popupRect.width / 2);
+
+                if (top + popupRect.height > window.innerHeight + window.scrollY) {
+                    top = window.scrollY + rect.top - popupRect.height - 8;
+                }
+                if (left < 0) left = 10;
+                else if (left + popupRect.width > window.innerWidth) left = window.innerWidth - popupRect.width - 10;
+
+                translationPopup.style.top = `${top}px`;
+                translationPopup.style.left = `${left}px`;
+
+                e.stopPropagation();
+            }
+            else if (!e.target.closest('.translation-toggle')) {
+                translationPopup.style.display = 'none';
+            }
+
+            handleToggle(e, '.translation-toggle', '.indonesian-text-wrapper');
+        });
+
+        // Quiz functionality - Store feedback data from Django
+        const feedbackData = {
+            {% for question in quiz_questions %}
+            {{ question.question_number }}: {
+                {% for option in question.options.all %}
+                {{ option.option_number }}: {
+                    japanese: "{{ option.explanation_japanese|escapejs }}",
+                    indonesian: "{{ option.explanation_indonesian|escapejs }}"
+                }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        const correctAnswers = {
+            {% for question in quiz_questions %}
+            {{ question.question_number }}: {% for option in question.options.all %}{% if option.is_correct %}{{ option.option_number }}{% endif %}{% endfor %}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        function checkAnswer(questionNumber) {
+            const selectedOption = document.querySelector(`input[name="question${questionNumber}"]:checked`);
+            const feedbackDiv = document.getElementById(`feedback${questionNumber}`);
+
+            if (!selectedOption) {
+                alert('選択肢を選んでください。');
+                return;
+            }
+
+            const selectedValue = parseInt(selectedOption.value);
+            let feedbackInfo = feedbackData[questionNumber][selectedValue];
+            let isCorrect = correctAnswers[questionNumber] === selectedValue;
+
+            feedbackDiv.style.display = 'block';
+            feedbackDiv.innerHTML = `
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="font-weight: bold; color: ${isCorrect ? '#28a745' : '#dc3545'};">
+                        ${isCorrect ? '✓ 正解' : '✗ 不正解'}
+                    </span>
+                </div>
+                <div style="background-color: #f8f9fa; padding: 12px; border-radius: 4px; border-left: 3px solid ${isCorrect ? '#28a745' : '#dc3545'};">
+                    <strong>解説:</strong><br>
+                    ${feedbackInfo.japanese}
+                </div>
+                <div style="background-color: #f1f3f4; padding: 12px; border-radius: 4px; margin-top: 10px; border-left: 3px solid #6c757d;">
+                    <strong>インドネシア語:</strong><br>
+                    ${feedbackInfo.indonesian}
+                </div>
+            `;
+
+            if (isCorrect) {
+                highlightCorrectAnswer(questionNumber);
+            }
+        }
+
+        function highlightCorrectAnswer(questionNumber) {
+            const correctOptionNumber = correctAnswers[questionNumber];
+            const correctOption = document.querySelector(`input[name="question${questionNumber}"][value="${correctOptionNumber}"]`).closest('.option');
+
+            document.querySelectorAll(`input[name="question${questionNumber}"]`).forEach(input => {
+                input.closest('.option').style.backgroundColor = '';
+                input.closest('.option').style.borderColor = '#dee2e6';
+            });
+
+            correctOption.style.backgroundColor = '#d4edda';
+            correctOption.style.borderColor = '#28a745';
+        }
+
+        // Mark vocabulary words in Japanese text
+        const textBlocks = {{ text_blocks|safe }};
+        const vocabMapping = {
+            {% for text_block in text_blocks %}
+            {{ text_block.id }}: [
+                {% for vocab in text_block.vocabulary.all %}
+                {word: "{{ vocab.japanese_word }}", translation: "{{ vocab.indonesian_translation }}"}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ]{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        // Function to wrap vocabulary words
+        function wrapVocabularyWords(textBlockId, japaneseText, vocabList) {
+            let markedText = japaneseText;
+
+            // Sort vocabulary by length (longest first) to avoid partial matches
+            const sortedVocab = vocabList.sort((a, b) => b.word.length - a.word.length);
+
+            sortedVocab.forEach(vocab => {
+                const regex = new RegExp(vocab.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+                markedText = markedText.replace(regex, `<span class="vocabulary-word" data-translation="${vocab.translation}">${vocab.word}</span>`);
+            });
+
+            return markedText;
+        }
+
+        // Apply vocabulary marking to all text blocks
+        {% for text_block in text_blocks %}
+        (function() {
+            const textElement = document.getElementById('text-{{ text_block.id }}');
+            if (textElement && vocabMapping[{{ text_block.id }}]) {
+                const markedText = wrapVocabularyWords(
+                    {{ text_block.id }},
+                    "{{ text_block.japanese_text|escapejs }}",
+                    vocabMapping[{{ text_block.id }}]
+                );
+                textElement.innerHTML = markedText;
+            }
+        })();
+        {% endfor %}
+
+        console.log('Chapter page interactive functionality loaded');
+    </script>
+{% endblock %}

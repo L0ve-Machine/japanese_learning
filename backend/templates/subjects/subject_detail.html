@@ -369,9 +369,9 @@
                         </div>
                         <div class="section-content">
                             <div class="chapter-list">
-                                <div class="chapter-item" onclick="startChapter('第1章', '1. 介護保険制度とは？', event)">
+                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=1 %}'; event.stopPropagation();">
                                     <div class="chapter-info">
-                                        <div class="chapter-title">第1章</div>
+                                        <div class="chapter-title">第1章 (DB版)</div>
                                         <div class="chapter-subtitle">1. 介護保険制度とは？</div>
                                     </div>
                                     <div class="chapter-progress">
@@ -383,27 +383,27 @@
                                     </div>
                                 </div>
 
-                                <div class="chapter-item" onclick="startChapter('第2章', '2. 被保険者（保険に加入する人）', event)">
+                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=2 %}'; event.stopPropagation();">
                                     <div class="chapter-info">
-                                        <div class="chapter-title">第2章</div>
+                                        <div class="chapter-title">第2章 (DB版)</div>
                                         <div class="chapter-subtitle">2. 被保険者（保険に加入する人）</div>
                                     </div>
                                     <div class="chapter-progress">
-                                        <span class="progress-badge" style="background: #ff9800;">進行中</span>
+                                        <span class="progress-badge" style="background: #ff9800;">コンテンツ準備中</span>
                                         <button class="start-btn">
                                             <span class="material-icons" style="font-size: 14px;">play_arrow</span>
-                                            続行
+                                            開始
                                         </button>
                                     </div>
                                 </div>
 
-                                <div class="chapter-item" onclick="startChapter('第3章', '3. 要介護認定（サービス利用までの流れ）', event)">
+                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=3 %}'; event.stopPropagation();">
                                     <div class="chapter-info">
-                                        <div class="chapter-title">第3章</div>
+                                        <div class="chapter-title">第3章 (DB版)</div>
                                         <div class="chapter-subtitle">3. 要介護認定（サービス利用までの流れ）</div>
                                     </div>
                                     <div class="chapter-progress">
-                                        <span class="progress-badge" style="background: #ccc;">未開始</span>
+                                        <span class="progress-badge" style="background: #ff9800;">コンテンツ準備中</span>
                                         <button class="start-btn">
                                             <span class="material-icons" style="font-size: 14px;">play_arrow</span>
                                             開始
@@ -411,13 +411,13 @@
                                     </div>
                                 </div>
 
-                                <div class="chapter-item" onclick="startChapter('第4章', '4. 介護保険のサービス', event)">
+                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=4 %}'; event.stopPropagation();">
                                     <div class="chapter-info">
-                                        <div class="chapter-title">第4章</div>
+                                        <div class="chapter-title">第4章 (DB版)</div>
                                         <div class="chapter-subtitle">4. 介護保険のサービス</div>
                                     </div>
                                     <div class="chapter-progress">
-                                        <span class="progress-badge" style="background: #ccc;">未開始</span>
+                                        <span class="progress-badge" style="background: #ff9800;">コンテンツ準備中</span>
                                         <button class="start-btn">
                                             <span class="material-icons" style="font-size: 14px;">play_arrow</span>
                                             開始
@@ -425,13 +425,13 @@
                                     </div>
                                 </div>
 
-                                <div class="chapter-item" onclick="startChapter('第5章', '5. 保険料と利用料', event)">
+                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=5 %}'; event.stopPropagation();">
                                     <div class="chapter-info">
-                                        <div class="chapter-title">第5章</div>
+                                        <div class="chapter-title">第5章 (DB版)</div>
                                         <div class="chapter-subtitle">5. 保険料と利用料</div>
                                     </div>
                                     <div class="chapter-progress">
-                                        <span class="progress-badge" style="background: #ccc;">未開始</span>
+                                        <span class="progress-badge" style="background: #ff9800;">コンテンツ準備中</span>
                                         <button class="start-btn">
                                             <span class="material-icons" style="font-size: 14px;">play_arrow</span>
                                             開始
