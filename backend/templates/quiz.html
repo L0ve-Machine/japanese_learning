@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load vocab_filters %}
 
 {% block title %}問題{{ question_number }} - {{ exam_year.year }}年度 第{{ exam_session.session_number }}回{% endblock %}
 
@@ -41,7 +42,7 @@
             {% endif %}
         </div>
         <div class="question-text" id="questionText">
-            {{ current_question.question_text|safe }}
+            {{ current_question.question_text|highlight_vocab:current_question.vocabulary }}
         </div>
         {% if current_question.translations.indonesian %}
         <div class="question-translation" id="questionTranslation" style="display: none;">
@@ -61,7 +62,7 @@
         {% for choice in current_question.choices.all %}
         <div class="choice-option" data-choice="{{ choice.choice_number }}">
             <div class="choice-number">{{ choice.choice_number }}</div>
-            <div class="choice-text">{{ choice.choice_text|safe }}</div>
+            <div class="choice-text">{{ choice.choice_text|highlight_vocab:current_question.vocabulary }}</div>
             <div class="choice-actions">
                 <button class="translate-btn" data-choice="{{ choice.choice_number }}">
                     <i class="material-icons">translate</i>
