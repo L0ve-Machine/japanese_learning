@@ -20,11 +20,69 @@ class SubjectGroup(models.Model):
         return self.name
 
 class Subject(models.Model):
+    # Icon choices for Material Icons (40 options)
+    ICON_CHOICES = [
+        ('medical_services', '🏥 Medical Services'),
+        ('local_hospital', '🏥 Hospital'),
+        ('health_and_safety', '🩺 Health & Safety'),
+        ('elderly', '👴 Elderly Care'),
+        ('psychology', '🧠 Psychology'),
+        ('chat', '💬 Chat'),
+        ('forum', '💭 Forum'),
+        ('question_answer', '❓ Q&A'),
+        ('people', '👥 People'),
+        ('groups', '👥 Groups'),
+        ('person', '👤 Person'),
+        ('assignment', '📋 Assignment'),
+        ('task', '✅ Task'),
+        ('quiz', '❓ Quiz'),
+        ('school', '🎓 School'),
+        ('menu_book', '📖 Book'),
+        ('auto_stories', '📚 Stories'),
+        ('import_contacts', '📕 Contacts'),
+        ('home', '🏠 Home'),
+        ('house', '🏡 House'),
+        ('apartment', '🏢 Apartment'),
+        ('work', '💼 Work'),
+        ('business', '💼 Business'),
+        ('science', '🔬 Science'),
+        ('biotech', '🧬 Biotech'),
+        ('favorite', '❤️ Favorite'),
+        ('star', '⭐ Star'),
+        ('grade', '⭐ Grade'),
+        ('volunteer_activism', '🤝 Volunteer'),
+        ('handshake', '🤝 Handshake'),
+        ('support', '🆘 Support'),
+        ('child_care', '👶 Child Care'),
+        ('face', '😊 Face'),
+        ('restaurant', '🍽️ Restaurant'),
+        ('fastfood', '🍔 Food'),
+        ('directions_car', '🚗 Car'),
+        ('directions_bus', '🚌 Bus'),
+        ('train', '🚆 Train'),
+        ('language', '🌐 Language'),
+        ('translate', '🔤 Translate'),
+    ]
+
     subject_key = models.CharField(max_length=100, unique=True, null=True, blank=True)
     group = models.ForeignKey(SubjectGroup, on_delete=models.CASCADE, related_name='subjects', null=True, blank=True)
     name = models.CharField(max_length=200)
     indonesian_name = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
+
+    # UI Customization fields
+    icon = models.CharField(
+        max_length=50,
+        choices=ICON_CHOICES,
+        default='menu_book',
+        help_text='Material icon for the subject card'
+    )
+    color = models.CharField(
+        max_length=7,
+        default='#4caf50',
+        help_text='Hex color code (e.g., #4caf50, #2196f3)'
+    )
+
     order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -33,6 +91,8 @@ class Subject(models.Model):
     class Meta:
         db_table = 'subjects'
         ordering = ['group__order', 'order', 'name']
+        verbose_name = '科目学習ー全体構造'
+        verbose_name_plural = '科目学習ー全体構造'
 
     def __str__(self):
         return self.name
@@ -214,6 +274,8 @@ class Page(models.Model):
     class Meta:
         db_table = 'pages'
         ordering = ['order', 'name']
+        verbose_name = '科目学習ー内容'
+        verbose_name_plural = '科目学習ー内容'
 
     def __str__(self):
         return f"{self.chapter.name} - {self.name}"

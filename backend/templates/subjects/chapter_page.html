@@ -159,7 +159,7 @@
 
 {% block content %}
     <div class="header">
-        <a href="{% url 'dashboard' %}" class="back-btn">← 戻る</a>
+        <a href="{% url 'subject_detail' subject.name %}" class="back-btn">← 戻る</a>
         <h1 class="chapter-title">{{ chapter.name }}</h1>
         <p><strong>章名:</strong> {{ page.name }}</p>
     </div>
@@ -368,12 +368,11 @@
         }
 
         // Mark vocabulary words in Japanese text
-        const textBlocks = {{ text_blocks|safe }};
         const vocabMapping = {
             {% for text_block in text_blocks %}
             {{ text_block.id }}: [
                 {% for vocab in text_block.vocabulary.all %}
-                {word: "{{ vocab.japanese_word }}", translation: "{{ vocab.indonesian_translation }}"}{% if not forloop.last %},{% endif %}
+                {word: "{{ vocab.japanese_word|escapejs }}", translation: "{{ vocab.indonesian_translation|escapejs }}"}{% if not forloop.last %},{% endif %}
                 {% endfor %}
             ]{% if not forloop.last %},{% endif %}
             {% endfor %}
@@ -399,16 +398,25 @@
         (function() {
             const textElement = document.getElementById('text-{{ text_block.id }}');
             if (textElement && vocabMapping[{{ text_block.id }}]) {
+                console.log('Processing text block {{ text_block.id }}');
+                console.log('Original text:', textElement.textContent);
+                console.log('Vocabulary words:', vocabMapping[{{ text_block.id }}]);
+
                 const markedText = wrapVocabularyWords(
                     {{ text_block.id }},
                     "{{ text_block.japanese_text|escapejs }}",
                     vocabMapping[{{ text_block.id }}]
                 );
+
+                console.log('Marked text:', markedText);
                 textElement.innerHTML = markedText;
+            } else {
+                console.log('Text block {{ text_block.id }} - element or vocab mapping missing');
             }
         })();
         {% endfor %}
 
         console.log('Chapter page interactive functionality loaded');
+        console.log('Total vocabulary mapping:', vocabMapping);
     </script>
 {% endblock %}

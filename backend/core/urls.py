@@ -7,6 +7,7 @@ from apps.learning.admin import learning_admin_site
 
 urlpatterns = [
     path('', include('apps.web.urls')),
+    path('_nested_admin/', include('nested_admin.urls')),  # Required for nested admin
     path('admin/', admin.site.urls),
     path('learning-admin/', learning_admin_site.urls),
     path('api/auth/', include('dj_rest_auth.urls')),

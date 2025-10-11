@@ -3,15 +3,83 @@ from django.urls import path
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
+import nested_admin
 from .models import (
-    SubjectGroup, Subject, ExamYear, ExamSession, Question, Choice, Word, FlashCard, Video, StudyText,
+    SubjectGroup, Subject, ExamYear, ExamSession, Question, Choice, Video,
     SubjectItem, Chapter, Page, UserProgress,
     KotobaCategory, KotobaSubcategory, KotobaWord, KotobaExample, KotobaVocabulary, UserWordProgress,
-    FlashcardDeck, FlashcardCard, UserFlashcardProgress,
     TextBlock, VocabularyEntry, QuizQuestion, QuizOption
 )
 from .forms import DataImportForm
 # from .services import DataImportService
+
+# ============================================================================
+# GROUP 1: STRUCTURE/OUTLINE - Nested Inlines for Subject → Item → Chapter → Page
+# ============================================================================
+
+class PageNestedInline(nested_admin.NestedStackedInline):
+    model = Page
+    extra = 1
+    fields = ['name', 'description', 'order', 'is_active']
+    ordering = ['order']
+    show_change_link = True  # Link to edit page content
+    verbose_name = "Page"
+    verbose_name_plural = "Pages (belong to this chapter)"
+    classes = ['collapse']  # Makes each page collapsible
+
+class ChapterNestedInline(nested_admin.NestedTabularInline):
+    model = Chapter
+    extra = 1
+    fields = ['name', 'description', 'order', 'is_active']
+    ordering = ['order']
+    inlines = [PageNestedInline]
+    show_change_link = True
+    verbose_name = "Chapter"
+    verbose_name_plural = "Chapters (expand to add pages)"
+
+class SubjectItemNestedInline(nested_admin.NestedTabularInline):
+    model = SubjectItem
+    extra = 1
+    fields = ['name', 'description', 'order', 'is_active']
+    ordering = ['order']
+    inlines = [ChapterNestedInline]
+    show_change_link = True
+    verbose_name = "Item"
+    verbose_name_plural = "Items (expand to add chapters and pages)"
+
+# ============================================================================
+# GROUP 2: CONTENT/DETAILS - Nested Inlines for Page → TextBlocks → Vocab, Quizzes → Options
+# ============================================================================
+
+class VocabularyEntryNestedInline(nested_admin.NestedTabularInline):
+    model = VocabularyEntry
+    extra = 1
+    fields = ['japanese_word', 'indonesian_translation', 'order']
+    ordering = ['order']
+
+class TextBlockNestedInline(nested_admin.NestedStackedInline):
+    model = TextBlock
+    extra = 1
+    fields = ['japanese_text', 'indonesian_translation', 'order']
+    ordering = ['order']
+    inlines = [VocabularyEntryNestedInline]
+
+class QuizOptionNestedInline(nested_admin.NestedTabularInline):
+    model = QuizOption
+    extra = 5
+    fields = ['option_number', 'option_text', 'is_correct', 'explanation_japanese', 'explanation_indonesian']
+    ordering = ['option_number']
+
+class QuizQuestionNestedInline(nested_admin.NestedStackedInline):
+    model = QuizQuestion
+    extra = 1
+    fields = ['question_number', 'question_text', 'order']
+    ordering = ['order']
+    inlines = [QuizOptionNestedInline]
+
+# ============================================================================
+# ADMIN CLASSES
+# ============================================================================
 
 @admin.register(SubjectGroup)
 class SubjectGroupAdmin(admin.ModelAdmin):
@@ -21,11 +89,25 @@ class SubjectGroupAdmin(admin.ModelAdmin):
     ordering = ['order', 'name']
 
 @admin.register(Subject)
-class SubjectAdmin(admin.ModelAdmin):
-    list_display = ['name', 'subject_key', 'group', 'order', 'is_active', 'created_at']
+class SubjectAdmin(nested_admin.NestedModelAdmin):
+    list_display = ['name', 'icon', 'color', 'subject_key', 'group', 'order', 'is_active', 'created_at']
     list_filter = ['is_active', 'group']
     search_fields = ['name', 'subject_key']
     ordering = ['group__order', 'order', 'name']
+    inlines = [SubjectItemNestedInline]  # GROUP 1: Nested structure
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'indonesian_name', 'description', 'subject_key', 'group')
+        }),
+        ('UI Customization', {
+            'fields': ('icon', 'color'),
+            'description': 'Customize how this subject appears on the subjects page'
+        }),
+        ('Organization', {
+            'fields': ('order', 'is_active')
+        }),
+    )
 
 @admin.register(ExamYear)
 class ExamYearAdmin(admin.ModelAdmin):
@@ -62,17 +144,8 @@ class ChoiceAdmin(admin.ModelAdmin):
     search_fields = ['choice_text', 'question__question_text']
     ordering = ['question', 'choice_number']
 
-@admin.register(Word)
-class WordAdmin(admin.ModelAdmin):
-    list_display = ['japanese', 'reading', 'category', 'is_premium', 'created_at']
-    list_filter = ['category', 'is_premium']
-    search_fields = ['japanese', 'reading']
-
-@admin.register(FlashCard)
-class FlashCardAdmin(admin.ModelAdmin):
-    list_display = ['user', 'word', 'is_memorized', 'review_count', 'last_reviewed']
-    list_filter = ['is_memorized']
-    search_fields = ['user__email', 'word__japanese']
+# Note: Old Word and FlashCard models are deprecated
+# Now using KotobaWord and FlashcardDeck/FlashcardCard instead
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
@@ -82,30 +155,16 @@ class VideoAdmin(admin.ModelAdmin):
     ordering = ['order', 'title']
 
 # Hierarchical Content Admin
-@admin.register(SubjectItem)
-class SubjectItemAdmin(admin.ModelAdmin):
-    list_display = ['name', 'subject', 'order', 'is_active', 'created_at']
-    list_filter = ['is_active', 'subject']
-    search_fields = ['name', 'description']
-    ordering = ['subject', 'order', 'name']
-
-@admin.register(Chapter)
-class ChapterAdmin(admin.ModelAdmin):
-    list_display = ['name', 'item', 'get_subject', 'order', 'is_active', 'created_at']
-    list_filter = ['is_active', 'item__subject']
-    search_fields = ['name', 'description']
-    ordering = ['item__subject', 'item__order', 'order', 'name']
-
-    def get_subject(self, obj):
-        return obj.item.subject.name
-    get_subject.short_description = 'Subject'
+# Note: SubjectItem and Chapter are edited via nested inlines in SubjectAdmin
+# This keeps the admin interface clean and organized
 
 @admin.register(Page)
-class PageAdmin(admin.ModelAdmin):
+class PageAdmin(nested_admin.NestedModelAdmin):
     list_display = ['name', 'chapter', 'get_item', 'get_subject', 'order', 'is_active']
     list_filter = ['is_active', 'chapter__item__subject']
     search_fields = ['name', 'description']
     ordering = ['chapter__item__subject', 'chapter__item__order', 'chapter__order', 'order']
+    inlines = [TextBlockNestedInline, QuizQuestionNestedInline]  # GROUP 2: Nested content
 
     def get_item(self, obj):
         return obj.chapter.item.name
@@ -115,72 +174,9 @@ class PageAdmin(admin.ModelAdmin):
         return obj.chapter.item.subject.name
     get_subject.short_description = 'Subject'
 
-@admin.register(StudyText)
-class StudyTextAdmin(admin.ModelAdmin):
-    list_display = ['title', 'page', 'get_chapter', 'get_subject', 'order', 'is_premium']
-    list_filter = ['is_premium', 'page__chapter__item__subject']
-    search_fields = ['title', 'content']
-    ordering = ['page__chapter__item__subject', 'page__chapter__order', 'page__order', 'order']
-
-    def get_chapter(self, obj):
-        return obj.page.chapter.name
-    get_chapter.short_description = 'Chapter'
-
-    def get_subject(self, obj):
-        return obj.page.chapter.item.subject.name
-    get_subject.short_description = 'Subject'
-
-class VocabularyEntryInline(admin.TabularInline):
-    model = VocabularyEntry
-    extra = 1
-    fields = ['japanese_word', 'indonesian_translation', 'order']
-
-@admin.register(TextBlock)
-class TextBlockAdmin(admin.ModelAdmin):
-    list_display = ['page', 'order', 'japanese_text_preview', 'created_at']
-    list_filter = ['page__chapter__item__subject']
-    search_fields = ['japanese_text', 'indonesian_translation']
-    ordering = ['page', 'order']
-    inlines = [VocabularyEntryInline]
-
-    def japanese_text_preview(self, obj):
-        return obj.japanese_text[:50] + '...' if len(obj.japanese_text) > 50 else obj.japanese_text
-    japanese_text_preview.short_description = 'Japanese Text'
-
-@admin.register(VocabularyEntry)
-class VocabularyEntryAdmin(admin.ModelAdmin):
-    list_display = ['japanese_word', 'indonesian_translation', 'text_block', 'order']
-    list_filter = ['text_block__page__chapter__item__subject']
-    search_fields = ['japanese_word', 'indonesian_translation']
-    ordering = ['text_block', 'order']
-
-class QuizOptionInline(admin.TabularInline):
-    model = QuizOption
-    extra = 5
-    fields = ['option_number', 'option_text', 'is_correct']
-
-@admin.register(QuizQuestion)
-class QuizQuestionAdmin(admin.ModelAdmin):
-    list_display = ['question_number', 'page', 'question_preview', 'created_at']
-    list_filter = ['page__chapter__item__subject']
-    search_fields = ['question_text']
-    ordering = ['page', 'order', 'question_number']
-    inlines = [QuizOptionInline]
-
-    def question_preview(self, obj):
-        return obj.question_text[:50] + '...' if len(obj.question_text) > 50 else obj.question_text
-    question_preview.short_description = 'Question Text'
-
-@admin.register(QuizOption)
-class QuizOptionAdmin(admin.ModelAdmin):
-    list_display = ['option_number', 'question', 'option_text_preview', 'is_correct']
-    list_filter = ['is_correct', 'question__page__chapter__item__subject']
-    search_fields = ['option_text', 'explanation_japanese', 'explanation_indonesian']
-    ordering = ['question', 'option_number']
-
-    def option_text_preview(self, obj):
-        return obj.option_text[:50] + '...' if len(obj.option_text) > 50 else obj.option_text
-    option_text_preview.short_description = 'Option Text'
+# Note: StudyText is not being used (deprecated in favor of TextBlock)
+# Note: TextBlock, VocabularyEntry, QuizQuestion, QuizOption are edited via nested inlines in PageAdmin
+# This provides a cleaner workflow: edit everything on the Page admin page
 
 @admin.register(UserProgress)
 class UserProgressAdmin(admin.ModelAdmin):
@@ -189,39 +185,77 @@ class UserProgressAdmin(admin.ModelAdmin):
     search_fields = ['user__email', 'subject__name']
     ordering = ['-last_accessed']
 
-# Kotoba Admin
+# ============================================================================
+# KOTOBA ADMIN - Nested structure for efficient editing
+# ============================================================================
+
+# Nested inline for vocabulary within examples
+class KotobaVocabularyNestedInline(nested_admin.NestedTabularInline):
+    model = KotobaVocabulary
+    extra = 1
+    fields = ['vocabulary_id', 'japanese_word', 'ruby_reading', 'indonesian_translation']
+    ordering = ['japanese_word']
+    verbose_name = "Vocabulary word in example"
+    verbose_name_plural = "Vocabulary words in this example"
+
+# Nested inline for examples within words
+class KotobaExampleNestedInline(nested_admin.NestedStackedInline):
+    model = KotobaExample
+    extra = 1
+    fields = ['example_id', 'japanese_example', 'indonesian_example', 'order_number']
+    ordering = ['order_number']
+    inlines = [KotobaVocabularyNestedInline]
+    verbose_name = "Example sentence"
+    verbose_name_plural = "Example sentences"
+    classes = ['collapse']
+
+# Kotoba Admin Classes
 @admin.register(KotobaCategory)
 class KotobaCategoryAdmin(admin.ModelAdmin):
-    list_display = ['japanese_name', 'category_key', 'indonesian_translation', 'order_number', 'created_at']
+    list_display = ['japanese_name', 'category_key', 'indonesian_translation', 'ruby_reading', 'order_number', 'word_count', 'created_at']
     search_fields = ['japanese_name', 'category_key', 'indonesian_translation']
     ordering = ['order_number', 'japanese_name']
+    list_editable = ['order_number']  # Quick edit order in list view
+
+    def word_count(self, obj):
+        return obj.words.count()
+    word_count.short_description = 'Total Words'
 
 @admin.register(KotobaSubcategory)
 class KotobaSubcategoryAdmin(admin.ModelAdmin):
-    list_display = ['japanese_name', 'subcategory_key', 'main_category', 'indonesian_translation', 'order_number']
+    list_display = ['japanese_name', 'subcategory_key', 'main_category', 'indonesian_translation', 'ruby_reading', 'order_number', 'word_count']
     list_filter = ['main_category']
-    search_fields = ['japanese_name', 'subcategory_key']
+    search_fields = ['japanese_name', 'subcategory_key', 'indonesian_translation']
     ordering = ['main_category__order_number', 'order_number']
+    list_editable = ['order_number']  # Quick edit order in list view
+
+    def word_count(self, obj):
+        return obj.words.count()
+    word_count.short_description = 'Words'
 
 @admin.register(KotobaWord)
-class KotobaWordAdmin(admin.ModelAdmin):
-    list_display = ['japanese_word', 'word_id', 'main_category', 'subcategory', 'indonesian_translation']
+class KotobaWordAdmin(nested_admin.NestedModelAdmin):
+    list_display = ['japanese_word', 'ruby_reading', 'word_id', 'main_category', 'subcategory', 'indonesian_translation', 'example_count']
     list_filter = ['main_category', 'subcategory']
-    search_fields = ['japanese_word', 'word_id', 'indonesian_translation']
+    search_fields = ['japanese_word', 'word_id', 'indonesian_translation', 'ruby_reading']
     ordering = ['main_category__order_number', 'subcategory__order_number', 'japanese_word']
+    inlines = [KotobaExampleNestedInline]  # Add examples and vocab inline
 
-@admin.register(KotobaExample)
-class KotobaExampleAdmin(admin.ModelAdmin):
-    list_display = ['example_id', 'word', 'japanese_example', 'order_number']
-    list_filter = ['word__main_category']
-    search_fields = ['example_id', 'japanese_example', 'indonesian_example']
-    ordering = ['word', 'order_number']
+    fieldsets = (
+        ('Word Information', {
+            'fields': ('word_id', 'japanese_word', 'ruby_reading', 'indonesian_translation')
+        }),
+        ('Category', {
+            'fields': ('main_category', 'subcategory')
+        }),
+    )
 
-@admin.register(KotobaVocabulary)
-class KotobaVocabularyAdmin(admin.ModelAdmin):
-    list_display = ['japanese_word', 'vocabulary_id', 'example', 'indonesian_translation']
-    search_fields = ['japanese_word', 'indonesian_translation']
-    ordering = ['example__word', 'japanese_word']
+    def example_count(self, obj):
+        return obj.examples.count()
+    example_count.short_description = 'Examples'
+
+# Note: KotobaExample and KotobaVocabulary are managed via nested inlines in KotobaWordAdmin
+# This keeps the admin interface clean - edit everything from the Word page
 
 @admin.register(UserWordProgress)
 class UserWordProgressAdmin(admin.ModelAdmin):
@@ -229,34 +263,6 @@ class UserWordProgressAdmin(admin.ModelAdmin):
     list_filter = ['is_memorized', 'word__main_category']
     search_fields = ['user__email', 'word__japanese_word']
     ordering = ['-last_reviewed']
-
-# Flashcard Admin
-@admin.register(FlashcardDeck)
-class FlashcardDeckAdmin(admin.ModelAdmin):
-    list_display = ['name', 'deck_type', 'is_premium', 'is_active', 'order', 'created_at']
-    list_filter = ['deck_type', 'is_premium', 'is_active']
-    search_fields = ['name', 'description']
-    ordering = ['order', 'name']
-
-class FlashcardCardInline(admin.TabularInline):
-    model = FlashcardCard
-    extra = 1
-    fields = ['front_text', 'back_text', 'front_reading', 'order']
-
-@admin.register(FlashcardCard)
-class FlashcardCardAdmin(admin.ModelAdmin):
-    list_display = ['front_text', 'deck', 'order', 'created_at']
-    list_filter = ['deck']
-    search_fields = ['front_text', 'back_text']
-    ordering = ['deck', 'order']
-
-@admin.register(UserFlashcardProgress)
-class UserFlashcardProgressAdmin(admin.ModelAdmin):
-    list_display = ['user', 'card', 'is_mastered', 'repetitions', 'interval_days', 'next_review_date', 'last_reviewed']
-    list_filter = ['is_mastered', 'card__deck']
-    search_fields = ['user__email', 'card__front_text']
-    ordering = ['-last_reviewed']
-    readonly_fields = ['ease_factor', 'interval_days', 'repetitions', 'total_reviews', 'correct_reviews']
 
 class LearningAdminSite(admin.AdminSite):
     """学習データ管理用のカスタム管理サイト"""
@@ -381,18 +387,16 @@ class LearningAdminSite(admin.AdminSite):
 # カスタム管理サイトのインスタンス作成
 learning_admin_site = LearningAdminSite(name='learning_admin')
 
-# 全てのモデルをカスタム管理サイトに登録
+# Register only essential models for custom admin site
+# Note: SubjectItem, Chapter are managed via nested inlines in SubjectAdmin
+# Note: TextBlock, VocabularyEntry, QuizQuestion, QuizOption are managed via nested inlines in PageAdmin
+# Note: Word, FlashCard, FlashcardDeck (old models) are deprecated - using KotobaWord for vocabulary
 learning_admin_site.register(SubjectGroup, SubjectGroupAdmin)
 learning_admin_site.register(Subject, SubjectAdmin)
 learning_admin_site.register(ExamYear, ExamYearAdmin)
 learning_admin_site.register(ExamSession, ExamSessionAdmin)
 learning_admin_site.register(Question, QuestionAdmin)
 learning_admin_site.register(Choice, ChoiceAdmin)
-learning_admin_site.register(Word, WordAdmin)
-learning_admin_site.register(FlashCard, FlashCardAdmin)
 learning_admin_site.register(Video, VideoAdmin)
-learning_admin_site.register(SubjectItem, SubjectItemAdmin)
-learning_admin_site.register(Chapter, ChapterAdmin)
 learning_admin_site.register(Page, PageAdmin)
-learning_admin_site.register(StudyText, StudyTextAdmin)
 learning_admin_site.register(UserProgress, UserProgressAdmin)

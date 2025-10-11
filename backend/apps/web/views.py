@@ -454,82 +454,79 @@ def kotoba_subcategory_view(request, category_key, subcategory_key):
 @login_required
 @allow_free_access
 def subject_learning_view(request):
-    """科目学習メインページ"""
-    import os
-    from django.conf import settings
+    """科目学習メインページ - Load subjects from database"""
+    from apps.learning.models import Subject
 
-    # 利用可能な科目ファイル一覧を取得
-    subjects_dir = os.path.join(settings.BASE_DIR, 'static', 'subjects')
-    available_subjects = []
+    # Get all active subjects from database with prefetch
+    subjects = Subject.objects.filter(is_active=True).prefetch_related(
+        'items__chapters'
+    ).order_by('order')
 
-    if os.path.exists(subjects_dir):
-        for filename in os.listdir(subjects_dir):
-            if filename.endswith('.html'):
-                subject_name = filename.replace('.html', '')
-                available_subjects.append({
-                    'name': subject_name,
-                    'filename': filename,
-                    'url': f'/static/subjects/{filename}'
-                })
+    # Add chapter count to each subject
+    for subject in subjects:
+        subject.total_chapters = sum(item.chapters.count() for item in subject.items.all())
 
     return render(request, 'subjects/subject_learning.html', {
-        'available_subjects': available_subjects,
+        'subjects': subjects,
         'user': request.user
     })
 
 @login_required
 @allow_free_access
 def subject_detail_view(request, subject_name):
-    """個別科目詳細ページ"""
+    """個別科目詳細ページ - Load from database"""
     from django.shortcuts import get_object_or_404
     from django.http import Http404
+    from apps.learning.models import Subject, SubjectItem, TextBlock
 
     # セキュリティ: パストラバーサル攻撃を防ぐ
     if '..' in subject_name or '/' in subject_name:
         raise Http404("Invalid subject name")
 
-    # 利用可能な科目リスト
-    available_subjects = {
-        '介護試験対策': {
-            'title': '介護試験対策',
-            'description': 'Persiapan Ujian Kaigo',
-            'icon': 'medical_services',
-            'color': '#4caf50'
-        },
-        '介護の実務会話': {
-            'title': '介護の実務会話',
-            'description': 'Percakapan Praktis Kaigo',
-            'icon': 'chat',
-            'color': '#2196f3'
-        },
-        '日本人と会話': {
-            'title': '日本人と会話',
-            'description': 'Percakapan dengan Orang Jepang',
-            'icon': 'people',
-            'color': '#ff9800'
-        },
-        '特定技能評価試験': {
-            'title': '特定技能評価試験',
-            'description': 'Ujian Evaluasi Keterampilan Khusus',
-            'icon': 'assignment',
-            'color': '#9c27b0'
-        },
-        '日本の生活マナー': {
-            'title': '日本の生活マナー',
-            'description': 'Etiket Kehidupan di Jepang',
-            'icon': 'home',
-            'color': '#795548'
-        }
-    }
-
-    if subject_name not in available_subjects:
+    # Get subject from database
+    try:
+        subject_obj = Subject.objects.get(name=subject_name, is_active=True)
+    except Subject.DoesNotExist:
         raise Http404("Subject not found")
 
-    subject = available_subjects[subject_name]
+    # Get items with chapters and pages
+    items = subject_obj.items.filter(is_active=True).prefetch_related(
+        'chapters__pages'
+    ).order_by('order')
+
+    # Calculate stats
+    total_items = items.count()
+    total_chapters = sum(item.chapters.count() for item in items)
+
+    # Calculate completion percentage (count pages with text blocks)
+    total_pages = sum(chapter.pages.count() for item in items for chapter in item.chapters.all())
+    completed_pages = 0
+    for item in items:
+        for chapter in item.chapters.all():
+            for page in chapter.pages.all():
+                if TextBlock.objects.filter(page=page).exists():
+                    completed_pages += 1
+
+    completion_percentage = int((completed_pages / total_pages * 100)) if total_pages > 0 else 0
+
+    # Use icon and color from database with fallback defaults
+    subject = {
+        'title': subject_obj.name,
+        'description': subject_obj.indonesian_name,
+        'icon': subject_obj.icon or 'menu_book',
+        'color': subject_obj.color or '#607d8b',
+        'stats': {
+            'total_items': total_items,
+            'total_chapters': total_chapters,
+            'completion_percentage': completion_percentage
+        }
+    }
 
     return render(request, 'subjects/subject_detail.html', {
         'subject_name': subject_name,
         'subject': subject,
+        'subject_obj': subject_obj,
+        'items': items,
         'user': request.user
     })
 

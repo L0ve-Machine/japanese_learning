@@ -339,126 +339,70 @@
                 <!-- Stats -->
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value">2</div>
+                        <div class="stat-value">{{ subject.stats.total_items }}</div>
                         <div class="stat-label">項目数</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">5</div>
+                        <div class="stat-value">{{ subject.stats.total_chapters }}</div>
                         <div class="stat-label">章数</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">15%</div>
+                        <div class="stat-value">{{ subject.stats.completion_percentage }}%</div>
                         <div class="stat-label">進捗率</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value">進行中</div>
+                        <div class="stat-value">{% if subject.stats.completion_percentage > 0 %}進行中{% else %}準備中{% endif %}</div>
                         <div class="stat-label">状態</div>
                     </div>
                 </div>
 
-                <!-- Learning sections -->
+                <!-- Learning sections - Dynamic from database -->
                 <div class="learning-sections">
-                    <!-- Section 1: 介護保険 -->
+                    {% for item in items %}
+                    <!-- Item: {{ item.name }} -->
                     <div class="section" onclick="toggleSection(this)">
                         <div class="section-header">
                             <div class="section-title">
-                                <span class="material-icons section-icon">health_and_safety</span>
-                                介護保険
+                                <span class="material-icons section-icon">{% if forloop.first %}health_and_safety{% else %}forum{% endif %}</span>
+                                {{ item.name }}
                             </div>
                             <span class="material-icons section-toggle">expand_more</span>
                         </div>
                         <div class="section-content">
+                            {% if item.chapters.exists %}
                             <div class="chapter-list">
-                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=1 %}'; event.stopPropagation();">
+                                {% for chapter in item.chapters.all %}
+                                {% for page in chapter.pages.all %}
+                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=page.id %}'; event.stopPropagation();">
                                     <div class="chapter-info">
-                                        <div class="chapter-title">第1章 (DB版)</div>
-                                        <div class="chapter-subtitle">1. 介護保険制度とは？</div>
+                                        <div class="chapter-title">{{ chapter.name }} (DB版)</div>
+                                        <div class="chapter-subtitle">{{ page.name }}</div>
                                     </div>
                                     <div class="chapter-progress">
+                                        {% if page.text_blocks.exists %}
                                         <span class="progress-badge">完了</span>
+                                        {% else %}
+                                        <span class="progress-badge" style="background: #ff9800;">準備中</span>
+                                        {% endif %}
                                         <button class="start-btn">
                                             <span class="material-icons" style="font-size: 14px;">play_arrow</span>
                                             開始
                                         </button>
                                     </div>
                                 </div>
-
-                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=2 %}'; event.stopPropagation();">
-                                    <div class="chapter-info">
-                                        <div class="chapter-title">第2章 (DB版)</div>
-                                        <div class="chapter-subtitle">2. 被保険者（保険に加入する人）</div>
-                                    </div>
-                                    <div class="chapter-progress">
-                                        <span class="progress-badge" style="background: #ff9800;">コンテンツ準備中</span>
-                                        <button class="start-btn">
-                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
-                                            開始
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=3 %}'; event.stopPropagation();">
-                                    <div class="chapter-info">
-                                        <div class="chapter-title">第3章 (DB版)</div>
-                                        <div class="chapter-subtitle">3. 要介護認定（サービス利用までの流れ）</div>
-                                    </div>
-                                    <div class="chapter-progress">
-                                        <span class="progress-badge" style="background: #ff9800;">コンテンツ準備中</span>
-                                        <button class="start-btn">
-                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
-                                            開始
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=4 %}'; event.stopPropagation();">
-                                    <div class="chapter-info">
-                                        <div class="chapter-title">第4章 (DB版)</div>
-                                        <div class="chapter-subtitle">4. 介護保険のサービス</div>
-                                    </div>
-                                    <div class="chapter-progress">
-                                        <span class="progress-badge" style="background: #ff9800;">コンテンツ準備中</span>
-                                        <button class="start-btn">
-                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
-                                            開始
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=5 %}'; event.stopPropagation();">
-                                    <div class="chapter-info">
-                                        <div class="chapter-title">第5章 (DB版)</div>
-                                        <div class="chapter-subtitle">5. 保険料と利用料</div>
-                                    </div>
-                                    <div class="chapter-progress">
-                                        <span class="progress-badge" style="background: #ff9800;">コンテンツ準備中</span>
-                                        <button class="start-btn">
-                                            <span class="material-icons" style="font-size: 14px;">play_arrow</span>
-                                            開始
-                                        </button>
-                                    </div>
-                                </div>
+                                {% endfor %}
+                                {% endfor %}
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 2: コミュニケーション -->
-                    <div class="section" onclick="toggleSection(this)">
-                        <div class="section-header">
-                            <div class="section-title">
-                                <span class="material-icons section-icon">forum</span>
-                                コミュニケーション
-                            </div>
-                            <span class="material-icons section-toggle">expand_more</span>
-                        </div>
-                        <div class="section-content">
+                            {% else %}
                             <div class="no-chapters-message" style="padding: 40px 20px; text-align: center; color: #666;">
                                 <span class="material-icons" style="font-size: 48px; color: #ddd; margin-bottom: 16px;">construction</span>
                                 <p style="margin: 10px 0; font-size: 1.1rem; color: #555;">コンテンツを準備中です</p>
                                 <p style="font-size: 0.9rem; color: #888;">Content under development</p>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

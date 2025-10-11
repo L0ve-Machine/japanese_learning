@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'drf_spectacular',
+    'nested_admin',  # Django nested admin for hierarchical inlines
     'apps.users',
     'apps.learning',
     'apps.subscriptions',

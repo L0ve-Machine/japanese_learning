@@ -1,0 +1,87 @@
+Total subjects: 5
+
+============================================================
+
+Subject ID 1: 介護試験対策
+   Subject Key: None
+   Indonesian: Persiapan Ujian Kaigo
+   Active: True
+   Total Items: 1
+
+   -- Item: 介護保険 (5 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: 1. 介護保険制度とは？test (4 texts, 2 quizzes)
+       -- Chapter: 第2章 (1 pages)
+           -- Page: 2. 被保険者（保険に加入する人） (0 texts, 0 quizzes)
+       -- Chapter: 第3章 (1 pages)
+           -- Page: 3. 要介護認定（サービス利用までの流れ） (0 texts, 0 quizzes)
+       -- Chapter: 第4章 (1 pages)
+           -- Page: 4. 介護保険のサービス (0 texts, 0 quizzes)
+       -- Chapter: 第5章 (1 pages)
+           -- Page: 5. 保険料と利用料 (0 texts, 0 quizzes)
+
+Subject ID 2: 介護の実務会話
+   Subject Key: None
+   Indonesian: Percakapan Praktis Kaigo
+   Active: True
+   Total Items: 3
+
+   -- Item: 先輩との会話 (1 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: 先輩との会話 - 準備中 (0 texts, 0 quizzes)
+
+   -- Item: 介護分野 (1 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: 介護分野 - 準備中 (0 texts, 0 quizzes)
+
+   -- Item: 緊急時の報告 (1 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: 緊急時の報告 - 準備中 (0 texts, 0 quizzes)
+
+Subject ID 3: 日本人と会話
+   Subject Key: None
+   Indonesian: Percakapan dengan Orang Jepang
+   Active: True
+   Total Items: 2
+
+   -- Item: 趣味を聞く (1 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: 趣味を聞く - 準備中 (0 texts, 0 quizzes)
+
+   -- Item: 食事に誘う (1 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: 食事に誘う - 準備中 (0 texts, 0 quizzes)
+
+Subject ID 4: 特定技能評価試験
+   Subject Key: None
+   Indonesian: Ujian Evaluasi Keterampilan Khusus
+   Active: True
+   Total Items: 1
+
+   -- Item: 飲食料品製造業分野 (1 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: 飲食料品製造業分野 - 準備中 (0 texts, 0 quizzes)
+
+Subject ID 5: 日本の生活マナー
+   Subject Key: None
+   Indonesian: Etiket Kehidupan di Jepang
+   Active: True
+   Total Items: 2
+
+   -- Item: ごみの分別 (1 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: ごみの分別 - 準備中 (0 texts, 0 quizzes)
+
+   -- Item: 公共交通機関の利用 (1 chapters)
+       -- Chapter: 第1章 (1 pages)
+           -- Page: 公共交通機関の利用 - 準備中 (0 texts, 0 quizzes)
+
+============================================================
+
+Summary:
+Total Subjects: 5
+Total Items: 9
+Total Chapters: 13
+Total Pages: 13
+Total Text Blocks: 4
+Total Quiz Questions: 2
