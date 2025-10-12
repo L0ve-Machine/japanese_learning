@@ -77,13 +77,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #e0e0e0;
     }
 
     .video-thumbnail-placeholder i {
         font-size: 48px;
-        color: white;
-        opacity: 0.8;
+        color: #999;
+        opacity: 0.5;
     }
 
     .video-duration {
@@ -200,8 +200,8 @@
         {% for video in videos %}
         <a href="{% url 'video_detail' video.id %}" class="video-card">
             <div class="video-thumbnail">
-                {% if video.thumbnail_url %}
-                <img src="{{ video.thumbnail_url }}" alt="{{ video.title }}" class="video-thumbnail-img">
+                {% if video.get_youtube_thumbnail_url %}
+                <img src="{{ video.get_youtube_thumbnail_url }}" alt="{{ video.title }}" class="video-thumbnail-img">
                 {% else %}
                 <div class="video-thumbnail-placeholder">
                     <i class="material-icons">play_circle_filled</i>

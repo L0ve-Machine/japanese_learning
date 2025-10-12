@@ -241,6 +241,24 @@ class Video(models.Model):
             return f'https://www.youtube.com/embed/{video_id}'
         return self.video_url
 
+    def get_youtube_thumbnail_url(self):
+        """Get YouTube thumbnail URL from video URL"""
+        if self.thumbnail_url:
+            return self.thumbnail_url
+
+        # Extract video ID
+        video_id = None
+        if 'youtu.be' in self.video_url:
+            video_id = self.video_url.split('/')[-1].split('?')[0]
+        elif 'youtube.com/watch' in self.video_url:
+            video_id = self.video_url.split('v=')[1].split('&')[0]
+
+        if video_id:
+            # Return high quality thumbnail
+            return f'https://img.youtube.com/vi/{video_id}/hqdefault.jpg'
+
+        return None
+
 class VideoContentBlock(models.Model):
     """Content block for videos with Japanese text and translation"""
     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='content_blocks')
