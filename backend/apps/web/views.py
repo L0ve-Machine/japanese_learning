@@ -181,70 +181,10 @@ def quiz_view(request, year, session_number):
     # Get question number from URL parameter, default to 1
     question_number = int(request.GET.get('q', 1))
 
-    # Get questions for this exam session
+    # Get questions for this exam session from database
     questions = Question.objects.filter(
         exam_session=exam_session
     ).prefetch_related('choices').order_by('question_number')
-
-    if questions.exists():
-        # Delete existing questions for this session to update with new data
-        questions.delete()
-
-    # Get first subject for this session
-    subject = exam_session.subjects.first()
-    if not subject:
-        subject = Subject.objects.first()
-
-    # Create sample question based on your provided data (q_37_2025_1)
-    question = Question.objects.create(
-        subject=subject,
-        exam_session=exam_session,
-        question_type='past_exam',
-        year=year,
-        question_number=1,
-        question_text="<span class='vocab-word' data-translation='berikut' data-reading='つぎ'>次</span>の<span class='vocab-word' data-translation='deskripsi' data-reading='きじゅつ'>記述</span>のうち、<span class='vocab-word' data-translation='pekerja perawatan' data-reading='かいごふくししょく'>介護福祉職</span>が<span class='vocab-word' data-translation='advocacy|advokasi' data-reading='アド・ボ・カ・シー'>アドボカシー</span>（advocacy）の<span class='vocab-word' data-translation='sudut pandang' data-reading='してん'>視点</span>から<span class='vocab-word' data-translation='melakukan' data-reading='おこな'>行う</span><span class='vocab-word' data-translation='tindakan' data-reading='たいおう'>対応</span>として、<span class='vocab-word' data-translation='paling' data-reading='もっとも'>最も</span><span class='vocab-word' data-translation='tepat' data-reading='てきせつ'>適切</span>なものを1つ<span class='vocab-word' data-translation='memilih' data-reading='えら'>選</span>びなさい。",
-        explanation="アドボカシーとは、利用者の権利を擁護し、代弁することです。選択肢1が正解で、利用者の最善の利益を代弁する役割を果たします。",
-        translations={
-            "indonesian": "Dari deskripsi berikut pilihlah satu tindakan yang paling tepat yang dilakukan oleh pekerja perawatan dari sudut pandang advokasi (advocacy)."
-        },
-        vocabulary={
-            "次": {"reading": "つぎ", "translation": "berikut"},
-            "記述": {"reading": "きじゅつ", "translation": "deskripsi"},
-            "介護福祉職": {"reading": "かいごふくししょく", "translation": "pekerja perawatan"},
-            "視点": {"reading": "してん", "translation": "sudut pandang"},
-            "行": {"reading": "おこな", "translation": "melakukan"},
-            "対応": {"reading": "たいおう", "translation": "tindakan"},
-            "最も": {"reading": "もっとも", "translation": "paling"},
-            "適切": {"reading": "てきせつ", "translation": "tepat"},
-            "選": {"reading": "えら", "translation": "memilih"},
-            "歳": {"reading": "さい", "translation": "tahun"},
-            "女性": {"reading": "じょせい", "translation": "wanita"},
-            "要介護": {"reading": "ようかいご", "translation": "membutuhkan perawatan"},
-            "脳梗塞": {"reading": "のうこうそく", "translation": "infark serebral"},
-            "後遺症": {"reading": "こういしょう", "translation": "gejala sisa"},
-            "左片麻痺": {"reading": "ひだりかたまひ", "translation": "hemiplegia kiri"},
-            "介護老人福祉施設": {"reading": "かいごろうじんふくししせつ", "translation": "panti jompo"},
-            "生活": {"reading": "せいかつ", "translation": "tinggal"},
-            "アドボカシー": {"reading": "アドボカシー", "translation": "advocacy|advokasi"}
-        }
-    )
-
-    # Create choices based on your provided data
-    choices_data = [
-        {"choice_number": 1, "choice_text": "<span class='vocab-word' data-translation='user|pengguna' data-reading='り・よう・しゃ'>利用者</span>の<span class='vocab-word' data-translation='best interests|kepentingan terbaik' data-reading='さい・ぜん・の・り・えき'>最善の利益</span>を<span class='vocab-word' data-translation='represent|mewakili' data-reading='だい・べん'>代弁</span>する。", "is_correct": True},
-        {"choice_number": 2, "choice_text": "<span class='vocab-word' data-translation='family|keluarga' data-reading='か・ぞく'>家族</span>が<span class='vocab-word' data-translation='desire|keinginan' data-reading='き・ぼう'>希望</span>する<span class='vocab-word' data-translation='care|perawatan' data-reading='かい・ご'>介護</span>サービスを<span class='vocab-word' data-translation='provide|menyediakan' data-reading='てい・きょう'>提供</span>する。", "is_correct": False},
-        {"choice_number": 3, "choice_text": "<span class='vocab-word' data-translation='institution|institusi' data-reading='し・せつ'>施設</span>の<span class='vocab-word' data-translation='rules|aturan' data-reading='き・そく'>規則</span>に<span class='vocab-word' data-translation='according to|sesuai dengan' data-reading='した・が'>従って</span><span class='vocab-word' data-translation='care|perawatan' data-reading='かい・ご'>介護</span>を<span class='vocab-word' data-translation='provide|menyediakan' data-reading='てい・きょう'>提供</span>する。", "is_correct": False},
-        {"choice_number": 4, "choice_text": "<span class='vocab-word' data-translation='individual user|pengguna individu' data-reading='り・よう・しゃ・こ・じん'>利用者個人</span>の<span class='vocab-word' data-translation='hobby|hobi' data-reading='しゅ・み'>趣味</span>を<span class='vocab-word' data-translation='utilize|memanfaatkan' data-reading='い'>生かして</span>、<span class='vocab-word' data-translation='recreation activities|kegiatan rekreasi' data-reading='レク・リ・エー・ション・かつ・どう'>レクリエーション活動</span>を<span class='vocab-word' data-translation='conduct|melakukan' data-reading='おこな'>行う</span>。", "is_correct": False},
-        {"choice_number": 5, "choice_text": "<span class='vocab-word' data-translation='visually impaired|penyandang disabilitas netra' data-reading='し・かく・しょう・がい・しゃ'>視覚障害者</span>が<span class='vocab-word' data-translation='need|membutuhkan' data-reading='ひつ・よう'>必要</span>とする<span class='vocab-word' data-translation='information|informasi' data-reading='じょう・ほう'>情報</span>を、<span class='vocab-word' data-translation='easy to use|mudah digunakan' data-reading='り・よう'>利用</span>しやすいようにする。", "is_correct": False}
-    ]
-
-    for choice_data in choices_data:
-        Choice.objects.create(
-            question=question,
-            **choice_data
-        )
-
-    questions = Question.objects.filter(exam_session=exam_session).prefetch_related('choices').order_by('question_number')
 
     try:
         current_question = questions[question_number - 1]
@@ -735,29 +675,13 @@ def flashcards_view(request):
         card_count=Count('cards')
     ).order_by('order', 'name')
 
-    # Get user's progress for each deck
+    # Get deck data with card counts
     deck_data = []
     for deck in decks:
-        # Calculate user progress
-        total_cards = deck.card_count
-        if total_cards > 0:
-            from apps.learning.models import UserFlashcardProgress
-            user_progress = UserFlashcardProgress.objects.filter(
-                user=request.user,
-                card__deck=deck
-            )
-            mastered_count = user_progress.filter(is_mastered=True).count()
-            learning_count = user_progress.filter(is_mastered=False).count()
-            new_count = total_cards - user_progress.count()
-
-            deck_data.append({
-                'deck': deck,
-                'total_cards': total_cards,
-                'new_count': new_count,
-                'learning_count': learning_count,
-                'mastered_count': mastered_count,
-                'progress_percentage': (mastered_count / total_cards) * 100 if total_cards > 0 else 0
-            })
+        deck_data.append({
+            'deck': deck,
+            'total_cards': deck.card_count
+        })
 
     return render(request, 'flashcards/main.html', {
         'deck_data': deck_data,
@@ -768,37 +692,20 @@ def flashcards_view(request):
 @allow_free_access
 def flashcards_study_view(request, deck_id):
     """暗記カード学習ページ"""
-    from apps.learning.models import FlashcardDeck, FlashcardCard, UserFlashcardProgress
+    from apps.learning.models import FlashcardDeck, FlashcardCard
     from django.shortcuts import get_object_or_404
-    from django.utils import timezone
-    from datetime import date
 
     deck = get_object_or_404(FlashcardDeck, id=deck_id, is_active=True)
-
-    # Get cards that need review (new cards or cards due for review)
-    cards_to_review = []
 
     # Get all cards in deck
     all_cards = FlashcardCard.objects.filter(deck=deck).order_by('order')
 
+    cards_to_review = []
     for card in all_cards:
-        try:
-            progress = UserFlashcardProgress.objects.get(user=request.user, card=card)
-            # Include if due for review or not mastered
-            if not progress.is_mastered:
-                if progress.next_review_date is None or progress.next_review_date <= date.today():
-                    cards_to_review.append({
-                        'card': card,
-                        'progress': progress,
-                        'is_new': False
-                    })
-        except UserFlashcardProgress.DoesNotExist:
-            # New card
-            cards_to_review.append({
-                'card': card,
-                'progress': None,
-                'is_new': True
-            })
+        cards_to_review.append({
+            'card': card,
+            'is_new': False
+        })
 
     return render(request, 'flashcards/study.html', {
         'deck': deck,
@@ -809,20 +716,16 @@ def flashcards_study_view(request, deck_id):
 
 @login_required
 def flashcards_update_progress(request, card_id):
-    """Update flashcard progress based on user response"""
+    """Update flashcard progress - simple review count only"""
     from apps.learning.models import FlashcardCard, UserFlashcardProgress
     from django.shortcuts import get_object_or_404
     from django.http import JsonResponse
     from django.utils import timezone
-    from datetime import date, timedelta
-    import json
 
     if request.method != 'POST':
         return JsonResponse({'error': 'POST required'}, status=400)
 
     card = get_object_or_404(FlashcardCard, id=card_id)
-    data = json.loads(request.body)
-    difficulty = int(data.get('difficulty', 3))  # 1=Again, 2=Hard, 3=Good, 4=Easy
 
     # Get or create progress
     progress, created = UserFlashcardProgress.objects.get_or_create(
@@ -835,35 +738,9 @@ def flashcards_update_progress(request, card_id):
         }
     )
 
-    # SM-2 Algorithm implementation
-    if difficulty >= 3:
-        # Correct response
-        progress.correct_reviews += 1
-        if progress.repetitions == 0:
-            progress.interval_days = 1
-        elif progress.repetitions == 1:
-            progress.interval_days = 6
-        else:
-            progress.interval_days = int(progress.interval_days * progress.ease_factor)
-        progress.repetitions += 1
-    else:
-        # Incorrect response - restart
-        progress.repetitions = 0
-        progress.interval_days = 1
-
-    # Update ease factor
-    progress.ease_factor = max(1.3, progress.ease_factor + (0.1 - (5 - difficulty) * (0.08 + (5 - difficulty) * 0.02)))
-
-    # Set next review date
-    progress.next_review_date = date.today() + timedelta(days=progress.interval_days)
-
-    # Mark as mastered if interval is > 21 days and repetitions > 3
-    if progress.interval_days > 21 and progress.repetitions > 3:
-        progress.is_mastered = True
-
-    progress.last_difficulty = difficulty
-    progress.last_reviewed = timezone.now()
+    # Simple review count increment
     progress.total_reviews += 1
+    progress.last_reviewed = timezone.now()
     progress.save()
 
     return JsonResponse({
