@@ -186,6 +186,14 @@ def quiz_view(request, year, session_number):
         exam_session=exam_session
     ).prefetch_related('choices').order_by('question_number')
 
+    # Calculate total questions
+    total_questions = questions.count()
+
+    # If no questions exist, show error message
+    if total_questions == 0:
+        messages.warning(request, f'{exam_year.year}年 第{exam_session.session_number}回の問題データがまだ登録されていません。')
+        return redirect('past_exams')
+
     try:
         current_question = questions[question_number - 1]
     except IndexError:
@@ -193,7 +201,6 @@ def quiz_view(request, year, session_number):
         question_number = 1
 
     # Calculate progress
-    total_questions = questions.count()
     progress_percentage = (question_number / total_questions) * 100
 
     return render(request, 'quiz.html', {
@@ -921,3 +928,35 @@ def chapter_page_view(request, page_id):
     }
 
     return render(request, 'subjects/chapter_page.html', context)
+
+@login_required
+@allow_free_access
+def videos_view(request):
+    """解説動画一覧ページ"""
+    from apps.learning.models import Video, Subject
+
+    # Get all active videos
+    videos = Video.objects.filter(is_active=True).select_related('subject').order_by('order', 'created_at')
+
+    # Get subjects for filtering
+    subjects = Subject.objects.filter(is_active=True).order_by('order')
+
+    return render(request, 'videos/list.html', {
+        'videos': videos,
+        'subjects': subjects,
+        'user': request.user
+    })
+
+@login_required
+@allow_free_access
+def video_detail_view(request, video_id):
+    """解説動画詳細ページ"""
+    from apps.learning.models import Video
+    from django.shortcuts import get_object_or_404
+
+    video = get_object_or_404(Video, id=video_id)
+
+    return render(request, 'videos/detail.html', {
+        'video': video,
+        'user': request.user
+    })

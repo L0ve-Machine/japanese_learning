@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 import nested_admin
 from .models import (
-    SubjectGroup, Subject, ExamYear, ExamSession, Question, Choice, Video,
+    SubjectGroup, Subject, ExamYear, ExamSession, Question, Choice, Video, VideoContentBlock,
     SubjectItem, Chapter, Page, UserProgress,
     KotobaCategory, KotobaSubcategory, KotobaWord, KotobaExample, KotobaVocabulary, UserWordProgress,
     TextBlock, VocabularyEntry, QuizQuestion, QuizOption
@@ -147,12 +147,35 @@ class ChoiceAdmin(admin.ModelAdmin):
 # Note: Old Word and FlashCard models are deprecated
 # Now using KotobaWord and FlashcardDeck/FlashcardCard instead
 
+class VideoContentBlockInline(admin.StackedInline):
+    model = VideoContentBlock
+    extra = 1
+    fields = ['japanese_text', 'indonesian_translation', 'order']
+    ordering = ['order']
+    verbose_name = 'コンテンツブロック'
+    verbose_name_plural = 'コンテンツブロック（日本語とインドネシア語翻訳）'
+
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
-    list_display = ['title', 'subject', 'duration_minutes', 'is_premium', 'order']
+    list_display = ['title', 'subject', 'duration_minutes', 'is_premium', 'order', 'created_at']
     list_filter = ['is_premium', 'subject']
-    search_fields = ['title', 'description']
+    search_fields = ['title', 'description', 'content']
     ordering = ['order', 'title']
+    list_editable = ['order']
+    inlines = [VideoContentBlockInline]
+
+    fieldsets = (
+        ('基本情報', {
+            'fields': ('title', 'description', 'subject')
+        }),
+        ('動画設定', {
+            'fields': ('video_url', 'thumbnail_url', 'duration_minutes'),
+            'description': 'YouTube URL (例: https://youtu.be/7fvCb5_Nzq4 または https://youtube.com/watch?v=...)'
+        }),
+        ('その他', {
+            'fields': ('is_premium', 'order')
+        }),
+    )
 
 # Hierarchical Content Admin
 # Note: SubjectItem and Chapter are edited via nested inlines in SubjectAdmin

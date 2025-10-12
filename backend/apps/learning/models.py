@@ -210,12 +210,14 @@ class FlashCard(models.Model):
 
 class Video(models.Model):
     title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    video_url = models.URLField()
+    description = models.TextField(blank=True, help_text='Short description/summary of the video')
+    content = models.TextField(blank=True, help_text='Detailed content/transcript to display below video')
+    video_url = models.URLField(help_text='YouTube URL (e.g., https://youtu.be/7fvCb5_Nzq4)')
     thumbnail_url = models.URLField(blank=True)
     duration_minutes = models.IntegerField(null=True, blank=True)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='videos', null=True, blank=True)
     is_premium = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -223,6 +225,39 @@ class Video(models.Model):
     class Meta:
         db_table = 'videos'
         ordering = ['order', 'title']
+        verbose_name = '解説動画'
+        verbose_name_plural = '解説動画'
+
+    def __str__(self):
+        return self.title
+
+    def get_youtube_embed_url(self):
+        """Convert YouTube URL to embed format"""
+        if 'youtu.be' in self.video_url:
+            video_id = self.video_url.split('/')[-1].split('?')[0]
+            return f'https://www.youtube.com/embed/{video_id}'
+        elif 'youtube.com/watch' in self.video_url:
+            video_id = self.video_url.split('v=')[1].split('&')[0]
+            return f'https://www.youtube.com/embed/{video_id}'
+        return self.video_url
+
+class VideoContentBlock(models.Model):
+    """Content block for videos with Japanese text and translation"""
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='content_blocks')
+    japanese_text = models.TextField(help_text='Japanese text with ruby annotations')
+    indonesian_translation = models.TextField(help_text='Indonesian translation')
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'video_content_blocks'
+        ordering = ['video', 'order']
+        verbose_name = '動画コンテンツブロック'
+        verbose_name_plural = '動画コンテンツブロック'
+
+    def __str__(self):
+        return f"{self.video.title} - Block {self.order}: {self.japanese_text[:50]}..."
 
 # Hierarchical Learning Content Models
 class SubjectItem(models.Model):
