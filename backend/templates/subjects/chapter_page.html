@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load translation_helpers %}
 
 {% block title %}{{ chapter.name }} - {{ subject.name }}{% endblock %}
 
@@ -25,6 +26,29 @@
             text-decoration: none;
             border-radius: 4px;
             font-size: 14px;
+        }
+        .language-selector {
+            float: right;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .language-btn {
+            padding: 6px 12px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .language-btn:hover {
+            background: #f8f9fa;
+        }
+        .language-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
         }
         .chapter-title {
             font-size: 2rem;
@@ -159,6 +183,12 @@
 
 {% block content %}
     <div class="header">
+        <div class="language-selector">
+            <span style="font-size: 13px; color: #6c757d;">翻訳言語:</span>
+            <button class="language-btn {% if user_language == 'id' %}active{% endif %}" data-lang="id">🇮🇩 Indonesian</button>
+            <button class="language-btn {% if user_language == 'en' %}active{% endif %}" data-lang="en">🇬🇧 English</button>
+            <button class="language-btn {% if user_language == 'vi' %}active{% endif %}" data-lang="vi">🇻🇳 Vietnamese</button>
+        </div>
         <a href="{% url 'subject_detail' subject.name %}" class="back-btn">← 戻る</a>
         <h1 class="chapter-title">{{ chapter.name }}</h1>
         <p><strong>章名:</strong> {{ page.name }}</p>
@@ -181,21 +211,39 @@
                 </div>
                 <div class="indonesian-text-wrapper">
                     <p class="indonesian-text">
-                        {{ text_block.indonesian_translation }}
+                        {% translate_text text_block.translations user_language text_block.indonesian_translation %}
                     </p>
                     <div class="indonesian-text" style="margin-top: 10px; overflow-x: auto; max-height: 300px; overflow-y: auto;">
                         <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
                             <thead>
                                 <tr style="background-color: #f3f4f6;">
                                     <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">日本語</th>
-                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">インドネシア語</th>
+                                    <th style="padding: 8px; border: 1px solid #d1d5db; text-align: left;">
+                                        {% if user_language == 'id' %}
+                                            Bahasa Indonesia
+                                        {% elif user_language == 'en' %}
+                                            English
+                                        {% elif user_language == 'vi' %}
+                                            Tiếng Việt
+                                        {% elif user_language == 'zh' %}
+                                            中文
+                                        {% elif user_language == 'ko' %}
+                                            한국어
+                                        {% elif user_language == 'th' %}
+                                            ไทย
+                                        {% elif user_language == 'my' %}
+                                            မြန်မာ
+                                        {% else %}
+                                            Bahasa Indonesia
+                                        {% endif %}
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for vocab in text_block.vocabulary.all %}
                                 <tr>
                                     <td style="padding: 8px; border: 1px solid #d1d5db;">{{ vocab.japanese_word }}</td>
-                                    <td style="padding: 8px; border: 1px solid #d1d5db;">{{ vocab.indonesian_translation }}</td>
+                                    <td style="padding: 8px; border: 1px solid #d1d5db;">{% translate_text vocab.translations user_language vocab.indonesian_translation %}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -306,7 +354,7 @@
                 {% for option in question.options.all %}
                 {{ option.option_number }}: {
                     japanese: "{{ option.explanation_japanese|escapejs }}",
-                    indonesian: "{{ option.explanation_indonesian|escapejs }}"
+                    translated: "{% translate_text option.translations user_language option.explanation_indonesian %}"
                 }{% if not forloop.last %},{% endif %}
                 {% endfor %}
             }{% if not forloop.last %},{% endif %}
@@ -344,8 +392,8 @@
                     ${feedbackInfo.japanese}
                 </div>
                 <div style="background-color: #f1f3f4; padding: 12px; border-radius: 4px; margin-top: 10px; border-left: 3px solid #6c757d;">
-                    <strong>インドネシア語:</strong><br>
-                    ${feedbackInfo.indonesian}
+                    <strong>翻訳:</strong><br>
+                    ${feedbackInfo.translated}
                 </div>
             `;
 
@@ -372,7 +420,7 @@
             {% for text_block in text_blocks %}
             {{ text_block.id }}: [
                 {% for vocab in text_block.vocabulary.all %}
-                {word: "{{ vocab.japanese_word|escapejs }}", translation: "{{ vocab.indonesian_translation|escapejs }}"}{% if not forloop.last %},{% endif %}
+                {word: "{{ vocab.japanese_word|escapejs }}", translation: "{% translate_text vocab.translations user_language vocab.indonesian_translation %}"}{% if not forloop.last %},{% endif %}
                 {% endfor %}
             ]{% if not forloop.last %},{% endif %}
             {% endfor %}
@@ -415,6 +463,18 @@
             }
         })();
         {% endfor %}
+
+        // Language selector functionality
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedLang = this.dataset.lang;
+
+                // Update URL with language parameter and reload
+                const url = new URL(window.location);
+                url.searchParams.set('lang', selectedLang);
+                window.location.href = url.toString();
+            });
+        });
 
         console.log('Chapter page interactive functionality loaded');
         console.log('Total vocabulary mapping:', vocabMapping);

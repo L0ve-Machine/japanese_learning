@@ -54,20 +54,20 @@ class SubjectItemNestedInline(nested_admin.NestedTabularInline):
 class VocabularyEntryNestedInline(nested_admin.NestedTabularInline):
     model = VocabularyEntry
     extra = 1
-    fields = ['japanese_word', 'indonesian_translation', 'order']
+    fields = ['japanese_word', 'indonesian_translation', 'translations', 'order']
     ordering = ['order']
 
 class TextBlockNestedInline(nested_admin.NestedStackedInline):
     model = TextBlock
     extra = 1
-    fields = ['japanese_text', 'indonesian_translation', 'order']
+    fields = ['japanese_text', 'indonesian_translation', 'translations', 'order']
     ordering = ['order']
     inlines = [VocabularyEntryNestedInline]
 
 class QuizOptionNestedInline(nested_admin.NestedTabularInline):
     model = QuizOption
     extra = 5
-    fields = ['option_number', 'option_text', 'is_correct', 'explanation_japanese', 'explanation_indonesian']
+    fields = ['option_number', 'option_text', 'is_correct', 'explanation_japanese', 'explanation_indonesian', 'translations']
     ordering = ['option_number']
 
 class QuizQuestionNestedInline(nested_admin.NestedStackedInline):
@@ -98,7 +98,7 @@ class SubjectAdmin(nested_admin.NestedModelAdmin):
 
     fieldsets = (
         ('Basic Information', {
-            'fields': ('name', 'indonesian_name', 'description', 'subject_key', 'group')
+            'fields': ('name', 'indonesian_name', 'translations', 'description', 'subject_key', 'group')
         }),
         ('UI Customization', {
             'fields': ('icon', 'color'),

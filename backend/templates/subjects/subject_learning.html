@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load translation_helpers %}
 
 {% block title %}科目学習 - 介護福祉士試験対策{% endblock %}
 
@@ -116,6 +117,32 @@
 
         .chip.active:hover {
             background: #1976d2;
+        }
+
+        .language-selector-main {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .language-btn {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .language-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .language-btn.active {
+            background: #2196f3;
+            color: white;
+            border-color: #2196f3;
         }
 
         .refresh-btn {
@@ -363,10 +390,12 @@
             </div>
 
             <div class="filter-chips">
-                <div class="chip active" onclick="filterByGroup('all')">全科目</div>
-                <div class="chip" onclick="filterByGroup('A')">グループA</div>
-                <div class="chip" onclick="filterByGroup('B')">グループB</div>
-                <div class="chip" onclick="filterByGroup('C')">グループC</div>
+                <div class="language-selector-main">
+                    <span style="font-size: 14px; color: #6c757d; margin-right: 8px;">翻訳言語:</span>
+                    <button class="language-btn {% if user_language == 'id' %}active{% endif %}" data-lang="id">🇮🇩 Indonesian</button>
+                    <button class="language-btn {% if user_language == 'en' %}active{% endif %}" data-lang="en">🇬🇧 English</button>
+                    <button class="language-btn {% if user_language == 'vi' %}active{% endif %}" data-lang="vi">🇻🇳 Vietnamese</button>
+                </div>
                 <button class="refresh-btn" onclick="refreshSubjects()">
                     <span class="material-icons">refresh</span>
                     更新
@@ -396,7 +425,7 @@
                     </div>
                     <div>
                         <div class="card-title">{{ subject.name }}</div>
-                        <div class="card-description">{{ subject.indonesian_name|default:subject.description }}</div>
+                        <div class="card-description">{{ subject|get_subject_name:user_language }}</div>
                     </div>
                 </div>
 
@@ -449,20 +478,17 @@
     </div>
 
     <script>
-        let currentFilter = 'all';
+        // Language selector functionality
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedLang = this.dataset.lang;
 
-        function filterByGroup(group) {
-            currentFilter = group;
-
-            // Update chip active state
-            document.querySelectorAll('.chip').forEach(chip => {
-                chip.classList.remove('active');
+                // Update URL with language parameter and reload
+                const url = new URL(window.location);
+                url.searchParams.set('lang', selectedLang);
+                window.location.href = url.toString();
             });
-            event.target.classList.add('active');
-
-            // Filter cards (simplified demo)
-            console.log(`Filtering by group: ${group}`);
-        }
+        });
 
         function refreshSubjects() {
             const spinner = document.getElementById('loadingSpinner');
@@ -483,8 +509,15 @@
         function startLearning(subjectName) {
             console.log(`[DJANGO ROUTING] Starting learning for: ${subjectName}`);
 
-            // Navigate to the subject detail page using the subject name
-            const url = `/subjects/${encodeURIComponent(subjectName)}/`;
+            // Get current language parameter if exists
+            const urlParams = new URLSearchParams(window.location.search);
+            const lang = urlParams.get('lang');
+
+            // Navigate to the subject detail page with language parameter preserved
+            let url = `/subjects/${encodeURIComponent(subjectName)}/`;
+            if (lang) {
+                url += `?lang=${lang}`;
+            }
             console.log(`[DJANGO ROUTING] Navigating to: ${url}`);
             window.location.href = url;
         }

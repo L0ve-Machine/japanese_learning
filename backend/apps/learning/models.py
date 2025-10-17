@@ -68,6 +68,11 @@ class Subject(models.Model):
     group = models.ForeignKey(SubjectGroup, on_delete=models.CASCADE, related_name='subjects', null=True, blank=True)
     name = models.CharField(max_length=200)
     indonesian_name = models.CharField(max_length=200, blank=True)
+    translations = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text='Translations: {"en": "English name", "vi": "Vietnamese name"}'
+    )
     description = models.TextField(blank=True)
 
     # UI Customization fields
@@ -356,6 +361,11 @@ class TextBlock(models.Model):
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='text_blocks')
     japanese_text = models.TextField(help_text='Japanese text content')
     indonesian_translation = models.TextField(help_text='Full Indonesian translation')
+    translations = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text='Additional translations: {"en": "English text", "vi": "Vietnamese text"}'
+    )
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -372,6 +382,11 @@ class VocabularyEntry(models.Model):
     text_block = models.ForeignKey(TextBlock, on_delete=models.CASCADE, related_name='vocabulary')
     japanese_word = models.CharField(max_length=200)
     indonesian_translation = models.CharField(max_length=200)
+    translations = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text='Additional translations: {"en": "English", "vi": "Vietnamese"}'
+    )
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -407,6 +422,11 @@ class QuizOption(models.Model):
     is_correct = models.BooleanField(default=False)
     explanation_japanese = models.TextField(help_text='Explanation in Japanese')
     explanation_indonesian = models.TextField(help_text='Explanation in Indonesian')
+    translations = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text='Additional explanations: {"en": "English explanation", "vi": "Vietnamese explanation"}'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

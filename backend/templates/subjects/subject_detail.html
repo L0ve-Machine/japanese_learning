@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load translation_helpers %}
 
 {% block title %}{{ subject.title }} - 介護福祉士試験対策{% endblock %}
 
@@ -284,6 +285,30 @@
             color: #666;
         }
 
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: auto;
+        }
+        .language-btn {
+            padding: 6px 12px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .language-btn:hover {
+            background: #f8f9fa;
+        }
+        .language-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -296,6 +321,12 @@
 
             .content-title {
                 font-size: 1.5rem;
+            }
+
+            .language-selector {
+                width: 100%;
+                justify-content: center;
+                margin-top: 12px;
             }
         }
     </style>
@@ -323,8 +354,15 @@
                 </div>
                 <div>
                     <div>{{ subject.title }}</div>
-                    <div style="font-size: 0.9rem; font-weight: 400; color: #666;">{{ subject.description }}</div>
+                    <div style="font-size: 0.9rem; font-weight: 400; color: #666;">{{ subject_obj|get_subject_name:user_language }}</div>
                 </div>
+            </div>
+
+            <div class="language-selector">
+                <span style="font-size: 13px; color: #6c757d;">翻訳:</span>
+                <button class="language-btn {% if user_language == 'id' %}active{% endif %}" data-lang="id">🇮🇩 ID</button>
+                <button class="language-btn {% if user_language == 'en' %}active{% endif %}" data-lang="en">🇬🇧 EN</button>
+                <button class="language-btn {% if user_language == 'vi' %}active{% endif %}" data-lang="vi">🇻🇳 VI</button>
             </div>
         </div>
 
@@ -332,7 +370,7 @@
         <div class="content">
             <div class="content-header">
                 <h1 class="content-title">{{ subject.title }}</h1>
-                <p class="content-subtitle">{{ subject.description }}</p>
+                <p class="content-subtitle">{{ subject_obj|get_subject_name:user_language }}</p>
             </div>
 
             <div class="content-body">
@@ -373,9 +411,9 @@
                             <div class="chapter-list">
                                 {% for chapter in item.chapters.all %}
                                 {% for page in chapter.pages.all %}
-                                <div class="chapter-item" onclick="window.location.href='{% url 'chapter_page' page_id=page.id %}'; event.stopPropagation();">
+                                <div class="chapter-item" onclick="navigateToPage({{ page.id }}); event.stopPropagation();">
                                     <div class="chapter-info">
-                                        <div class="chapter-title">{{ chapter.name }} (DB版)</div>
+                                        <div class="chapter-title">{{ chapter.name }}</div>
                                         <div class="chapter-subtitle">{{ page.name }}</div>
                                     </div>
                                     <div class="chapter-progress">
@@ -418,6 +456,20 @@
             element.classList.toggle('open');
         }
 
+        function navigateToPage(pageId) {
+            // Get current language parameter if exists
+            const urlParams = new URLSearchParams(window.location.search);
+            const lang = urlParams.get('lang');
+
+            // Build URL with language parameter preserved
+            let url = `/chapter-db/${pageId}/`;
+            if (lang) {
+                url += `?lang=${lang}`;
+            }
+
+            window.location.href = url;
+        }
+
         function startChapter(chapterNumber, chapterTitle, event) {
             event.stopPropagation();
 
@@ -437,6 +489,18 @@
             if (firstSection) {
                 firstSection.classList.add('open');
             }
+        });
+
+        // Language selector functionality
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const selectedLang = this.dataset.lang;
+
+                // Update URL with language parameter and reload
+                const url = new URL(window.location);
+                url.searchParams.set('lang', selectedLang);
+                window.location.href = url.toString();
+            });
         });
 
         console.log('Subject detail page loaded: {{ subject_name }}');

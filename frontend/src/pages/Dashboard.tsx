@@ -82,35 +82,10 @@ const Dashboard: React.FC = () => {
         </Typography>
       </Box>
 
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 2 }}>
-            <Typography color="text.secondary" gutterBottom>
-              今週の学習時間
-            </Typography>
-            <Typography variant="h4">12時間</Typography>
-            <LinearProgress variant="determinate" value={60} sx={{ mt: 2 }} />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 2 }}>
-            <Typography color="text.secondary" gutterBottom>
-              完了した問題
-            </Typography>
-            <Typography variant="h4">234問</Typography>
-            <LinearProgress variant="determinate" value={45} sx={{ mt: 2 }} />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 2 }}>
-            <Typography color="text.secondary" gutterBottom>
-              正答率
-            </Typography>
-            <Typography variant="h4">78%</Typography>
-            <LinearProgress variant="determinate" value={78} sx={{ mt: 2 }} />
-          </Paper>
-        </Grid>
-      </Grid>
+      {/* Blank canvas for future content */}
+      <Box sx={{ mb: 4, minHeight: 200 }}>
+        {/* Add custom content here later */}
+      </Box>
 
       <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
         学習メニュー

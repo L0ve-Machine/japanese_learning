@@ -14,7 +14,7 @@ class User(AbstractUser):
 
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, blank=True, null=True)
-    native_language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, default='en')
+    native_language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, default='id')
     is_premium = models.BooleanField(default=False)
     subscription_end_date = models.DateTimeField(null=True, blank=True)
     stripe_customer_id = models.CharField(max_length=255, blank=True)

@@ -413,9 +413,15 @@ def subject_learning_view(request):
     for subject in subjects:
         subject.total_chapters = sum(item.chapters.count() for item in subject.items.all())
 
+    # Get user's language preference (URL param overrides user setting)
+    user_language = request.GET.get('lang')
+    if not user_language:
+        user_language = request.user.native_language if request.user.is_authenticated else 'id'
+
     return render(request, 'subjects/subject_learning.html', {
         'subjects': subjects,
-        'user': request.user
+        'user': request.user,
+        'user_language': user_language,
     })
 
 @login_required
@@ -456,6 +462,11 @@ def subject_detail_view(request, subject_name):
 
     completion_percentage = int((completed_pages / total_pages * 100)) if total_pages > 0 else 0
 
+    # Get user's language preference (URL param overrides user setting)
+    user_language = request.GET.get('lang')
+    if not user_language:
+        user_language = request.user.native_language if request.user.is_authenticated else 'id'
+
     # Use icon and color from database with fallback defaults
     subject = {
         'title': subject_obj.name,
@@ -474,7 +485,8 @@ def subject_detail_view(request, subject_name):
         'subject': subject,
         'subject_obj': subject_obj,
         'items': items,
-        'user': request.user
+        'user': request.user,
+        'user_language': user_language,
     })
 
 @login_required
@@ -918,6 +930,11 @@ def chapter_page_view(request, page_id):
     text_blocks = page.text_blocks.all().prefetch_related('vocabulary')
     quiz_questions = page.quiz_questions.all().prefetch_related('options')
 
+    # Get user's language preference (URL param overrides user setting)
+    user_language = request.GET.get('lang')
+    if not user_language:
+        user_language = request.user.native_language if request.user.is_authenticated else 'id'
+
     context = {
         'page': page,
         'text_blocks': text_blocks,
@@ -925,6 +942,7 @@ def chapter_page_view(request, page_id):
         'chapter': page.chapter,
         'item': page.chapter.item,
         'subject': page.chapter.item.subject,
+        'user_language': user_language,
     }
 
     return render(request, 'subjects/chapter_page.html', context)
