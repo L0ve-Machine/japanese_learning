@@ -3,29 +3,100 @@
 
 {% block title %}解説動画 - 介護福祉士試験対策{% endblock %}
 
+{% block extra_head %}
+<style>
+    .page-banner {
+        background: var(--orange);
+        color: white;
+        padding: 30px 20px;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-banner::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: 10%;
+        width: 50px;
+        height: 50px;
+        background: var(--accent-color);
+        border-radius: 50%;
+        opacity: 0.3;
+    }
+
+    .page-banner::after {
+        content: '';
+        position: absolute;
+        bottom: 15px;
+        left: 5%;
+        width: 30px;
+        height: 30px;
+        background: var(--coral);
+        border-radius: 50%;
+        opacity: 0.4;
+    }
+
+    .page-banner h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-banner p {
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    .banner-back-btn {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        position: relative;
+        z-index: 1;
+        transition: all 0.2s ease;
+    }
+
+    .banner-back-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .page-banner {
+            flex-direction: column;
+            text-align: center;
+            gap: 16px;
+        }
+
+        .page-banner h1 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <style>
     .videos-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
-    }
-
-    .page-header {
-        margin-bottom: 32px;
-    }
-
-    .page-header h1 {
-        font-size: 32px;
-        font-weight: 700;
-        color: #333;
-        margin: 0 0 8px 0;
-    }
-
-    .page-header p {
-        font-size: 16px;
-        color: #666;
-        margin: 0;
     }
 
     .videos-grid {
@@ -190,9 +261,16 @@
 </style>
 
 <div class="videos-container">
-    <div class="page-header">
-        <h1>解説動画</h1>
-        <p>動画で詳しく学習しましょう</p>
+    <!-- Banner -->
+    <div class="page-banner">
+        <div>
+            <h1>解説動画</h1>
+            <p>動画で詳しく学習しましょう</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="banner-back-btn">
+            <span class="material-icons">arrow_back</span>
+            ダッシュボードに戻る
+        </a>
     </div>
 
     {% if videos %}

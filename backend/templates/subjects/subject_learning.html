@@ -8,40 +8,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* 科目学習 Page Styles - Using Global Color Variables */
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #fafafa;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
+        .subject-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        .header {
-            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        .subject-header {
+            background: var(--teal);
             color: white;
             padding: 30px 20px;
             margin-bottom: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-lg);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .header h1 {
+        .subject-header::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 10%;
+            width: 50px;
+            height: 50px;
+            background: var(--mint);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .subject-header::after {
+            content: '';
+            position: absolute;
+            bottom: 15px;
+            left: 5%;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        .subject-header h1 {
             font-size: 2.5rem;
-            font-weight: 300;
+            font-weight: 600;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .subject-header p {
+            opacity: 0.9;
         }
 
         .back-btn {
@@ -55,36 +77,46 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
+            position: relative;
+            z-index: 1;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
         }
 
         .search-filters {
-            background: white;
+            background: var(--bg-primary);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
         }
 
         .search-box {
             width: 100%;
             padding: 12px 16px 12px 48px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
             margin-bottom: 16px;
             position: relative;
+            transition: border-color 0.2s ease;
         }
 
         .search-box:focus {
             outline: none;
-            border-color: #2196f3;
+            border-color: var(--primary-color);
         }
 
         .search-icon {
             position: absolute;
             left: 16px;
             top: 12px;
-            color: #666;
+            color: var(--text-secondary);
             pointer-events: none;
         }
 
@@ -97,26 +129,28 @@
 
         .chip {
             padding: 8px 16px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border-color);
             border-radius: 20px;
-            background: white;
+            background: var(--bg-primary);
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 14px;
+            color: var(--text-secondary);
         }
 
         .chip.active {
-            background: #2196f3;
+            background: var(--primary-color);
             color: white;
-            border-color: #2196f3;
+            border-color: var(--primary-color);
         }
 
         .chip:hover {
-            background: #f5f5f5;
+            background: var(--bg-accent);
+            color: var(--primary-color);
         }
 
         .chip.active:hover {
-            background: #1976d2;
+            background: var(--primary-dark);
         }
 
         .language-selector-main {
@@ -127,28 +161,30 @@
 
         .language-btn {
             padding: 8px 16px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border-color);
             border-radius: 20px;
-            background: white;
+            background: var(--bg-primary);
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 14px;
+            color: var(--text-secondary);
         }
 
         .language-btn:hover {
-            background: #f5f5f5;
+            background: var(--bg-accent);
+            border-color: var(--secondary-color);
         }
 
         .language-btn.active {
-            background: #2196f3;
+            background: var(--primary-color);
             color: white;
-            border-color: #2196f3;
+            border-color: var(--primary-color);
         }
 
         .refresh-btn {
             margin-left: auto;
             padding: 8px 16px;
-            background: #4caf50;
+            background: var(--secondary-color);
             color: white;
             border: none;
             border-radius: 6px;
@@ -156,6 +192,12 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            background: var(--blue-mid);
+            transform: translateY(-1px);
         }
 
         .subjects-grid {
@@ -174,14 +216,15 @@
         }
 
         .subject-card {
-            background: white;
+            background: var(--bg-primary);
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
         .subject-card::before {
@@ -191,16 +234,27 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #4caf50, #66bb6a);
+            background: linear-gradient(90deg, var(--palette-navy), var(--palette-teal));
         }
 
-        .subject-card:nth-child(2)::before { background: linear-gradient(90deg, #2196f3, #42a5f5); }
-        .subject-card:nth-child(3)::before { background: linear-gradient(90deg, #ff9800, #ffb74d); }
-        .subject-card:nth-child(4)::before { background: linear-gradient(90deg, #9c27b0, #ba68c8); }
+        /* Top border gradients - Custom palette (matching icons) */
+        .subject-card:nth-child(2)::before { background: linear-gradient(90deg, var(--palette-teal), var(--palette-light-blue)); }
+        .subject-card:nth-child(3)::before { background: linear-gradient(90deg, var(--palette-light-blue), var(--palette-teal)); }
+        .subject-card:nth-child(4)::before { background: linear-gradient(90deg, var(--palette-yellow), var(--palette-orange)); }
+        .subject-card:nth-child(5)::before { background: linear-gradient(90deg, var(--palette-orange), var(--palette-yellow)); }
+        .subject-card:nth-child(6)::before { background: linear-gradient(90deg, var(--palette-navy), var(--palette-teal)); }
+        .subject-card:nth-child(7)::before { background: linear-gradient(90deg, var(--palette-teal), var(--palette-light-blue)); }
+        .subject-card:nth-child(8)::before { background: linear-gradient(90deg, var(--palette-light-blue), var(--palette-teal)); }
+        .subject-card:nth-child(9)::before { background: linear-gradient(90deg, var(--palette-yellow), var(--palette-orange)); }
+        .subject-card:nth-child(10)::before { background: linear-gradient(90deg, var(--palette-orange), var(--palette-yellow)); }
+        .subject-card:nth-child(11)::before { background: linear-gradient(90deg, var(--palette-navy), var(--palette-teal)); }
+        .subject-card:nth-child(12)::before { background: linear-gradient(90deg, var(--palette-teal), var(--palette-light-blue)); }
+        .subject-card:nth-child(13)::before { background: linear-gradient(90deg, var(--palette-light-blue), var(--palette-teal)); }
 
         .subject-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-color);
         }
 
         .card-header {
@@ -221,14 +275,30 @@
             margin-right: 16px;
         }
 
+        /* Override database colors - Custom 5-color palette */
+        .subject-card:nth-child(1) .card-icon { background: var(--palette-navy) !important; }
+        .subject-card:nth-child(2) .card-icon { background: var(--palette-teal) !important; }
+        .subject-card:nth-child(3) .card-icon { background: var(--palette-light-blue) !important; }
+        .subject-card:nth-child(4) .card-icon { background: var(--palette-yellow) !important; color: var(--palette-navy) !important; }
+        .subject-card:nth-child(5) .card-icon { background: var(--palette-orange) !important; }
+        .subject-card:nth-child(6) .card-icon { background: var(--palette-navy) !important; }
+        .subject-card:nth-child(7) .card-icon { background: var(--palette-teal) !important; }
+        .subject-card:nth-child(8) .card-icon { background: var(--palette-light-blue) !important; }
+        .subject-card:nth-child(9) .card-icon { background: var(--palette-yellow) !important; color: var(--palette-navy) !important; }
+        .subject-card:nth-child(10) .card-icon { background: var(--palette-orange) !important; }
+        .subject-card:nth-child(11) .card-icon { background: var(--palette-navy) !important; }
+        .subject-card:nth-child(12) .card-icon { background: var(--palette-teal) !important; }
+        .subject-card:nth-child(13) .card-icon { background: var(--palette-light-blue) !important; }
+
         .card-title {
             font-size: 1.3rem;
             font-weight: 500;
             margin-bottom: 4px;
+            color: var(--text-primary);
         }
 
         .card-description {
-            color: #666;
+            color: var(--text-secondary);
             font-size: 0.9rem;
         }
 
@@ -244,13 +314,13 @@
 
         .progress-label {
             font-size: 0.9rem;
-            color: #666;
+            color: var(--text-secondary);
         }
 
         .progress-bar {
             width: 100%;
             height: 8px;
-            background: #e0e0e0;
+            background: var(--gray-light);
             border-radius: 4px;
             overflow: hidden;
         }
@@ -259,6 +329,7 @@
             height: 100%;
             border-radius: 4px;
             transition: width 0.3s ease;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
         }
 
         .stats-row {
@@ -274,12 +345,12 @@
         .stat-value {
             font-size: 1.4rem;
             font-weight: 600;
-            color: #4caf50;
+            color: var(--primary-color);
         }
 
         .stat-label {
             font-size: 0.8rem;
-            color: #666;
+            color: var(--text-secondary);
             text-transform: uppercase;
         }
 
@@ -299,14 +370,27 @@
         }
 
         .action-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            filter: brightness(1.1);
         }
 
-        .btn-primary { background: #4caf50; color: white; }
-        .btn-primary:nth-child(2) { background: #2196f3; }
-        .btn-primary:nth-child(3) { background: #ff9800; }
-        .btn-primary:nth-child(4) { background: #9c27b0; }
+        .btn-primary { background: var(--secondary-color); color: white; }
+
+        /* Override database colors for action buttons - Custom palette (matching icons) */
+        .subject-card:nth-child(1) .action-btn { background: var(--palette-navy) !important; }
+        .subject-card:nth-child(2) .action-btn { background: var(--palette-teal) !important; }
+        .subject-card:nth-child(3) .action-btn { background: var(--palette-light-blue) !important; color: var(--palette-navy) !important; }
+        .subject-card:nth-child(4) .action-btn { background: var(--palette-yellow) !important; color: var(--palette-navy) !important; }
+        .subject-card:nth-child(5) .action-btn { background: var(--palette-orange) !important; }
+        .subject-card:nth-child(6) .action-btn { background: var(--palette-navy) !important; }
+        .subject-card:nth-child(7) .action-btn { background: var(--palette-teal) !important; }
+        .subject-card:nth-child(8) .action-btn { background: var(--palette-light-blue) !important; color: var(--palette-navy) !important; }
+        .subject-card:nth-child(9) .action-btn { background: var(--palette-yellow) !important; color: var(--palette-navy) !important; }
+        .subject-card:nth-child(10) .action-btn { background: var(--palette-orange) !important; }
+        .subject-card:nth-child(11) .action-btn { background: var(--palette-navy) !important; }
+        .subject-card:nth-child(12) .action-btn { background: var(--palette-teal) !important; }
+        .subject-card:nth-child(13) .action-btn { background: var(--palette-light-blue) !important; color: var(--palette-navy) !important; }
 
         .alert {
             padding: 16px;
@@ -318,19 +402,41 @@
         }
 
         .alert.error {
-            background: #ffebee;
-            color: #c62828;
-            border-left: 4px solid #f44336;
+            background: var(--danger-light);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .alert.success {
+            background: var(--success-light);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert.warning {
+            background: var(--warning-light);
+            color: var(--warning-color);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .alert.info {
+            background: var(--info-light);
+            color: var(--info-color);
+            border-left: 4px solid var(--info-color);
         }
 
         .no-results {
             text-align: center;
             padding: 40px;
-            color: #666;
+            color: var(--text-secondary);
+        }
+
+        .no-results .material-icons {
+            color: var(--gray-light);
         }
 
         @media (max-width: 768px) {
-            .header {
+            .subject-header {
                 flex-direction: column;
                 text-align: center;
                 gap: 16px;
@@ -355,8 +461,8 @@
         .spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid #e0e0e0;
-            border-top: 4px solid #2196f3;
+            border: 4px solid var(--gray-light);
+            border-top: 4px solid var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -365,13 +471,37 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Status badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.in-progress {
+            background: var(--info-light);
+            color: var(--info-color);
+        }
+
+        .status-badge.completed {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .status-badge.pending {
+            background: var(--warning-light);
+            color: var(--warning-color);
+        }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="subject-container">
         <!-- Header -->
-        <div class="header">
+        <div class="subject-header">
             <div>
                 <h1>科目学習</h1>
                 <p>13科目から選択して、テキスト→問題→解説の流れで学習します</p>
@@ -391,7 +521,7 @@
 
             <div class="filter-chips">
                 <div class="language-selector-main">
-                    <span style="font-size: 14px; color: #6c757d; margin-right: 8px;">翻訳言語:</span>
+                    <span style="font-size: 14px; color: var(--text-secondary); margin-right: 8px;">翻訳言語:</span>
                     <button class="language-btn {% if user_language == 'id' %}active{% endif %}" data-lang="id">🇮🇩 Indonesian</button>
                     <button class="language-btn {% if user_language == 'en' %}active{% endif %}" data-lang="en">🇬🇧 English</button>
                     <button class="language-btn {% if user_language == 'vi' %}active{% endif %}" data-lang="vi">🇻🇳 Vietnamese</button>
@@ -429,16 +559,6 @@
                     </div>
                 </div>
 
-                <div class="progress-section">
-                    <div class="progress-header">
-                        <span class="progress-label">学習進捗</span>
-                        <span class="progress-label">0%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%; background: {{ subject.color|default:'#607d8b' }};"></div>
-                    </div>
-                </div>
-
                 <div class="stats-row">
                     <div class="stat-item">
                         <div class="stat-value">{{ subject.items.count }}</div>
@@ -462,7 +582,7 @@
             {% empty %}
             <!-- No subjects message -->
             <div class="no-results" style="display: block;">
-                <span class="material-icons" style="font-size: 48px; color: #ccc; margin-bottom: 16px;">folder_open</span>
+                <span class="material-icons" style="font-size: 48px; color: var(--gray-light); margin-bottom: 16px;">folder_open</span>
                 <h3>科目がまだ登録されていません</h3>
                 <p>管理画面で科目を追加してください</p>
             </div>
@@ -471,7 +591,7 @@
 
         <!-- No Results -->
         <div class="no-results" id="noResults" style="display: none;">
-            <span class="material-icons" style="font-size: 48px; color: #ccc; margin-bottom: 16px;">search_off</span>
+            <span class="material-icons" style="font-size: 48px; color: var(--gray-light); margin-bottom: 16px;">search_off</span>
             <h3>条件に一致する科目が見つかりません</h3>
             <p>検索条件やフィルターを変更してお試しください</p>
         </div>

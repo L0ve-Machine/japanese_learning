@@ -1,10 +1,95 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load translation_helpers %}
 
 {% block title %}暗記カード - 介護福祉士試験対策{% endblock %}
 
 {% block extra_css %}
 <style>
+    .page-banner {
+        background: var(--purple);
+        color: white;
+        padding: 30px 20px;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-banner::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: 10%;
+        width: 50px;
+        height: 50px;
+        background: var(--coral);
+        border-radius: 50%;
+        opacity: 0.3;
+    }
+
+    .page-banner::after {
+        content: '';
+        position: absolute;
+        bottom: 15px;
+        left: 5%;
+        width: 30px;
+        height: 30px;
+        background: var(--mint);
+        border-radius: 50%;
+        opacity: 0.4;
+    }
+
+    .page-banner h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-banner p {
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    .banner-back-btn {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        position: relative;
+        z-index: 1;
+        transition: all 0.2s ease;
+    }
+
+    .banner-back-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .page-banner {
+            flex-direction: column;
+            text-align: center;
+            gap: 16px;
+        }
+
+        .page-banner h1 {
+            font-size: 1.8rem;
+        }
+    }
+
     .flashcards-container {
         max-width: 1200px;
         margin: 0 auto;
@@ -15,14 +100,8 @@
         margin-bottom: 2rem;
     }
 
-    .flashcards-header h1 {
-        font-size: 2rem;
-        color: #333;
-        margin-bottom: 0.5rem;
-    }
-
     .flashcards-subtitle {
-        color: #666;
+        color: var(--text-secondary);
         font-size: 1.1rem;
     }
 
@@ -37,14 +116,42 @@
         background: white;
         border-radius: 12px;
         padding: 1.5rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: var(--shadow-sm);
         transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
     }
+
+    .deck-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--fc-navy), var(--fc-teal));
+    }
+
+    .deck-card:nth-child(2)::before { background: linear-gradient(90deg, var(--fc-red), var(--fc-orange)); }
+    .deck-card:nth-child(3)::before { background: linear-gradient(90deg, var(--fc-orange), var(--fc-yellow)); }
+    .deck-card:nth-child(4)::before { background: linear-gradient(90deg, var(--fc-teal), var(--fc-slate)); }
+    .deck-card:nth-child(5)::before { background: linear-gradient(90deg, var(--fc-yellow), var(--fc-cream)); }
+    .deck-card:nth-child(6)::before { background: linear-gradient(90deg, var(--fc-slate), var(--fc-navy)); }
+    .deck-card:nth-child(7)::before { background: linear-gradient(90deg, var(--fc-red), var(--fc-yellow)); }
 
     .deck-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        box-shadow: var(--shadow-lg);
     }
+
+    .deck-card:nth-child(1):hover { border-color: var(--fc-navy); }
+    .deck-card:nth-child(2):hover { border-color: var(--fc-red); }
+    .deck-card:nth-child(3):hover { border-color: var(--fc-orange); }
+    .deck-card:nth-child(4):hover { border-color: var(--fc-teal); }
+    .deck-card:nth-child(5):hover { border-color: var(--fc-yellow); }
+    .deck-card:nth-child(6):hover { border-color: var(--fc-slate); }
+    .deck-card:nth-child(7):hover { border-color: var(--fc-red); }
 
     .deck-header {
         display: flex;
@@ -61,22 +168,27 @@
         align-items: center;
         justify-content: center;
         font-size: 1.5rem;
+        color: white;
     }
 
-    .deck-icon.vocabulary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .deck-icon.kanji { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-    .deck-icon.grammar { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-    .deck-icon.medical { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-    .deck-icon.caregiving { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    /* Rotating colors for deck icons */
+    .deck-card:nth-child(1) .deck-icon { background: var(--fc-navy); }
+    .deck-card:nth-child(2) .deck-icon { background: var(--fc-red); }
+    .deck-card:nth-child(3) .deck-icon { background: var(--fc-orange); }
+    .deck-card:nth-child(4) .deck-icon { background: var(--fc-teal); }
+    .deck-card:nth-child(5) .deck-icon { background: var(--fc-yellow); color: var(--fc-navy); }
+    .deck-card:nth-child(6) .deck-icon { background: var(--fc-slate); }
+    .deck-card:nth-child(7) .deck-icon { background: var(--fc-navy); }
 
     .deck-info h3 {
         font-size: 1.3rem;
-        color: #333;
+        color: var(--fc-navy);
         margin-bottom: 0.25rem;
+        font-family: 'Inter', 'Noto Sans JP', sans-serif;
     }
 
     .deck-type {
-        color: #666;
+        color: var(--text-secondary);
         font-size: 0.9rem;
     }
 
@@ -85,7 +197,7 @@
         gap: 1rem;
         margin: 1rem 0;
         padding: 1rem;
-        background: #f8f9fa;
+        background: var(--fc-cream);
         border-radius: 8px;
     }
 
@@ -97,23 +209,23 @@
     .stat-value {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #333;
+        color: var(--fc-navy);
     }
 
     .stat-label {
         font-size: 0.8rem;
-        color: #666;
+        color: var(--text-secondary);
         margin-top: 0.25rem;
     }
 
-    .stat-item.new .stat-value { color: #2196F3; }
-    .stat-item.learning .stat-value { color: #FF9800; }
-    .stat-item.mastered .stat-value { color: #4CAF50; }
+    .stat-item.new .stat-value { color: var(--fc-teal); }
+    .stat-item.learning .stat-value { color: var(--fc-orange); }
+    .stat-item.mastered .stat-value { color: var(--fc-navy); }
 
     .progress-bar {
         width: 100%;
         height: 8px;
-        background: #e0e0e0;
+        background: var(--fc-cream);
         border-radius: 4px;
         overflow: hidden;
         margin: 1rem 0;
@@ -121,7 +233,7 @@
 
     .progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+        background: linear-gradient(90deg, var(--fc-teal) 0%, var(--fc-navy) 100%);
         transition: width 0.3s ease;
     }
 
@@ -142,52 +254,115 @@
         text-align: center;
     }
 
+    /* Rotating button colors */
+    .deck-card:nth-child(1) .btn-primary { background: var(--fc-navy); }
+    .deck-card:nth-child(2) .btn-primary { background: var(--fc-red); }
+    .deck-card:nth-child(3) .btn-primary { background: var(--fc-orange); }
+    .deck-card:nth-child(4) .btn-primary { background: var(--fc-teal); }
+    .deck-card:nth-child(5) .btn-primary { background: var(--fc-yellow); color: var(--fc-navy); }
+    .deck-card:nth-child(6) .btn-primary { background: var(--fc-slate); }
+    .deck-card:nth-child(7) .btn-primary { background: var(--fc-navy); }
+
     .btn-primary {
-        background: #9C27B0;
+        background: var(--fc-navy);
         color: white;
         flex: 1;
     }
 
     .btn-primary:hover {
-        background: #7B1FA2;
+        filter: brightness(1.1);
         transform: translateY(-2px);
     }
 
     .btn-outline {
         background: white;
-        color: #9C27B0;
-        border: 2px solid #9C27B0;
+        color: var(--fc-navy);
+        border: 2px solid var(--fc-navy);
     }
 
     .btn-outline:hover {
-        background: #f3e5f5;
+        background: var(--fc-cream);
     }
 
     .empty-state {
         text-align: center;
         padding: 3rem;
-        color: #666;
+        color: var(--text-secondary);
     }
 
     .empty-state .material-icons {
         font-size: 4rem;
-        color: #ccc;
+        color: var(--fc-cream);
         margin-bottom: 1rem;
+    }
+
+    .language-selector {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .language-btn {
+        padding: 0.5rem 1rem;
+        border: 2px solid var(--border-color);
+        background: white;
+        color: var(--text-secondary);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .language-btn:hover {
+        border-color: var(--fc-teal);
+        color: var(--fc-navy);
+    }
+
+    .language-btn.active {
+        background: var(--fc-navy);
+        color: white;
+        border-color: var(--fc-navy);
+    }
+
+    /* Back link styling */
+    .back-link {
+        text-decoration: none;
+        color: var(--fc-navy);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+
+    .back-link:hover {
+        color: var(--fc-teal);
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="flashcards-container">
-    <div class="flashcards-header">
-        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-            <a href="{% url 'dashboard' %}" style="text-decoration: none; color: #666; display: flex; align-items: center; gap: 0.5rem;">
-                <span class="material-icons">arrow_back</span>
-                ダッシュボードに戻る
-            </a>
+    <!-- Banner -->
+    <div class="page-banner">
+        <div>
+            <h1>暗記カード</h1>
+            <p>フラッシュカードで効率的に記憶定着。医療・介護用語を中心に学習しましょう。</p>
         </div>
-        <h1>暗記カード</h1>
-        <p class="flashcards-subtitle">フラッシュカードで効率的に記憶定着。医療・介護用語を中心に学習しましょう。</p>
+        <a href="{% url 'dashboard' %}" class="banner-back-btn">
+            <span class="material-icons">arrow_back</span>
+            ダッシュボードに戻る
+        </a>
+    </div>
+
+    <div class="flashcards-header">
+        <div class="language-selector">
+            <span style="font-size: 14px; color: #6c757d; margin-right: 8px;">翻訳言語:</span>
+            <button class="language-btn {% if user_language == 'id' %}active{% endif %}" data-lang="id">🇮🇩 Indonesian</button>
+            <button class="language-btn {% if user_language == 'en' %}active{% endif %}" data-lang="en">🇬🇧 English</button>
+            <button class="language-btn {% if user_language == 'vi' %}active{% endif %}" data-lang="vi">🇻🇳 Vietnamese</button>
+        </div>
     </div>
 
     {% if deck_data %}
@@ -216,7 +391,7 @@
             </div>
 
             <div class="deck-actions">
-                <a href="{% url 'flashcards_study' data.deck.id %}" class="btn btn-primary">
+                <a href="{% url 'flashcards_study' data.deck.id %}?lang={{ user_language }}" class="btn btn-primary">
                     学習開始
                 </a>
             </div>
@@ -231,4 +406,18 @@
     </div>
     {% endif %}
 </div>
+
+<script>
+// Language selector functionality
+document.querySelectorAll('.language-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const selectedLang = this.dataset.lang;
+
+        // Update URL with language parameter and reload
+        const url = new URL(window.location);
+        url.searchParams.set('lang', selectedLang);
+        window.location.href = url.toString();
+    });
+});
+</script>
 {% endblock %}

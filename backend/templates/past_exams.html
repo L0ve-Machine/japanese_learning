@@ -3,11 +3,106 @@
 
 {% block title %}過去問題 - 介護福祉士試験対策{% endblock %}
 
+{% block extra_head %}
+<style>
+    .page-banner {
+        background: var(--primary-color);
+        color: white;
+        padding: 30px 20px;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-banner::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: 10%;
+        width: 50px;
+        height: 50px;
+        background: var(--secondary-color);
+        border-radius: 50%;
+        opacity: 0.3;
+    }
+
+    .page-banner::after {
+        content: '';
+        position: absolute;
+        bottom: 15px;
+        left: 5%;
+        width: 30px;
+        height: 30px;
+        background: var(--accent-color);
+        border-radius: 50%;
+        opacity: 0.4;
+    }
+
+    .page-banner h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-banner p {
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    .banner-back-btn {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        position: relative;
+        z-index: 1;
+        transition: all 0.2s ease;
+    }
+
+    .banner-back-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .page-banner {
+            flex-direction: column;
+            text-align: center;
+            gap: 16px;
+        }
+
+        .page-banner h1 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="dashboard-container">
-    <div class="dashboard-header">
-        <h1>過去問題 [UPDATED-FIX-V3-CACHE-CLEAR]</h1>
-        <p class="dashboard-subtitle">年度と科目を選択して過去問題を開始しましょう</p>
+    <!-- Banner -->
+    <div class="page-banner">
+        <div>
+            <h1>過去問題</h1>
+            <p>年度と科目を選択して過去問題を開始しましょう</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="banner-back-btn">
+            <span class="material-icons">arrow_back</span>
+            ダッシュボードに戻る
+        </a>
     </div>
 
     <div id="category-page" class="max-w-3xl mx-auto">
